@@ -46,7 +46,7 @@ class Sources(models.Model):
     # TODO: need to complete this
     # jobid = models.IntegerField()
     sourceid = models.AutoField(primary_key=True)
-    jobid = models.ForeignKey(Job, on_delete=models.SET_NULL, to_field='jobid', null=True)
+    jobid = models.ForeignKey(Job, on_delete=models.SET_NULL, related_name='sources', to_field='jobid', null=True)
     sourceTable = models.CharField(max_length=30, blank=False, null=False,
                                    help_text='Source Table Name')
     sourceTypeDefs = SourceTypes()
