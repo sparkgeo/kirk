@@ -9,6 +9,7 @@ from __future__ import unicode_literals
 from django.test import TestCase
 from api.models.Job import Job
 from api.models.Sources import Sources
+from api.models.Destinations import Destinations
 
 
 # Create your tests here.
@@ -44,6 +45,14 @@ class ModelTestCase(TestCase):
         new_count = Sources.objects.count()
         self.assertNotEqual(old_count, new_count)
         
-    #def test_model_can_create_a_complete_job(self):
+    def test_model_can_create_a_destination(self):
+        old_count = Destinations.objects.count()
+        job = Job(jobid=self.jobid)
+        dests = Destinations(dest_key='DLV2', dest_service_name='ServName', 
+                               dest_host='dest_host', dest_port=None, 
+                               dest_type=r'dbase')
+        dests.save()
+        new_count = Destinations.objects.count()
+        self.assertNotEqual(old_count, new_count)
         
         

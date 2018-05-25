@@ -11,8 +11,10 @@ from django.shortcuts import render
 from rest_framework import generics
 from .serializers import JobIdlistSerializer
 from .serializers import SourceDataListSerializer
+from .serializers import DestinationsSerializer
 from .models.Job import Job
 from .models.Sources import Sources
+from .models.Destinations import Destinations
 
 class CreateJobView(generics.ListCreateAPIView):
     """This class defines the create behavior of our rest api."""
@@ -34,7 +36,6 @@ class SourceDataView(generics.ListCreateAPIView):
     serializer_class = SourceDataListSerializer
     #lookup_field  = 'sourceid'
 
-
     def perform_create(self, serializer):
         """Save the post data when creating a new bucketlist."""
         serializer.save()
@@ -47,8 +48,12 @@ class SourcesDetailsView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Sources.objects.all()
     serializer_class = SourceDataListSerializer
     
-# class JobCompleteView(generics.ListCreateAPIView):
-#     queryset = Job.objects.all()
-
+class DestinationsView(generics.ListCreateAPIView):
+    lookup_field  = 'dest_key'
+    queryset = Destinations.objects.all()
+    serializer_class = DestinationsSerializer
     
+    def perform_create(self, serializer):
+        """Save the post data when creating a new bucketlist."""
+        serializer.save()
     

@@ -20,10 +20,12 @@ class JobViewTestCase(TestCase):
     def setUp(self):
         """Define the test client and other test variables."""
         self.client = APIClient()
-        job_data = {'jobStatus': 'TESTING2'}
+        job_data = {'jobStatus': 'TESTING5',
+                    'cronStr': 'some'}
+        #'destEnvKey': 'DLV',
         #job_data = {'jobid', 7}
         self.response = self.client.post(
-            reverse('create'),
+            reverse('job_create'),
             job_data,
             format="json")
 
@@ -33,36 +35,38 @@ class JobViewTestCase(TestCase):
         
     def test_api_can_get_a_job(self):
         """Test the api can get a given bucketlist."""
-        joblist = Job.objects.get(jobStatus='TESTING2')
+        joblist = Job.objects.get(jobStatus='TESTING5')
         #print 'joblist', joblist, type(joblist)
         #print 'joblist.jobid', joblist.jobid
         response = self.client.get(
-            reverse('details',
+            reverse('job_details',
             kwargs={'jobid': joblist.jobid}), format="json")
- 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, joblist)
 
 
     def test_api_can_update_a_job(self):
         """Test the api can update a given bucketlist."""
-        jobs =  Job.objects.get(jobStatus='TESTING2')
-        change_bucketlist = {'jobStatus': 'TESTING3'}
+        jobs =  Job.objects.get(jobStatus='TESTING5')
+        change_bucketlist = {'jobStatus': 'TESTING6',
+                             'cronStr': 'required'}
         res = self.client.put(
-            reverse('details', kwargs={'jobid': jobs.jobid}),
+            reverse('job_details', kwargs={'jobid': jobs.jobid}),
             change_bucketlist, format='json'
         )
-        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        print res.content
 
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+ 
     def test_api_can_delete_a_job(self):
         """Test the api can delete a bucketlist."""
-        jobList = Job.objects.get(jobStatus = 'TESTING2')
+        jobList = Job.objects.get(jobStatus = 'TESTING5')
         response = self.client.delete(
-            reverse('details', kwargs={'jobid': jobList.jobid}),
+            reverse('job_details', kwargs={'jobid': jobList.jobid}),
             format='json',
             follow=True)
         self.assertEquals(response.status_code, status.HTTP_204_NO_CONTENT)
-        
+         
     
 class SourceViewTestCase(TestCase):
     """Define the test client and other test variables."""

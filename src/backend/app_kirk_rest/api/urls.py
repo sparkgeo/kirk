@@ -11,17 +11,17 @@ from .views import CreateJobView
 from .views import JobDetailsView
 from .views import SourceDataView
 from .views import SourcesDetailsView
-#from .views import JobCompleteView
+from .views import DestinationsView
 
 urlpatterns = {
-    url(r'^job/$', CreateJobView.as_view(), name="create"),
+    url(r'^job/$', CreateJobView.as_view(), name="job_create"),
     #url(r'^job/$', JobCompleteView.as_view(), name="create"),
     url(r'^job/(?P<jobid>[0-9]+)/$',
-        JobDetailsView.as_view(), name="details"),
+        JobDetailsView.as_view(), name="job_details"),
     url(r'^sources/$', SourceDataView.as_view(), name='source_create'),
     url(r'^sources/(?P<sourceid>[0-9]+)/$',
         SourcesDetailsView.as_view(), name="source_details"),
-
+    url(r'^destinations/$', DestinationsView.as_view(), name='destination_create')
 }
 
 urlpatterns = format_suffix_patterns(urlpatterns)

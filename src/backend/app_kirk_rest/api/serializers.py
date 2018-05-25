@@ -8,7 +8,7 @@ Created on May 16, 2018
 from rest_framework import serializers
 from .models.Job import Job
 from .models.Sources import Sources
-
+from .models.Destinations import Destinations
 
 
 class SourceDataListSerializer(serializers.ModelSerializer):
@@ -31,7 +31,18 @@ class JobDetailedInfoSerializer(serializers.ModelSerializer):
         job details Metadata
         '''
         model = Job
-        fields = ('jobid', 'jobStatus','cronStr', 'date_created', 'date_modified', 'sources')
+        fields = ('jobid', 'jobStatus','cronStr', 'destEnvKey', 'date_created', 'date_modified', 'sources')
+        read_only_fields = ('date_created', 'date_modified')
+        
+        
+class DestinationsSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        """Meta class to map serializer's fields with the model fields."""
+        model = Destinations
+        fields = ('dest_key', 'dest_service_name', 'dest_host', 'dest_port', 'dest_type',
+                  )
+        #read_only_fields = ( 'sourceid',  )    
 
 class JobIdlistSerializer(serializers.ModelSerializer):
     """
@@ -40,20 +51,12 @@ class JobIdlistSerializer(serializers.ModelSerializer):
     # read_only = True
     #sources = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     sources = SourceDataListSerializer(many = True, read_only=True)
+    destkey = DestinationsSerializer(many=True, read_only=True)
+    
     class Meta:
         """Meta class to map serializer's fields with the model fields."""
         model = Job
-        fields = ('jobid', 'jobStatus', 'date_created', 'date_modified', 'sources')
+        fields = ('jobid', 'jobStatus','cronStr', 'destEnvKey', 'date_created', 
+                  'date_modified', 'sources', 'destkey')
         read_only_fields = ('date_created', 'date_modified')
-
-# class JobCompleteSerializer(serializers.ModelSerializer):
-#     '''
-#     Builds the relationships necessary to display all the related job
-#     information.
-#     '''
-#     sources = serializers.PrimaryKeyRelatedField(many=True, read_only=False)
-# 
-#     class Meta:
-#         model = Job
-#         fields = ('jobid', 'jobStatus', 'date_created', 'date_modified', 'sources')
-
+        depth = 1
