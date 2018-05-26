@@ -1,0 +1,186 @@
+[
+  {
+    "model": "api.FieldMap",
+    "pk": 1,
+    "fields": {
+      "fieldType": "fme_binary()",
+      "Description": "Fixed-length binary data. width defines the size, in bytes."
+    }
+  },
+  {
+    "model": "api.FieldMap",
+    "pk": 2,
+    "fields": {
+      "fieldType": "fme_varbinary()",
+      "Description": "Variable-length binary data. width defines the maximum size, in bytes."
+    }
+  },
+  {
+    "model": "api.FieldMap",
+    "pk": 3,
+    "fields": {
+      "fieldType": "fme_binarybuffer",
+      "Description": "Unbounded binary data."
+    }
+  },
+  {
+    "model": "api.FieldMap",
+    "pk": 4,
+    "fields": {
+      "fieldType": "fme_char()",
+      "Description": "Fixed-length string data. width defines the string length."
+    }
+  },
+  {
+    "model": "api.FieldMap",
+    "pk": 5,
+    "fields": {
+      "fieldType": "fme_varchar()",
+      "Description": "Variable-length string data. width defines the maximum length."
+    }
+  },
+  {
+    "model": "api.FieldMap",
+    "pk": 6,
+    "fields": {
+      "fieldType": "fme_buffer",
+      "Description": "Unbounded character string."
+    }
+  },
+  {
+    "model": "api.FieldMap",
+    "pk": 7,
+    "fields": {
+      "fieldType": "fme_xml",
+      "Description": "XML data"
+    }
+  },
+  {
+    "model": "api.FieldMap",
+    "pk": 8,
+    "fields": {
+      "fieldType": "fme_json",
+      "Description": "JSON data"
+    }
+  },
+    {
+    "model": "api.FieldMap",
+    "pk": 9,
+    "fields": {
+      "fieldType": "fme_datetime",
+      "Description": "Defines a date that is combined with a time of day with fractional seconds, and is based on a 24-hour clock. For supported date and time formats, see Standard FME Date and Time Format."
+    }
+  },
+    {
+    "model": "api.FieldMap",
+    "pk": 10,
+    "fields": {
+      "fieldType": "fme_date",
+      "Description": "Defines a date. For supported date formats, see Standard FME Date and Time Format."
+    }
+  },
+    {
+    "model": "api.FieldMap",
+    "pk": 11,
+    "fields": {
+      "fieldType": "fme_time",
+      "Description": "Defines a time of day. The time is without time zone awareness and is based on a 24-hour clock. For supported time formats, see Standard FME Date and Time Format."
+    }
+  },
+    {
+    "model": "api.FieldMap",
+    "pk": 12,
+    "fields": {
+      "fieldType": "fme_decimal()",
+      "Description": "takes two arguements, Fixed-width and fixed-decimal numbers. width is the maximum total number of decimal digits, both to the left and to the right of the decimal point. decimal is the number of decimal digits to the right of the decimal point. This number is subtracted from width to determine the maximum number of digits to the left of the decimal point."
+    }
+  },
+    {
+    "model": "api.FieldMap",
+    "pk": 13,
+    "fields": {
+      "fieldType": "fme_real32",
+      "Description": "Floating point numeric data that occupies 4 bytes in standard IEEE floating point format."
+    }
+  },
+    {
+    "model": "api.FieldMap",
+    "pk": 14,
+    "fields": {
+      "fieldType": "fme_real64",
+      "Description": "Floating point numeric data that occupies 8 bytes in standard IEEE floating point format."
+    }
+  },
+    {
+    "model": "api.FieldMap",
+    "pk": 15,
+    "fields": {
+      "fieldType": "fme_int64",
+      "Description": "Integer data that occupies 8 bytes"
+    }
+  },
+    {
+    "model": "api.FieldMap",
+    "pk": 16,
+    "fields": {
+      "fieldType": "fme_uint64",
+      "Description": "Unsigned integer data that occupies 8 bytes."
+    }
+  },
+    {
+    "model": "api.FieldMap",
+    "pk": 17,
+    "fields": {
+      "fieldType": "fme_int32",
+      "Description": "Integer data that occupies 4 bytes."
+    }
+  },
+    {
+    "model": "api.FieldMap",
+    "pk": 18,
+    "fields": {
+      "fieldType": "fme_uint32",
+      "Description": "Unsigned integer data that occupies 4 bytes"
+    }
+  },
+    {
+    "model": "api.FieldMap",
+    "pk": 19,
+    "fields": {
+      "fieldType": "fme_int16",
+      "Description": "Integer data that occupies 2 bytes"
+    }
+  },
+    {
+    "model": "api.FieldMap",
+    "pk": 20,
+    "fields": {
+      "fieldType": "fme_uint16",
+      "Description": "Unsigned integer data that occupies 2 bytes."
+    }
+  },
+    {
+    "model": "api.FieldMap",
+    "pk": 21,
+    "fields": {
+      "fieldType": "fme_int8",
+      "Description": "Integer data that occupies 1 byte"
+    }
+  },
+    {
+    "model": "api.FieldMap",
+    "pk": 22,
+    "fields": {
+      "fieldType": "fme_uint8",
+      "Description": "Unsigned integer data that occupies 1 byte."
+    }
+  },
+    {
+    "model": "api.FieldMap",
+    "pk": 23,
+    "fields": {
+      "fieldType": "fme_boolean",
+      "Description": "An integer data type that can take an integer value of 1 (true) or 0 (false), or any string that begins with \" t \" or \" y \" (true), or \" f \" or \" n \" (false), or NULL."
+    }
+  }
+]
