@@ -12,15 +12,14 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 
-
-class FieldMap(models.Model):
+class FMEDataTypes(models.Model):
     '''
     Defines the relationship between fields in the source data and the
     destination data.
 
     '''
-    fieldTypeId = models.AutoField()
-    fieldType = models.CharField(max_length=30, primary_key=True)
+    fieldTypeId = models.AutoField(primary_key=True)
+    fieldType = models.CharField(max_length=30)
     Description = models.TextField()
 
     def __str__(self):

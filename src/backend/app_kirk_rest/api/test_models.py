@@ -6,13 +6,18 @@ Created on May 15, 2018
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.contrib.auth.models import User
 from django.test import TestCase
-from api.models.Job import Job
-from api.models.Sources import Sources
+
 from api.models.Destinations import Destinations
 from api.models.FieldMap import FieldMap
-from django.contrib.auth.models import User
+from api.models.Job import Job
+from api.models.Sources import Sources
+from api.models.DataTypes import FMEDataTypes
+from api.models.JobStatistics import JobStatistics
 
+import pytz
+import datetime
 
 # Create your tests here.
 class ModelTestCase(TestCase):
@@ -26,12 +31,12 @@ class ModelTestCase(TestCase):
         """
         self.jobid = "1"
         self.user = 'spock'
-        user = User.objects.create(username="spock")
-        self.job = Job(jobid=self.jobid, owner=user)
+        self.user = User.objects.create(username="spock")
+        self.job = Job(jobid=self.jobid, owner=self.user)
 
     def test_model_can_create_a_job(self):
         """
-        Test the bucketlist model can create a bucketlist.
+        Test the Job model can create a Job.
         """
         # self.assertEqual(1, 1, "one doesn't equal 1")
         old_count = Job.objects.count()
@@ -40,6 +45,9 @@ class ModelTestCase(TestCase):
         self.assertNotEqual(old_count, new_count)
 
     def test_model_can_create_a_FGDB_source(self):
+        """
+        Test the sources model can create a source.
+        """
         old_count = Sources.objects.count()
         job = Job(jobid=self.jobid)
         sources = Sources(jobid=job, sourceTable='fgdbTable', sourceType='FGDB',
@@ -50,6 +58,9 @@ class ModelTestCase(TestCase):
         self.assertNotEqual(old_count, new_count)
 
     def test_model_can_create_a_destination(self):
+        """
+        Test the Destination model can create a Destination.
+        """
         old_count = Destinations.objects.count()
         job = Job(jobid=self.jobid)
         dests = Destinations(dest_key='DLV2', dest_service_name='ServName',
@@ -60,7 +71,42 @@ class ModelTestCase(TestCase):
         self.assertNotEqual(old_count, new_count)
         
     def test_model_can_create_a_fieldmap(self):
+        """
+        Test the Fieldmap model can create a Fieldmap.
+        """
         old_count = FieldMap.objects.count()
         fieldMap = FieldMap(sourceColumnName='COL_A', destColumnName='COL_1', 
-                            fmeColumnType='fme_char')
+                            fmeColumnType='fme_char', whoCreated=self.user, 
+                            whoUpdated=self.user)
+                             
+        fieldMap.save()
+        new_count = FieldMap.objects.count()
+        self.assertNotEqual(old_count, new_count)
         
+        
+    def test_model_can_create_a_FMEDataType(self):
+        """
+        Test the DataType model can create a FMEDataType.
+        """
+        old_count = FMEDataTypes.objects.count()
+        dataType = FMEDataTypes(fieldType='testchar', 
+                                Description='testing description')
+        dataType.save()
+        new_count = FMEDataTypes.objects.count()
+        self.assertNotEqual(old_count, new_count)
+        
+    def test_model_can_create_a_JobStatistic(self):
+        """
+        Test the Jobstatistics model can create a jobstatistic.
+        """
+        old_count = JobStatistics.objects.count()
+        dataType = JobStatistics(jobStatus='WORKING', 
+                                 fmeServerJobId=100232,
+                                 jobStarted=datetime.datetime.now(pytz.UTC),
+                                jobCompleted=datetime.datetime.now(pytz.UTC))
+        dataType.save()
+        new_count = JobStatistics.objects.count()
+        self.assertNotEqual(old_count, new_count)
+         
+
+

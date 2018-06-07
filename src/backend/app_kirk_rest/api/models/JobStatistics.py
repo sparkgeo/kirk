@@ -18,7 +18,7 @@ from .Job import Job
 from django.contrib.auth.models import User
 
 
-class jobStatistics(models.Model):
+class JobStatistics(models.Model):
     '''
     Defines the relationship between fields in the source data and the
     destination data.
@@ -26,7 +26,7 @@ class jobStatistics(models.Model):
     '''
     jobStatsId = models.AutoField(primary_key=True)
     jobid = models.ForeignKey(Job, on_delete=models.SET_NULL,
-                              related_name='sources', to_field='jobid',
+                              related_name='jobstatssources', to_field='jobid',
                               null=True)
     jobStatus = models.CharField(max_length=25)
     fmeServerJobId = models.IntegerField(null=True)

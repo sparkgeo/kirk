@@ -16,24 +16,34 @@ from .views import SourceDataView
 from .views import SourcesDetailsView
 from .views import UserDetailsView
 from .views import UserView
-
+from .views import FieldMapView
+from .views import JobStatisticsView
+from .views import JobStatisticsDetailsView
+from .views import DestinationsDetailsView
 
 urlpatterns = {
-    url(r'^auth/', include('rest_framework.urls', # ADD THIS URL
+    url(r'^auth/', include('rest_framework.urls',  # ADD THIS URL
                                namespace='rest_framework')),
     url(r'^users/$', UserView.as_view(), name="users"),
     url(r'users/(?P<pk>[0-9]+)/$',
         UserDetailsView.as_view(), name="user_details"),
-    url(r'^get-token/', obtain_auth_token), # Add this line
+    url(r'^get-token/', obtain_auth_token),  # Add this line
 
     url(r'^job/$', CreateJobView.as_view(), name="job_create"),
-    #url(r'^job/$', JobCompleteView.as_view(), name="create"),
+    # url(r'^job/$', JobCompleteView.as_view(), name="create"),
     url(r'^job/(?P<jobid>[0-9]+)/$',
         JobDetailsView.as_view(), name="job_details"),
     url(r'^sources/$', SourceDataView.as_view(), name='source_create'),
     url(r'^sources/(?P<sourceid>[0-9]+)/$',
         SourcesDetailsView.as_view(), name="source_details"),
-    url(r'^destinations/$', DestinationsView.as_view(), name='destination_create')
+    url(r'^destinations/$', DestinationsView.as_view(), name='destination_create'),
+    url(r'^destinations/(?P<dest_key>[a-zA-Z]+)/$',
+        DestinationsDetailsView.as_view(), name="destinations_details"),
+    url(r'^fieldmaps/$', FieldMapView.as_view(), name='fieldmap_create'),
+    url(r'^jobstats/$', JobStatisticsView.as_view(), name='jobstats_create'),
+    url(r'^jobstats/(?P<jobStatsId>[0-9]+)/$',
+        JobStatisticsDetailsView.as_view(), name="jobstats_details"),
+
 }
 
 urlpatterns = format_suffix_patterns(urlpatterns)

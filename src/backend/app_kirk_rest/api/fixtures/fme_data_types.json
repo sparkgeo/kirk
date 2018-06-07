@@ -1,6 +1,6 @@
 [
   {
-    "model": "api.FieldMap",
+    "model": "api.FMEDataTypes",
     "pk": 1,
     "fields": {
       "fieldType": "fme_binary()",
@@ -8,7 +8,7 @@
     }
   },
   {
-    "model": "api.FieldMap",
+    "model": "api.FMEDataTypes",
     "pk": 2,
     "fields": {
       "fieldType": "fme_varbinary()",
@@ -16,7 +16,7 @@
     }
   },
   {
-    "model": "api.FieldMap",
+    "model": "api.FMEDataTypes",
     "pk": 3,
     "fields": {
       "fieldType": "fme_binarybuffer",
@@ -24,7 +24,7 @@
     }
   },
   {
-    "model": "api.FieldMap",
+    "model": "api.FMEDataTypes",
     "pk": 4,
     "fields": {
       "fieldType": "fme_char()",
@@ -32,7 +32,7 @@
     }
   },
   {
-    "model": "api.FieldMap",
+    "model": "api.FMEDataTypes",
     "pk": 5,
     "fields": {
       "fieldType": "fme_varchar()",
@@ -40,7 +40,7 @@
     }
   },
   {
-    "model": "api.FieldMap",
+    "model": "api.FMEDataTypes",
     "pk": 6,
     "fields": {
       "fieldType": "fme_buffer",
@@ -48,7 +48,7 @@
     }
   },
   {
-    "model": "api.FieldMap",
+    "model": "api.FMEDataTypes",
     "pk": 7,
     "fields": {
       "fieldType": "fme_xml",
@@ -56,7 +56,7 @@
     }
   },
   {
-    "model": "api.FieldMap",
+    "model": "api.FMEDataTypes",
     "pk": 8,
     "fields": {
       "fieldType": "fme_json",
@@ -64,7 +64,7 @@
     }
   },
     {
-    "model": "api.FieldMap",
+    "model": "api.FMEDataTypes",
     "pk": 9,
     "fields": {
       "fieldType": "fme_datetime",
@@ -72,7 +72,7 @@
     }
   },
     {
-    "model": "api.FieldMap",
+    "model": "api.FMEDataTypes",
     "pk": 10,
     "fields": {
       "fieldType": "fme_date",
@@ -80,7 +80,7 @@
     }
   },
     {
-    "model": "api.FieldMap",
+    "model": "api.FMEDataTypes",
     "pk": 11,
     "fields": {
       "fieldType": "fme_time",
@@ -88,7 +88,7 @@
     }
   },
     {
-    "model": "api.FieldMap",
+    "model": "api.FMEDataTypes",
     "pk": 12,
     "fields": {
       "fieldType": "fme_decimal()",
@@ -96,7 +96,7 @@
     }
   },
     {
-    "model": "api.FieldMap",
+    "model": "api.FMEDataTypes",
     "pk": 13,
     "fields": {
       "fieldType": "fme_real32",
@@ -104,7 +104,7 @@
     }
   },
     {
-    "model": "api.FieldMap",
+    "model": "api.FMEDataTypes",
     "pk": 14,
     "fields": {
       "fieldType": "fme_real64",
@@ -112,7 +112,7 @@
     }
   },
     {
-    "model": "api.FieldMap",
+    "model": "api.FMEDataTypes",
     "pk": 15,
     "fields": {
       "fieldType": "fme_int64",
@@ -120,7 +120,7 @@
     }
   },
     {
-    "model": "api.FieldMap",
+    "model": "api.FMEDataTypes",
     "pk": 16,
     "fields": {
       "fieldType": "fme_uint64",
@@ -128,7 +128,7 @@
     }
   },
     {
-    "model": "api.FieldMap",
+    "model": "api.FMEDataTypes",
     "pk": 17,
     "fields": {
       "fieldType": "fme_int32",
@@ -136,7 +136,7 @@
     }
   },
     {
-    "model": "api.FieldMap",
+    "model": "api.FMEDataTypes",
     "pk": 18,
     "fields": {
       "fieldType": "fme_uint32",
@@ -144,7 +144,7 @@
     }
   },
     {
-    "model": "api.FieldMap",
+    "model": "api.FMEDataTypes",
     "pk": 19,
     "fields": {
       "fieldType": "fme_int16",
@@ -152,7 +152,7 @@
     }
   },
     {
-    "model": "api.FieldMap",
+    "model": "api.FMEDataTypes",
     "pk": 20,
     "fields": {
       "fieldType": "fme_uint16",
@@ -160,7 +160,7 @@
     }
   },
     {
-    "model": "api.FieldMap",
+    "model": "api.FMEDataTypes",
     "pk": 21,
     "fields": {
       "fieldType": "fme_int8",
@@ -168,7 +168,7 @@
     }
   },
     {
-    "model": "api.FieldMap",
+    "model": "api.FMEDataTypes",
     "pk": 22,
     "fields": {
       "fieldType": "fme_uint8",
@@ -176,7 +176,7 @@
     }
   },
     {
-    "model": "api.FieldMap",
+    "model": "api.FMEDataTypes",
     "pk": 23,
     "fields": {
       "fieldType": "fme_boolean",
