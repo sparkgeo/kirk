@@ -33,7 +33,7 @@ class CreateJobView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         """Save the post data when creating a new job item."""
-        print 'serializer', serializer
+        print 'create: serializer', serializer
         serializer.save(owner=self.request.user)
 
 
@@ -43,6 +43,10 @@ class JobDetailsView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Job.objects.all()
     serializer_class = JobIdlistSerializer
     permission_classes = (permissions.IsAuthenticated,)
+    
+#     def perform_update(self, serializer):
+#         print 'update: serializer', serializer
+#         serializer.save(owner=self.request.user)
 
 
 class SourceDataView(generics.ListCreateAPIView):
