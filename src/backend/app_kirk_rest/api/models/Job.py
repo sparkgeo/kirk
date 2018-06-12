@@ -30,6 +30,8 @@ class Job(models.Model):
     destEnvKey = models.ForeignKey(Destinations, on_delete=models.SET_NULL, 
                                    related_name='destEnvKey', to_field='dest_key', 
                                    null=True, blank=True, editable=True)
+    #destEnvKey = models.CharField(max_length=3,null=True, blank=True, editable=True)
+    
     # TODO: once implement the user model change on_delete to SET_NULL
     owner = models.ForeignKey('auth.User',  
                               related_name='user', 

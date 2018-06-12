@@ -32,8 +32,6 @@ class DestinationsSerializer(serializers.ModelSerializer):
         model = Destinations
         fields = ('dest_key', 'dest_service_name', 'dest_host', 'dest_port', 'dest_type',
                   )
-        # read_only_fields = ( 'sourceid',  )
-
 
 class FieldmapSerializer(serializers.ModelSerializer):
 
@@ -59,7 +57,7 @@ class JobStatisticsSerializer(serializers.ModelSerializer):
         read_only_fields = ('jobStatsId',)
 
 
-class JobDetailedInfoSerializer(serializers.ModelSerializer):
+class JobDetailedInfoSerializer(serializers.PrimaryKeyRelatedField):
 
     sources = SourceDataListSerializer(many=True, read_only=True)
     fieldmaps = FieldmapSerializer(many=True, read_only=True)
@@ -72,6 +70,27 @@ class JobDetailedInfoSerializer(serializers.ModelSerializer):
         fields = ('jobid', 'jobStatus', 'cronStr', 'destEnvKey', 'date_created', 'date_modified', 'sources', 'fieldmaps')
         read_only_fields = ('date_created', 'date_modified')
 
+class JobDestSerializer(serializers.PrimaryKeyRelatedField):
+    def get_queryset(self):
+        print 'context:', self.context['request'].data
+        filteredDests = None
+        queryset = self.queryset
+        if 'destkey' in self.context['request'].data:
+            # if the destkey relates to Destinations then keep, otherwise set to None
+            ProvidedEnvKey = self.context['request'].data['destkey']
+            print 'ProvidedEnvKey', ProvidedEnvKey
+            
+            filteredDests = Destinations.objects.filter(dest_key=ProvidedEnvKey)
+            print 'filteredDests', filteredDests
+        if filteredDests:
+            #destKey = ProvidedEnvKey
+            queryset = queryset.filter(dest_key=ProvidedEnvKey)
+        else:
+            #destKey = None
+            queryset = queryset.filter()
+        #print 'return data:', destKey
+        print 'queryset', queryset
+        return queryset
 
 class JobIdlistSerializer(serializers.ModelSerializer):
     """
@@ -82,28 +101,65 @@ class JobIdlistSerializer(serializers.ModelSerializer):
     sources = SourceDataListSerializer(many=True, read_only=True)
     owner = serializers.ReadOnlyField(source='owner.username')  # ADD THIS LINE
     fieldmaps = FieldmapSerializer(many=True, read_only=True)
-    #destkey = serializers.PrimaryKeyRelatedField(queryset=Destinations.objects.all())
-    #destkey = DestinationsSerializer(many=False, read_only=False)
-    destkey = serializers.SlugRelatedField(many=False, read_only=False,
-                                            queryset=Destinations.objects.all(),
-                                            slug_field='dest_key', 
-                                            allow_null=True)
+        
+#     destkey = serializers.SlugRelatedField(read_only=True,
+#                                             slug_field='dest_key', 
+#                                             allow_null=True)
+#                                             #queryset=Destinations.objects.all())
+    
+    destkey = JobDestSerializer( queryset=Destinations.objects.all(),
+                                source='Destinations', 
+                                required=False)
+                                #slug_field='dest_key',
+    #destkey = serializers.PrimaryKeyRelatedField(read_only=False)
+    #dests = serializers.PrimaryKeyRelatedField(queryset=Destinations.objects.filter())
+    #destkey = DestinationsSerializer(many=True, read_only=False)
+    #destkey = serializers.RelatedField(read_only=True)
+    #destEnvKey = serializers.CharField(source='Destinations.dest_key', allow_blank=True, allow_null=True, required=False)
+
+
+#     dests = Destinations.objects.all()
+#     print 'dests:', dests
+#     for dest in dests:
+#         print 'dest', dest
+    
+    #destkey = serializers.PrimaryKeyRelatedField(queryset=Destinations.objects.all(), pk_field='dest_key')
     #destkey = serializers.ReadOnlyField(source='Destinations.dest_key')
 
     class Meta:
         """Meta class to map serializer's fields with the model fields."""
         model = Job
         fields = ('jobid', 'jobStatus', 'cronStr', 'destEnvKey', 'date_created',
-                  'date_modified', 'sources', 'destkey', 'owner', 'fieldmaps')
+                  'date_modified', 'sources', 'owner', 'fieldmaps', 'destkey')
         read_only_fields = ('date_created', 'date_modified')
         depth = 1
         
     def create(self, validated_data):
+        # validated_data {'owner': <User: spock>, u'cronStr': u'some', 
+        #                 u'jobStatus': u'TESTING5', 
+        #                 u'Destinations': <Destinations: DLV>}
+        #
+        print 'here'
         print 'validated_data', validated_data
-        destinationsData = validated_data.pop('destEnvKey')
-        print 'destinationsData', destinationsData
-        #jobs = Job.objects.get()
-        #jobs.objects.update()
+        # {'owner': <User: spock>, u'dests': <Destinations: DLV>, u'cronStr': u'some', u'jobStatus': u'TESTING5'}
+        destKey = validated_data['Destinations']
+        print 'destkey value:', destKey
+        del validated_data['Destinations']
+        validated_data['destEnvKey'] = destKey
+        print 'validated_data after fix:', validated_data
+        retval = Job.objects.create(**validated_data)
+        retval.save()
+        print 'returned from attempted create: ', retval, type(retval)
+        return retval
+    
+    def update(self, instance, validated_data):
+        print 'update: instance', instance
+        print 'update: validated_data', validated_data
+        #status = validated_data.pop('status')
+        #instance.status_id = status.id
+        # ... plus any other fields you may want to update
+        return instance
+
 
 
 class UserSerializer(serializers.ModelSerializer):

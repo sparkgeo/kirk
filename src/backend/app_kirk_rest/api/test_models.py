@@ -32,6 +32,8 @@ class ModelTestCase(TestCase):
         self.jobid = "1"
         self.user = 'spock'
         self.user = User.objects.create(username="spock")
+        fixtures = ['Destination_Keywords.json']
+
         self.job = Job(jobid=self.jobid, owner=self.user)
 
     def test_model_can_create_a_job(self):
@@ -69,6 +71,9 @@ class ModelTestCase(TestCase):
         dests.save()
         new_count = Destinations.objects.count()
         self.assertNotEqual(old_count, new_count)
+        allDest = Destinations.objects.all()
+        for dest in allDest:
+            print 'dest:', dest
         
     def test_model_can_create_a_fieldmap(self):
         """
@@ -94,6 +99,9 @@ class ModelTestCase(TestCase):
         dataType.save()
         new_count = FMEDataTypes.objects.count()
         self.assertNotEqual(old_count, new_count)
+        dataTypes = FMEDataTypes.objects.all()
+        for datatype in dataTypes:
+            print 'type:', datatype
         
     def test_model_can_create_a_JobStatistic(self):
         """
@@ -107,6 +115,16 @@ class ModelTestCase(TestCase):
         dataType.save()
         new_count = JobStatistics.objects.count()
         self.assertNotEqual(old_count, new_count)
+        
+#     def test_model_can_create_a_DestinationKeyword(self):
+#         old_count = JobStatistics.objects.count()
+#         dataType = JobStatistics(jobStatus='WORKING', 
+#                                  fmeServerJobId=100232,
+#                                  jobStarted=datetime.datetime.now(pytz.UTC),
+#                                 jobCompleted=datetime.datetime.now(pytz.UTC))
+#         dataType.save()
+#         new_count = JobStatistics.objects.count()
+#         self.assertNotEqual(old_count, new_count)
          
 
 

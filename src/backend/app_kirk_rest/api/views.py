@@ -32,7 +32,8 @@ class CreateJobView(generics.ListCreateAPIView):
     #    permissions.IsAuthenticated, IsOwner)
 
     def perform_create(self, serializer):
-        """Save the post data when creating a new bucketlist."""
+        """Save the post data when creating a new job item."""
+        print 'serializer', serializer
         serializer.save(owner=self.request.user)
 
 
