@@ -1,0 +1,29 @@
+[
+  {
+    "model": "api.Destinations",
+    "fields": {
+      "dest_key": "DLV",
+      "dest_service_name": "delivery.bcgov", 
+      "dest_host": "delivery_host.bcgov",
+      "dest_type": "oracle"
+    }
+  },
+  {
+    "model": "api.Destinations",
+    "fields": {
+      "dest_key": "TST",
+      "dest_service_name": "test.bcgov", 
+      "dest_host": "test_host.bcgov",
+      "dest_type": "oracle"
+    }
+  },
+  {
+    "model": "api.Destinations",
+    "fields": {
+      "dest_key": "PRD",
+      "dest_service_name": "production.bcgov", 
+      "dest_host": "production_host.bcgov",
+      "dest_type": "oracle"
+    }
+  }
+]

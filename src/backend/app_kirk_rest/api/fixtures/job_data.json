@@ -1,0 +1,23 @@
+[
+  {
+    "model": "api.Job",
+    "jobid": 1,
+    "fields": {
+      "jobStatus": "TESTING2",
+      "cronStr": "0 0 30 * ?", 
+      "destEnvKey": "TST", 
+      "date_created": "1970-08-16 22:31:22", 
+      "date_modified": "1970-08-16 22:31:22"  }
+  }, 
+  {
+    "model": "api.Job",
+    "jobid": 2,
+    "fields": {
+      "jobStatus": "TESTING3",
+      "cronStr": "0 0 2 * ?", 
+      "destEnvKey": "DLV",
+      "date_created": "1970-08-16 22:31:22", 
+      "date_modified": "1970-08-16 22:31:22"      }
+  }
+ ]
+  
