@@ -14,7 +14,7 @@ will include:
 '''
 from __future__ import unicode_literals
 from django.db import models
-from .Job import Job
+from .Jobs import Jobs
 from django.contrib.auth.models import User
 
 
@@ -25,7 +25,7 @@ class JobStatistics(models.Model):
 
     '''
     jobStatsId = models.AutoField(primary_key=True)
-    jobid = models.ForeignKey(Job, on_delete=models.SET_NULL,
+    jobid = models.ForeignKey(Jobs, on_delete=models.SET_NULL,
                               related_name='jobstatssources', to_field='jobid',
                               null=True)
     jobStatus = models.CharField(max_length=25)

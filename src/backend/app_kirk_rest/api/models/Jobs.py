@@ -11,7 +11,7 @@ from rest_framework.authtoken.models import Token
 from django.dispatch import receiver
 from .Destinations import Destinations
 
-class Job(models.Model):
+class Jobs(models.Model):
     '''
     Sources
     ----------------

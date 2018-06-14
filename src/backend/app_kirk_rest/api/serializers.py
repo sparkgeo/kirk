@@ -6,7 +6,7 @@ Created on May 16, 2018
 # api/serializers.py
 
 from rest_framework import serializers
-from .models.Job import Job
+from .models.Jobs import Jobs
 from .models.Sources import Sources
 from .models.Destinations import Destinations
 from .models.FieldMap import FieldMap
@@ -67,7 +67,7 @@ class JobDetailedInfoSerializer(serializers.PrimaryKeyRelatedField):
         '''
         job details Metadata
         '''
-        model = Job
+        model = Jobs
         fields = ('jobid', 'jobStatus', 'cronStr', 'destEnvKey', 'date_created', 'date_modified', 'sources', 'fieldmaps')
         read_only_fields = ('date_created', 'date_modified')
 
@@ -114,7 +114,7 @@ class JobIdlistSerializer(serializers.ModelSerializer):
     
     class Meta:
         """Meta class to map serializer's fields with the model fields."""
-        model = Job
+        model = Jobs
         fields = ('jobid', 'jobStatus', 'cronStr', 'date_created',
                   'date_modified', 'sources', 'owner', 'fieldmaps', 'destField', )
         read_only_fields = ('date_created', 'date_modified', 'destEnvKey')
@@ -151,7 +151,7 @@ class JobIdlistSerializer(serializers.ModelSerializer):
         #del validated_data['destField']
         #validated_data['destEnvKey'] = destKey
         #print 'validated_data after fix:', validated_data
-        retval = Job.objects.create(**validated_data)
+        retval = Jobs.objects.create(**validated_data)
         retval.save()
         print 'returned from attempted create: ', retval, type(retval)
         return originalValidation
@@ -171,7 +171,7 @@ class JobIdlistSerializer(serializers.ModelSerializer):
         # using the text value get a Destination record for that value
         #DestObj = Destinations.objects.filter(dest_key=torep['destField'])
         #validated_data['destEnvKey'] = DestObj
-        retval = Job.objects.update(**validated_data)
+        retval = Jobs.objects.update(**validated_data)
         
         # fld: api.Destinations.dest_type {'_validators': [], 'auto_created': False, 'serialize': True, 'cached_col': Col(api_destinations, api.Destinations.dest_type), '_unique': False, 'unique_for_year': None, 'blank': False, 'help_text': u'', 'null': False, 'db_index': False, 'is_relation': False, 'unique_for_month': None, 'unique_for_date': None, 'primary_key': False, 'concrete': True, 'remote_field': None, 'max_length': 30, 'db_tablespace': u'', 'verbose_name': u'dest type', 'creation_counter': 42, 'validators': [<django.core.validators.MaxLengthValidator object at 0x02F65EF0>], 'editable': True, 'error_messages': {u'unique': u'%(model_name)s with this %(field_label)s already exists.', u'invalid_choice': u'Value %(value)r is not a valid choice.', u'blank': u'This field cannot be blank.', u'null': u'This field cannot be null.',
         #      u'unique_for_date': u'%(field_label)s must be unique for %(date_field_label)s %(lookup_type)s.'}, '_error_messages': None, '_verbose_name': None, 'name': 'dest_type', 'db_column': None, 'default': <class django.db.models.fields.NOT_PROVIDED at 0x02B11538>, 'choices': [], 'column': 'dest_type', 'model': <class 'api.models.Destinations.Destinations'>, 'attname': 'dest_type'}
@@ -218,7 +218,7 @@ class UserSerializer(serializers.ModelSerializer):
     """A user serializer to aid in authentication and authorization."""
 
     job = serializers.PrimaryKeyRelatedField(many=True,
-                                             queryset=Job.objects.all())
+                                             queryset=Jobs.objects.all())
 
     class Meta:
         """Map this serializer to the default django user model."""

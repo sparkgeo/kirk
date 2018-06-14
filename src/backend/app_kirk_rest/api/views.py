@@ -8,7 +8,7 @@ from rest_framework import permissions
 
 from .models.Destinations import Destinations
 from .models.FieldMap import FieldMap
-from .models.Job import Job
+from .models.Jobs import Jobs
 from .models.Sources import Sources
 from .models.JobStatistics import JobStatistics
 from .permissions import IsOwner
@@ -23,7 +23,7 @@ from .serializers import UserSerializer
 # Create your views here.
 class CreateJobView(generics.ListCreateAPIView):
     """This class defines the create behavior of our rest api."""
-    queryset = Job.objects.all()
+    queryset = Jobs.objects.all()
     serializer_class = JobIdlistSerializer
     permission_classes = (permissions.IsAuthenticated,)
     # if we wanted only owners of the job to be able to modify then use this
@@ -40,7 +40,7 @@ class CreateJobView(generics.ListCreateAPIView):
 class JobDetailsView(generics.RetrieveUpdateDestroyAPIView):
     """This class handles the http GET, PUT and DELETE requests."""
     lookup_field = 'jobid'
-    queryset = Job.objects.all()
+    queryset = Jobs.objects.all()
     serializer_class = JobIdlistSerializer
     permission_classes = (permissions.IsAuthenticated,)
     
