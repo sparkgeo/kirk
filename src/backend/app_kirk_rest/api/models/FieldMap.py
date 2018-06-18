@@ -5,7 +5,7 @@ Created on May 25, 2018
 '''
 from __future__ import unicode_literals
 from django.db import models
-from .Jobs import Jobs
+from .ReplicationJobs import ReplicationJobs
 from django.contrib.auth.models import User
 import datetime
 
@@ -17,8 +17,8 @@ class FieldMap(models.Model):
     '''
     fieldMapId = models.AutoField(primary_key=True)
     
-    jobid = models.ForeignKey(Jobs, on_delete=models.SET_NULL,
-                              related_name='Jobs', to_field='jobid',
+    jobid = models.ForeignKey(ReplicationJobs, on_delete=models.SET_NULL,
+                              related_name='ReplicationJobs', to_field='jobid',
                               null=True)
     sourceColumnName = models.CharField(max_length=64)
     destColumnName = models.CharField(max_length=64)

@@ -8,7 +8,7 @@ from __future__ import unicode_literals
 
 from django.contrib.auth.models import User
 from django.test import TestCase
-from api.models.Jobs import Jobs
+from api.models.ReplicationJobs import ReplicationJobs
 from api.models.Destinations import Destinations
 from api.models.FieldMap import FieldMap
 from api.models.Sources import Sources
@@ -33,16 +33,16 @@ class ModelTestCase(TestCase):
         self.user = User.objects.create(username="spock")
         fixtures = ['Destination_Keywords.json']
 
-        self.job = Jobs(jobid=self.jobid, owner=self.user)
+        self.job = ReplicationJobs(jobid=self.jobid, owner=self.user)
 
     def test_model_can_create_a_job(self):
         """
-        Test the Jobs model can create a Jobs.
+        Test the ReplicationJobs model can create a ReplicationJobs.
         """
         # self.assertEqual(1, 1, "one doesn't equal 1")
-        old_count = Jobs.objects.count()
+        old_count = ReplicationJobs.objects.count()
         self.job.save()
-        new_count = Jobs.objects.count()
+        new_count = ReplicationJobs.objects.count()
         self.assertNotEqual(old_count, new_count)
 
     def test_model_can_create_a_FGDB_source(self):
@@ -50,7 +50,7 @@ class ModelTestCase(TestCase):
         Test the sources model can create a source.
         """
         old_count = Sources.objects.count()
-        job = Jobs(jobid=self.jobid)
+        job = ReplicationJobs(jobid=self.jobid)
         sources = Sources(jobid=job, sourceTable='fgdbTable', sourceType='FGDB',
                           sourceDBSchema='', sourceDBName=None, sourceDBHost=None ,
                           sourceDBPort=None, sourceFilePath=r'c:\dir\dir2\somwhere\src.fgdb')
@@ -63,7 +63,7 @@ class ModelTestCase(TestCase):
         Test the Destination model can create a Destination.
         """
         old_count = Destinations.objects.count()
-        job = Jobs(jobid=self.jobid)
+        job = ReplicationJobs(jobid=self.jobid)
         dests = Destinations(dest_key='DLV2', dest_service_name='ServName',
                                dest_host='dest_host', dest_port=None,
                                dest_type=r'dbase')

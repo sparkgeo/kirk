@@ -3,9 +3,9 @@
 
 '''
 
+from .ReplicationJobs import ReplicationJobs
 from .Destinations import Destinations
-from .Jobs import Jobs
-from .FieldMap import FieldMap
 from .Sources import Sources
+from .FieldMap import FieldMap
 from .DataTypes import FMEDataTypes
 from .JobStatistics import JobStatistics

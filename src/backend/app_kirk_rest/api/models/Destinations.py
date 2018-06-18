@@ -23,3 +23,4 @@ class Destinations(models.Model):
     def __str__(self):
         """Return a human readable representation of the model instance."""
         return "{}".format(self.dest_key)
+    

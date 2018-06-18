@@ -6,7 +6,7 @@ Created on May 15, 2018
 '''
 from __future__ import unicode_literals
 from django.db import models
-from .Jobs import Jobs
+from .ReplicationJobs import ReplicationJobs
 
 class SourceTypes(object):
     '''
@@ -46,7 +46,7 @@ class Sources(models.Model):
     # TODO: need to complete this
     # jobid = models.IntegerField()
     sourceid = models.AutoField(primary_key=True)
-    jobid = models.ForeignKey(Jobs, on_delete=models.SET_NULL, 
+    jobid = models.ForeignKey(ReplicationJobs, on_delete=models.SET_NULL, 
                               related_name='sources', to_field='jobid', 
                               null=True)
     sourceTable = models.CharField(max_length=30, blank=False, null=False,

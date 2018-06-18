@@ -1,6 +1,6 @@
 [
   {
-    "model": "api.Job",
+    "model": "api.ReplicationJobs",
     "jobid": 1,
     "fields": {
       "jobStatus": "TESTING2",
@@ -10,7 +10,7 @@
       "date_modified": "1970-08-16 22:31:22"  }
   }, 
   {
-    "model": "api.Job",
+    "model": "api.ReplicationJobs",
     "jobid": 2,
     "fields": {
       "jobStatus": "TESTING3",

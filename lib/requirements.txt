@@ -15,3 +15,5 @@ requests==2.18.4
 six==1.11.0
 urllib3==1.22
 #drf-writable-nested==0.4.2
+#PyJWT==1.6.4
+#djangorestframework-jwt==1.11.0
