@@ -11,13 +11,14 @@ from .models.FieldMap import FieldMap
 from .models.ReplicationJobs import ReplicationJobs
 from .models.Sources import Sources
 from .models.JobStatistics import JobStatistics
-from .permissions import IsOwner
+#from .permissions import IsOwner
 from .serializers import DestinationsSerializer
 from .serializers import FieldmapSerializer
 from .serializers import JobIdlistSerializer
 from .serializers import JobStatisticsSerializer
 from .serializers import SourceDataListSerializer
 from .serializers import UserSerializer
+
 
 
 # Create your views here.
@@ -44,15 +45,15 @@ class JobDetailsView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = JobIdlistSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
-#     def perform_update(self, serializer):
-#         print 'update: serializer', serializer
-#         serializer.save(owner=self.request.user)
+    def perform_update(self, serializer):
+        print 'update: serializer', serializer
+        serializer.save(owner=self.request.user)
 
 
 class SourceDataView(generics.ListCreateAPIView):
     queryset = Sources.objects.all()
     serializer_class = SourceDataListSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    #permission_classes = (permissions.IsAuthenticated,)
 
     # lookup_field  = 'sourceid'
 

@@ -97,8 +97,6 @@ class JobDestSerializer(serializers.PrimaryKeyRelatedField):
         return queryset
 
 
-
-
 class JobIdlistSerializer(serializers.ModelSerializer):
     """
     Serializer to map the Model instance into JSON format.
@@ -225,11 +223,11 @@ class JobIdlistSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     """A user serializer to aid in authentication and authorization."""
 
-    job = serializers.PrimaryKeyRelatedField(many=True,
-                                             queryset=ReplicationJobs.objects.all())
+    #jobs = serializers.PrimaryKeyRelatedField(many=True,
+    #                                         queryset=ReplicationJobs.objects.all())
 
     class Meta:
         """Map this serializer to the default django user model."""
         model = User
-        fields = ('id', 'username', 'job')
-
+        #fields = ('id', 'username', 'jobs')
+        fields = ('id', 'username')

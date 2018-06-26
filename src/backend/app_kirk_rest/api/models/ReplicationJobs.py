@@ -43,10 +43,10 @@ class ReplicationJobs(models.Model):
         """Return a human readable representation of the model instance."""
         return "{}".format(self.jobid)
 
+        
+# This receiver handles token creation immediately a new user is created.
 @receiver(post_save, sender=User)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
-    '''
-    This receiver handles token creation immediately a new user is created
-    '''
     if created:
         Token.objects.create(user=instance)
+
