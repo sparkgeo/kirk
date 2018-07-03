@@ -1,5 +1,15 @@
 # Overview
-PP_KIRK is a replication system that defines replication configurations in a database. 
+PP_KIRK is a replication system that defines replication configurations in a database.
+
+# Migrations
+### data model migrations
+python manage.py makemigrations api
+python manage.py migrate api
+
+### loading fixtures
+python manage.py loaddata Destination_Keywords.json
+python manage.py loaddata fme_data_types.json
+python manage.py loaddata job_data.json
 
 # REST API
 The APP_KIRK is initially going to be set up to use two rest-apis.

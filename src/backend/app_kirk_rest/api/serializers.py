@@ -11,6 +11,7 @@ from .models.Sources import Sources
 from .models.Destinations import Destinations
 from .models.FieldMap import FieldMap
 from .models.JobStatistics import JobStatistics
+#from .models.User import User
 from django.contrib.auth.models import User
 
 
@@ -230,4 +231,9 @@ class UserSerializer(serializers.ModelSerializer):
         """Map this serializer to the default django user model."""
         model = User
         #fields = ('id', 'username', 'jobs')
-        fields = ('id', 'username')
+        fields = ('id', 'username', 'email')
+                  
+        read_only_fields = ('authorization_directory', 'authorization_email', 
+                            'authorization_guid', 'authorization_id', 
+                            'display_name')
+        

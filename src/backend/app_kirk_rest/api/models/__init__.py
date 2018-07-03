@@ -9,5 +9,4 @@ from .Sources import Sources
 from .FieldMap import FieldMap
 from .DataTypes import FMEDataTypes
 from .JobStatistics import JobStatistics
-from .Users import Users
-
+from .User import User

@@ -14,12 +14,12 @@ from .views import JobDetailsView
 from .views import SourceDataView
 from .views import SourcesDetailsView
 from .views import UserDetailsView
-from .views import UserView
 from .views import FieldMapView
 from .views import JobStatisticsView
 from .views import JobStatisticsDetailsView
 from .views import DestinationsDetailsView
 from .views import FieldMapDetailsView
+from .views import AddUserView
 from . import views as local_view
 from rest_framework_swagger.views import get_swagger_view
 
@@ -49,7 +49,7 @@ urlpatterns = {
         JobStatisticsDetailsView.as_view(), name="jobstats_details"),
     #url(r'^login/$', local_views.get_auth_token, name='login'),
 
-    url(r'^users/$', UserView.as_view(), name="users"),
+    url(r'^users/$', AddUserView.as_view(), name="users"),
     url(r'users/(?P<pk>[0-9]+)/$',
         UserDetailsView.as_view(), name="user_details"),
     #url(r'^get_auth_token/$', obtain_auth_token, name='get_auth_token'),    

@@ -18,3 +18,4 @@ geometries that can be consumed by both ESRI SDE and Oracle SDO.
 
 APP_KIRK is currently under development with primary priority being the construction 
 of the REST api to broker communication to the database layer.
+

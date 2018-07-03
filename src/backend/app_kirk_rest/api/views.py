@@ -6,6 +6,7 @@ from django.shortcuts import render
 from rest_framework import generics, permissions
 from rest_framework import permissions
 
+#from .models.User import User
 from .models.Destinations import Destinations
 from .models.FieldMap import FieldMap
 from .models.ReplicationJobs import ReplicationJobs
@@ -90,13 +91,16 @@ class DestinationsDetailsView(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticated,)
 
 
-class UserView(generics.ListAPIView):
+class AddUserView(generics.ListCreateAPIView):
     """View to list the user queryset."""
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-
-class UserDetailsView(generics.RetrieveAPIView):
+    def perform_create(self, serializer):
+        """Save the post data when creating a new source dataset."""
+        serializer.save()
+        
+class UserDetailsView(generics.RetrieveUpdateDestroyAPIView):
     """View to retrieve a user instance."""
     queryset = User.objects.all()
     serializer_class = UserSerializer
