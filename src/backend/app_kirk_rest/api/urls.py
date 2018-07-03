@@ -20,6 +20,8 @@ from .views import JobStatisticsDetailsView
 from .views import DestinationsDetailsView
 from .views import FieldMapDetailsView
 from .views import AddUserView
+from .views import JobSourcesView
+from .views import JobDestinationView
 from . import views as local_view
 from rest_framework_swagger.views import get_swagger_view
 
@@ -35,6 +37,9 @@ urlpatterns = {
     # url(r'^job/$', JobCompleteView.as_view(), name="create"),
     url(r'^jobs/(?P<jobid>[0-9]+)/$',
         JobDetailsView.as_view(), name="job_details"),
+    url(r'^jobs/(?P<jobid>[0-9]+)/sources/$', JobSourcesView.as_view(), name='job_sources'),
+    url(r'^jobs/(?P<jobid>[0-9]+)/destination/$', JobDestinationView.as_view(), name='job_destination'),
+    url(r'^jobs/(?P<jobid>[0-9]+)/destination/$', JobDestinationView.as_view(), name='job_destination'),
     url(r'^sources/$', SourceDataView.as_view(), name='source_create'),
     url(r'^sources/(?P<sourceid>[0-9]+)/$',
         SourcesDetailsView.as_view(), name="source_details"),

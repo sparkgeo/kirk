@@ -51,6 +51,7 @@ class JobDetailsView(generics.RetrieveUpdateDestroyAPIView):
         serializer.save(owner=self.request.user)
 
 
+
 class SourceDataView(generics.ListCreateAPIView):
     queryset = Sources.objects.all()
     serializer_class = SourceDataListSerializer
@@ -73,6 +74,15 @@ class SourcesDetailsView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticated,)
 
 
+class JobSourcesView(generics.ListCreateAPIView):
+    #queryset = Sources.objects.all()
+    serializer_class = SourceDataListSerializer
+    
+    def get_queryset(self):
+        jobid = self.kwargs['jobid']
+        sources = Sources.objects.filter(jobid=jobid)
+        return sources
+
 class DestinationsView(generics.ListCreateAPIView):
     lookup_field = 'dest_key'
     queryset = Destinations.objects.all()
@@ -90,7 +100,19 @@ class DestinationsDetailsView(generics.ListCreateAPIView):
     serializer_class = DestinationsSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
-
+class JobDestinationView(generics.ListCreateAPIView):
+    serializer_class = DestinationsSerializer
+    
+    def get_queryset(self):
+        print 'kwargs: ', self.kwargs
+        jobid = self.kwargs['jobid']
+        print 'jobid: {0}'.format(jobid)
+        dest = ReplicationJobs.objects.filter(jobid=jobid)
+        destKey =  dest[0].destEnvKey
+        # now get the full destination object
+        destObj = Destinations.objects.filter(dest_key=destKey)
+        return destObj
+    
 class AddUserView(generics.ListCreateAPIView):
     """View to list the user queryset."""
     queryset = User.objects.all()
