@@ -12,7 +12,10 @@ transparent as replication metadata is stored in plain database tables as oppose
 embedded in individual FME scripts.  
 
 Re-using FMW's also makes it much easier for us to switch to different reader / 
-writers.
+writers.  Also opens up the possibility to complete replications using different 
+replications tools.  Currently FME is the only known tool available for writing 
+geometries that can be consumed by both ESRI SDE and Oracle SDO.
 
-App is currently under development with primary priority being the construction 
+APP_KIRK is currently under development with primary priority being the construction 
 of the REST api to broker communication to the database layer.
+

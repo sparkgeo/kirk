@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from django.dispatch import receiver
 from .Destinations import Destinations
+from django.conf import settings
 
 class ReplicationJobs(models.Model):
     '''
@@ -33,6 +34,7 @@ class ReplicationJobs(models.Model):
     #destEnvKey = models.CharField(max_length=3,null=True, blank=True, editable=True)
     
     # TODO: once implement the user model change on_delete to SET_NULL
+    # auth.User
     owner = models.ForeignKey('auth.User',  
                               related_name='user', 
                               on_delete=models.CASCADE) 
@@ -43,10 +45,10 @@ class ReplicationJobs(models.Model):
         """Return a human readable representation of the model instance."""
         return "{}".format(self.jobid)
 
+        
+# This receiver handles token creation immediately a new user is created.
 @receiver(post_save, sender=User)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
-    '''
-    This receiver handles token creation immediately a new user is created
-    '''
     if created:
         Token.objects.create(user=instance)
+

@@ -11,6 +11,7 @@ from .models.Sources import Sources
 from .models.Destinations import Destinations
 from .models.FieldMap import FieldMap
 from .models.JobStatistics import JobStatistics
+#from .models.User import User
 from django.contrib.auth.models import User
 
 
@@ -95,8 +96,6 @@ class JobDestSerializer(serializers.PrimaryKeyRelatedField):
         # print 'return data:', destKey
         print 'queryset', queryset
         return queryset
-
-
 
 
 class JobIdlistSerializer(serializers.ModelSerializer):
@@ -225,11 +224,16 @@ class JobIdlistSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     """A user serializer to aid in authentication and authorization."""
 
-    job = serializers.PrimaryKeyRelatedField(many=True,
-                                             queryset=ReplicationJobs.objects.all())
+    #jobs = serializers.PrimaryKeyRelatedField(many=True,
+    #                                         queryset=ReplicationJobs.objects.all())
 
     class Meta:
         """Map this serializer to the default django user model."""
         model = User
-        fields = ('id', 'username', 'job')
-
+        #fields = ('id', 'username', 'jobs')
+        fields = ('id', 'username', 'email')
+                  
+        read_only_fields = ('authorization_directory', 'authorization_email', 
+                            'authorization_guid', 'authorization_id', 
+                            'display_name')
+        

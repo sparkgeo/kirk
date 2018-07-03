@@ -29,7 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+#LOGIN_URL = 'https://test.apps.gov.bc.ca/ext/httpbin/get?show_env=1'
 # Application definition
 
 INSTALLED_APPS = [
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'api',
     'rest_framework.authtoken',
+    'rest_framework_swagger'
 ]
 
 MIDDLEWARE = [
@@ -124,16 +125,15 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+#AUTH_USER_MODEL = 'api.User'
+
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
-    ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        #'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',  
+        'rest_framework.authentication.TokenAuthentication',
     )
-    #,
-    #'DEFAULT_AUTHENTICATION_CLASSES': (
-    #    'rest_framework.authentication.BasicAuthentication',
-    #    'rest_framework.authentication.TokenAuthentication',
-    #)
 }
