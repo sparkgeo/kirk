@@ -11,6 +11,7 @@ from .models.Sources import Sources
 from .models.Destinations import Destinations
 from .models.FieldMap import FieldMap
 from .models.JobStatistics import JobStatistics
+from .models.DataTypes import FMEDataTypes
 #from .models.User import User
 from django.contrib.auth.models import User
 
@@ -48,6 +49,21 @@ class FieldmapSerializer(serializers.ModelSerializer):
                   'whoUpdated'
                   )
         read_only_fields = ('fieldMapId',)
+        
+class FieldmapDataTypeSerializer(serializers.ModelSerializer):
+    
+    fmeColumnType = serializers.SlugRelatedField(read_only=False, 
+                                               slug_field='fieldType', 
+                                               queryset=FMEDataTypes.objects.all())
+    
+    class Meta:
+        """Meta class to map serializer's fields with the model fields."""
+        model = FieldMap
+        fields = ( 'fieldMapId', 'jobid', 'sourceColumnName', 'destColumnName', \
+                   'whoCreated', 'whenCreated', 'whoUpdated',
+                  'whoUpdated', 'fmeColumnType',
+                  )
+        read_only_fields = ('fieldMapId',)
 
 
 class JobStatisticsSerializer(serializers.ModelSerializer):
@@ -77,24 +93,17 @@ class JobDetailedInfoSerializer(serializers.PrimaryKeyRelatedField):
 class JobDestSerializer(serializers.PrimaryKeyRelatedField):
 
     def get_queryset(self):
-        print 'context:', self.context['request'].data
         filteredDests = None
         queryset = self.queryset
         if 'destkey' in self.context['request'].data:
             # if the destkey relates to Destinations then keep, otherwise set to None
             ProvidedEnvKey = self.context['request'].data['destkey']
-            print 'ProvidedEnvKey', ProvidedEnvKey
 
             filteredDests = Destinations.objects.filter(dest_key=ProvidedEnvKey)
-            print 'filteredDests', filteredDests
         if filteredDests:
-            # destKey = ProvidedEnvKey
             queryset = queryset.filter(dest_key=ProvidedEnvKey)
         else:
-            # destKey = None
             queryset = queryset.filter()
-        # print 'return data:', destKey
-        print 'queryset', queryset
         return queryset
 
 
@@ -134,7 +143,7 @@ class JobIdlistSerializer(serializers.ModelSerializer):
         #                 u'Destinations': <Destinations: DLV>}
         #
         originalValidation = validated_data.copy()
-        print 'validated_data', validated_data
+#         print 'validated_data', validated_data
         # use the same logic as the update,
         if 'destField' in validated_data:
             if isinstance(validated_data['destField'], Destinations):
@@ -145,31 +154,13 @@ class JobIdlistSerializer(serializers.ModelSerializer):
             if isinstance(originalValidation['destField'], Destinations):
                 originalValidation['destField'] = originalValidation['destField'].dest_key
 
-        print 'originalValidation 1:', originalValidation
-        # print originalValidation['destField'].dest_key
-        # originalValidation['destField'] = originalValidation['destField'].dest_key
-        print 'originalValidation 2:', originalValidation
-        # del originalValidation['Destinations']
-        # print 'originalValidation 3:', originalValidation
-        # originalValidation OrderedDict([('jobStatus', u'11111'), ('cronStr', u'11111'), ('owner', u'kjnether'), ('destField', <Destinations: DLV>), ('destkey', u'DLV')])
-        # {'owner': <User: spock>, u'dests': <Destinations: DLV>, u'cronStr': u'some', u'jobStatus': u'TESTING5'}
-        # destKey = validated_data['Destinations']
-        # print 'destkey value:', destKey
-        # del validated_data['Destinations']
-        # del validated_data['destField']
-        # validated_data['destEnvKey'] = destKey
-        # print 'validated_data after fix:', validated_data
         retval = ReplicationJobs.objects.create(**validated_data)
         retval.save()
-        print 'returned from attempted create: ', retval, type(retval)
         return originalValidation
 
     def update(self, instance, validated_data):
         inst = self.to_representation(validated_data)
         torep = self.to_representation(validated_data)
-        print 'to_representation', torep
-        print 'update: instance', instance
-        print 'update: validated_data', validated_data
 
         if 'destField' in validated_data:
             if isinstance(validated_data['destField'], Destinations):
@@ -204,18 +195,18 @@ class JobIdlistSerializer(serializers.ModelSerializer):
                    string value, then the serializer handles the management of
                    the foreignkey update.
         """
-        print 'to_representation instance:', instance, type(instance)
+#         print 'to_representation instance:', instance, type(instance)
         # print 'destEnvKey', instance.destEnvKey
         ret = super(JobIdlistSerializer, self).to_representation(instance)
         if 'destEnvKey' in ret:
-            print 'superclass to_representation:', ret, type(ret)
-            print 'instance.destEnvKey.dest_key:', instance.destEnvKey.dest_key
+#             print 'superclass to_representation:', ret, type(ret)
+#             print 'instance.destEnvKey.dest_key:', instance.destEnvKey.dest_key
             ret['destField'] = instance.destEnvKey.dest_key
         elif isinstance(ret['destField'], Destinations):
             ret['destField'] = ret['destField'].dest_key
         else:
             ret['destField'] = instance.destEnvKey.dest_key
-        print 'ret:', ret
+#         print 'ret:', ret
         # OrderedDict([('jobid', 20), ('jobStatus', u'PRETTY'), ('cronStr', u'1'), ('date_created', u'2018-06-12T23:18:34.124000Z'), ('date_modified', u'2018-06-12T23:18:34.140000Z'), ('sources', []), ('owner', u'kjnether'), ('destField', None)]) <class 'collections.OrderedDict'>
         # ret['username'] = ret['username'].lower()
         return ret

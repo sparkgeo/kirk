@@ -79,8 +79,14 @@ class ModelTestCase(TestCase):
         Test the Fieldmap model can create a Fieldmap.
         """
         old_count = FieldMap.objects.count()
+        dataType = FMEDataTypes(fieldType='testchar', 
+                                Description='testing description')
+        dataType.save()
+
+        fieldmaps = FMEDataTypes.objects.all()
+        
         fieldMap = FieldMap(sourceColumnName='COL_A', destColumnName='COL_1', 
-                            fmeColumnType='fme_char', whoCreated=self.user, 
+                            fmeColumnType=fieldmaps[0], whoCreated=self.user, 
                             whoUpdated=self.user)
                              
         fieldMap.save()
