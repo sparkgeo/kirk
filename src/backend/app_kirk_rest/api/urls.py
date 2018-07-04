@@ -15,6 +15,7 @@ from .views import SourceDataView
 from .views import SourcesDetailsView
 from .views import UserDetailsView
 from .views import FieldMapView
+from .views import JobFieldMapsView
 from .views import JobStatisticsView
 from .views import JobStatisticsDetailsView
 from .views import DestinationsDetailsView
@@ -39,7 +40,7 @@ urlpatterns = {
         JobDetailsView.as_view(), name="job_details"),
     url(r'^jobs/(?P<jobid>[0-9]+)/sources/$', JobSourcesView.as_view(), name='job_sources'),
     url(r'^jobs/(?P<jobid>[0-9]+)/destination/$', JobDestinationView.as_view(), name='job_destination'),
-    url(r'^jobs/(?P<jobid>[0-9]+)/destination/$', JobDestinationView.as_view(), name='job_destination'),
+    url(r'^jobs/(?P<jobid>[0-9]+)/fieldmaps/$', JobFieldMapsView.as_view(), name='job_fieldmaps'),
     url(r'^sources/$', SourceDataView.as_view(), name='source_create'),
     url(r'^sources/(?P<sourceid>[0-9]+)/$',
         SourcesDetailsView.as_view(), name="source_details"),

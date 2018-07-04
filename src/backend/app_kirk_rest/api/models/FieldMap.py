@@ -6,6 +6,7 @@ Created on May 25, 2018
 from __future__ import unicode_literals
 from django.db import models
 from .ReplicationJobs import ReplicationJobs
+from .DataTypes import FMEDataTypes
 from django.contrib.auth.models import User
 import datetime
 
@@ -24,7 +25,10 @@ class FieldMap(models.Model):
     destColumnName = models.CharField(max_length=64)
     #TODO: make this a foreign key to the FME Data types table to ensure its 
     #      entered as a valid FME Data Type. 
-    fmeColumnType = models.CharField(max_length=64)
+    #fmeColumnType = models.CharField(max_length=64)
+    fmeColumnType = models.ForeignKey(FMEDataTypes, on_delete=models.SET_NULL, 
+                                      related_name='FMEDataTypes', to_field='fieldTypeId',
+                                      null=True)
     whoCreated = models.ForeignKey('auth.User',
                                    related_name='user_created',
                                    on_delete=models.CASCADE)

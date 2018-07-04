@@ -19,7 +19,7 @@ from .serializers import JobIdlistSerializer
 from .serializers import JobStatisticsSerializer
 from .serializers import SourceDataListSerializer
 from .serializers import UserSerializer
-
+from .serializers import FieldmapDataTypeSerializer
 
 
 # Create your views here.
@@ -35,7 +35,7 @@ class CreateJobView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         """Save the post data when creating a new job item."""
-        print 'create: serializer', serializer
+        #print 'create: serializer', serializer
         serializer.save(owner=self.request.user)
 
 
@@ -47,7 +47,7 @@ class JobDetailsView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def perform_update(self, serializer):
-        print 'update: serializer', serializer
+        #print 'update: serializer', serializer
         serializer.save(owner=self.request.user)
 
 
@@ -100,18 +100,19 @@ class DestinationsDetailsView(generics.ListCreateAPIView):
     serializer_class = DestinationsSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
-class JobDestinationView(generics.ListCreateAPIView):
+class JobDestinationView(generics.RetrieveAPIView):
     serializer_class = DestinationsSerializer
     
-    def get_queryset(self):
-        print 'kwargs: ', self.kwargs
+    def get_object(self):
+        #print 'kwargs: ', self.kwargs
         jobid = self.kwargs['jobid']
-        print 'jobid: {0}'.format(jobid)
+        #print 'jobid: {0}'.format(jobid)
         dest = ReplicationJobs.objects.filter(jobid=jobid)
         destKey =  dest[0].destEnvKey
         # now get the full destination object
         destObj = Destinations.objects.filter(dest_key=destKey)
-        return destObj
+        #print 'destObj: {0}'.format(destObj)
+        return destObj[0]
     
 class AddUserView(generics.ListCreateAPIView):
     """View to list the user queryset."""
@@ -140,11 +141,31 @@ class FieldMapView(generics.ListCreateAPIView):
         serializer.save()
 
 
-class FieldMapDetailsView(generics.ListCreateAPIView):
+class FieldMapDetailsView(generics.RetrieveUpdateDestroyAPIView):
     queryset = FieldMap.objects.all()
-    serializer_class = FieldmapSerializer
+    lookupfield = 'fieldMapId'
+    print 'here'
+    serializer_class = FieldmapDataTypeSerializer
     permission_classes = (permissions.IsAuthenticated,)
+    
+    def get_object(self):
+        fldmapid = self.kwargs['fieldMapId']
+        print 'fldmapid', fldmapid
+        fldmap = FieldMap.objects.filter(fieldMapId=fldmapid)
+        obj = fldmap.get(pk=fldmapid)
+        print 'fldmap', fldmap
+        print 'obj', obj
+        return obj
 
+
+class JobFieldMapsView(generics.ListCreateAPIView):
+    #queryset = Sources.objects.all()
+    serializer_class = FieldmapSerializer
+    
+    def get_queryset(self):
+        jobid = self.kwargs['jobid']
+        fldMaps = FieldMap.objects.filter(jobid=jobid)
+        return fldMaps
 
 class JobStatisticsView(generics.ListCreateAPIView):
     queryset = JobStatistics.objects.all()
@@ -154,7 +175,13 @@ class JobStatisticsView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         """Save the post data when creating a new bucketlist."""
         serializer.save()
-
+    #queryset = Sources.objects.all()
+    serializer_class = SourceDataListSerializer
+    
+    def get_queryset(self):
+        jobid = self.kwargs['jobid']
+        sources = Sources.objects.filter(jobid=jobid)
+        return sources
 
 class JobStatisticsDetailsView(generics.ListAPIView):
     '''
