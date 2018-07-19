@@ -1,25 +1,26 @@
 # -*- coding: utf-8 -*-
+'''
+views used for kirk
+
+'''
 from __future__ import unicode_literals
 
 from django.contrib.auth.models import User
-from django.shortcuts import render
-from rest_framework import generics, permissions
+from rest_framework import generics
 from rest_framework import permissions
 
-#from .models.User import User
 from .models.Destinations import Destinations
 from .models.FieldMap import FieldMap
+from .models.JobStatistics import JobStatistics
 from .models.ReplicationJobs import ReplicationJobs
 from .models.Sources import Sources
-from .models.JobStatistics import JobStatistics
-#from .permissions import IsOwner
 from .serializers import DestinationsSerializer
+from .serializers import FieldmapDataTypeSerializer
 from .serializers import FieldmapSerializer
 from .serializers import JobIdlistSerializer
 from .serializers import JobStatisticsSerializer
 from .serializers import SourceDataListSerializer
 from .serializers import UserSerializer
-from .serializers import FieldmapDataTypeSerializer
 
 
 # Create your views here.
@@ -35,7 +36,7 @@ class CreateJobView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         """Save the post data when creating a new job item."""
-        #print 'create: serializer', serializer
+        # print 'create: serializer', serializer
         serializer.save(owner=self.request.user)
 
 
@@ -47,15 +48,14 @@ class JobDetailsView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def perform_update(self, serializer):
-        #print 'update: serializer', serializer
+        # print 'update: serializer', serializer
         serializer.save(owner=self.request.user)
-
 
 
 class SourceDataView(generics.ListCreateAPIView):
     queryset = Sources.objects.all()
     serializer_class = SourceDataListSerializer
-    #permission_classes = (permissions.IsAuthenticated,)
+    # permission_classes = (permissions.IsAuthenticated,)
 
     # lookup_field  = 'sourceid'
 
@@ -75,13 +75,14 @@ class SourcesDetailsView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class JobSourcesView(generics.ListCreateAPIView):
-    #queryset = Sources.objects.all()
+    # queryset = Sources.objects.all()
     serializer_class = SourceDataListSerializer
-    
+
     def get_queryset(self):
         jobid = self.kwargs['jobid']
         sources = Sources.objects.filter(jobid=jobid)
         return sources
+
 
 class DestinationsView(generics.ListCreateAPIView):
     lookup_field = 'dest_key'
@@ -100,20 +101,22 @@ class DestinationsDetailsView(generics.ListCreateAPIView):
     serializer_class = DestinationsSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
+
 class JobDestinationView(generics.RetrieveAPIView):
     serializer_class = DestinationsSerializer
-    
+
     def get_object(self):
-        #print 'kwargs: ', self.kwargs
+        # print 'kwargs: ', self.kwargs
         jobid = self.kwargs['jobid']
-        #print 'jobid: {0}'.format(jobid)
+        # print 'jobid: {0}'.format(jobid)
         dest = ReplicationJobs.objects.filter(jobid=jobid)
-        destKey =  dest[0].destEnvKey
+        destKey = dest[0].destEnvKey
         # now get the full destination object
         destObj = Destinations.objects.filter(dest_key=destKey)
-        #print 'destObj: {0}'.format(destObj)
+        # print 'destObj: {0}'.format(destObj)
         return destObj[0]
-    
+
+
 class AddUserView(generics.ListCreateAPIView):
     """View to list the user queryset."""
     queryset = User.objects.all()
@@ -122,7 +125,8 @@ class AddUserView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         """Save the post data when creating a new source dataset."""
         serializer.save()
-        
+
+
 class UserDetailsView(generics.RetrieveUpdateDestroyAPIView):
     """View to retrieve a user instance."""
     queryset = User.objects.all()
@@ -130,6 +134,9 @@ class UserDetailsView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class FieldMapView(generics.ListCreateAPIView):
+    '''
+    View to create and list fieldmaps
+    '''
     queryset = FieldMap.objects.all()
     serializer_class = FieldmapSerializer
     permission_classes = (permissions.IsAuthenticated,)
@@ -142,12 +149,15 @@ class FieldMapView(generics.ListCreateAPIView):
 
 
 class FieldMapDetailsView(generics.RetrieveUpdateDestroyAPIView):
+    '''
+    view used to provide details for individual field map records.
+    '''
     queryset = FieldMap.objects.all()
     lookupfield = 'fieldMapId'
     print 'here'
     serializer_class = FieldmapDataTypeSerializer
     permission_classes = (permissions.IsAuthenticated,)
-    
+
     def get_object(self):
         fldmapid = self.kwargs['fieldMapId']
         print 'fldmapid', fldmapid
@@ -159,15 +169,20 @@ class FieldMapDetailsView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class JobFieldMapsView(generics.ListCreateAPIView):
-    #queryset = Sources.objects.all()
-    serializer_class = FieldmapSerializer
-    
+    '''view used to provide fieldmaps for a specific job'''
+    # queryset = Sources.objects.all()
+    serializer_class = FieldmapDataTypeSerializer
+
     def get_queryset(self):
         jobid = self.kwargs['jobid']
         fldMaps = FieldMap.objects.filter(jobid=jobid)
         return fldMaps
 
+
 class JobStatisticsView(generics.ListCreateAPIView):
+    '''
+    view used to create new statistics line, and get complete list of stats.
+    '''
     queryset = JobStatistics.objects.all()
     serializer_class = JobStatisticsSerializer
     permission_classes = (permissions.IsAuthenticated,)
@@ -175,13 +190,15 @@ class JobStatisticsView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         """Save the post data when creating a new bucketlist."""
         serializer.save()
-    #queryset = Sources.objects.all()
+
+    # queryset = Sources.objects.all()
     serializer_class = SourceDataListSerializer
-    
+
     def get_queryset(self):
         jobid = self.kwargs['jobid']
         sources = Sources.objects.filter(jobid=jobid)
         return sources
+
 
 class JobStatisticsDetailsView(generics.ListAPIView):
     '''
@@ -191,4 +208,3 @@ class JobStatisticsDetailsView(generics.ListAPIView):
     queryset = JobStatistics.objects.all()
     serializer_class = JobStatisticsSerializer
     permission_classes = (permissions.IsAuthenticated,)
-
