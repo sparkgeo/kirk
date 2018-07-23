@@ -28,7 +28,7 @@ SECRET_KEY = '@f95&sb4(u#ek9edzdn)^_f4t&vo!dr3s0z&0sdm06t3&^r(5d'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 #LOGIN_URL = 'https://test.apps.gov.bc.ca/ext/httpbin/get?show_env=1'
 # Application definition
