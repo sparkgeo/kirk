@@ -14,7 +14,7 @@ from .models.JobStatistics import JobStatistics
 from .models.DataTypes import FMEDataTypes
 # from .models.User import User
 from django.contrib.auth.models import User
-
+import sys
 
 class SourceDataListSerializer(serializers.ModelSerializer):
 
@@ -117,14 +117,17 @@ class JobIdlistSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')  # ADD THIS LINE
     fieldmaps = FieldmapSerializer(many=True, read_only=True)
 
-    # destkey = JobDestSerializer(queryset=Destinations.objects.all(),
+    #destkey = JobDestSerializer(queryset=Destinations.objects.all(),
     #                            source='Destinations',
     #                            required=False)
     #
     # replace line below to allow for initial makemigration then swap comments
     # back.
-    dests = Destinations.objects.all()
-    # dests = ['a', 'b']
+    if ('makemigrations' in sys.argv or 'migrate' in sys.argv):
+       
+        dests = ['a', 'b']
+    else:
+        dests = Destinations.objects.all()
     destField = serializers.ChoiceField(choices=dests, allow_blank=True, allow_null=True)
 
     class Meta:
