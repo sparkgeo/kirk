@@ -24,7 +24,6 @@ FIXTURE_DIRS = (os.path.join(PROJECT_ROOT, 'fixtures'),)
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
-#SECRET_KEY = '@f95&sb4(u#ek9edzdn)^_f4t&vo!dr3s0z&0sdm06t3&^r(5d'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
