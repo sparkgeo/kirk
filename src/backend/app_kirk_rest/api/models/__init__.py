@@ -1,4 +1,4 @@
-'''
+'''  #pylint: disable=invalid-name
  tying together all the various models
 
 '''

@@ -1,17 +1,15 @@
-
 '''
-Created on May 15, 2018
-
-@author: kjnether
+Model used to define source data sets
 '''
 from __future__ import unicode_literals
 from django.db import models
 from .ReplicationJobs import ReplicationJobs
 
+
 class SourceTypes(object):
     '''
-    These are the source types that we are trying to 
-    
+    These are the source types that we are trying to
+
     '''
     FGDB = 'FGDB'
     ORASDE = 'OracleSDE'
@@ -20,11 +18,10 @@ class SourceTypes(object):
     SS = 'SqlServer'
     CSV = 'CSV'
     SHP = 'SHP'
-    # only implementing FGDB at the moment. When add support for different 
+    # only implementing FGDB at the moment. When add support for different
     # source types will add to the defs below.
-    sourceTypes = ((FGDB, 'File Geodatabase'),
-                   )
-    
+    sourceTypes = ((FGDB, 'File Geodatabase'), )
+
 
 class Sources(models.Model):
     '''
@@ -40,33 +37,26 @@ class Sources(models.Model):
     sourceDBHost:
     sourceDBPort:
     sourceFilePath: directory to where data is stored on a file sys.
-    
-    
+
+
     '''
-    # TODO: need to complete this
     # jobid = models.IntegerField()
     sourceid = models.AutoField(primary_key=True)
-    jobid = models.ForeignKey(ReplicationJobs, on_delete=models.SET_NULL, 
-                              related_name='sources', to_field='jobid', 
+    jobid = models.ForeignKey(ReplicationJobs, on_delete=models.SET_NULL,
+                              related_name='sources', to_field='jobid',
                               null=True)
     sourceTable = models.CharField(max_length=30, blank=False, null=False,
                                    help_text='Source Table Name')
     sourceTypeDefs = SourceTypes()
     sourceType = models.CharField(max_length=30, blank=False, null=False, \
-                                   choices=sourceTypeDefs.sourceTypes, default=sourceTypeDefs.sourceTypes[0][0] )
+                                  choices=sourceTypeDefs.sourceTypes,
+                                  default=sourceTypeDefs.sourceTypes[0][0])
     sourceDBSchema = models.CharField(max_length=30, blank=True, null=True)
     sourceDBName = models.CharField(max_length=30, blank=True, null=True)
     sourceDBHost = models.CharField(max_length=30, blank=True, null=True)
     sourceDBPort = models.IntegerField(blank=True, null=True)
     sourceFilePath = models.CharField(max_length=200, blank=True, null=True)
-    
+
     def __str__(self):
         """Return a human readable representation of the model instance."""
         return "{}".format(self.sourceid)
-
-    
-
-    
-    
-    
-    

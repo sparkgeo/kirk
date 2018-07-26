@@ -124,7 +124,6 @@ class JobIdlistSerializer(serializers.ModelSerializer):
     # replace line below to allow for initial makemigration then swap comments
     # back.
     if ('makemigrations' in sys.argv or 'migrate' in sys.argv):
-       
         dests = ['a', 'b']
     else:
         dests = Destinations.objects.all()

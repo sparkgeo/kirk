@@ -8,6 +8,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 import django.contrib.auth.validators
 
+
 class User(AbstractUser):
 
     """
@@ -25,8 +26,7 @@ class User(AbstractUser):
     password = models.CharField(max_length=128, blank=True, null=True)
     email = email = models.EmailField(blank=True, null=True)
 
-
-    # Siteminder headers, not using for now but in case required later on if 
+    # Siteminder headers, not using for now but in case required later on if
     # integrate with openid connect.
     authorization_id = models.CharField(max_length=500, blank=True, null=True)
     authorization_guid = models.UUIDField(unique=True, default=None, null=True)
@@ -34,8 +34,11 @@ class User(AbstractUser):
                                                null=True)
     authorization_email = models.EmailField(blank=True, null=True)
     display_name = models.CharField(max_length=500, blank=True, null=True)
-    
+
     class Meta:
+        '''
+        defining the table name
+        '''
         app_label = 'app_auth'
-        #db_table = "app_user"
+        # db_table = "app_user"
         db_table = 'kirk_users'
