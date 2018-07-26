@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -22,12 +23,15 @@ FIXTURE_DIRS = (os.path.join(PROJECT_ROOT, 'fixtures'),)
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '@f95&sb4(u#ek9edzdn)^_f4t&vo!dr3s0z&0sdm06t3&^r(5d'
+if 'DJANGO_SECRET_KEY' in os.environ:
+    SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
+else:
+    SECRET_KEY = '1234abcd'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '.idir.bcgov', 'kirkroute-kirk.192.168.99.100.nip.io', '*']
 
 #LOGIN_URL = 'https://test.apps.gov.bc.ca/ext/httpbin/get?show_env=1'
 # Application definition
@@ -86,6 +90,17 @@ DATABASES = {
     }
 }
 
+if 'POSTGRES_DB_NAME' in os.environ:
+    #url = urlparse.urlparse(os.environ.get('OPENSHIFT_POSTGRESQL_DB_URL'))
+
+    DATABASES['default'] = {
+        'ENGINE' : 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ['POSTGRES_DB_NAME'],
+        'USER': os.environ['POSTGRES_USER_NAME'],
+        'PASSWORD': os.environ['POSTGRES_PASSWORD'],
+        'HOST': os.environ['POSTGRES_HOST'],
+        'PORT': os.environ['POSTGRES_PORT']
+        }
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators

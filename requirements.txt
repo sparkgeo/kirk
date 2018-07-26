@@ -15,6 +15,7 @@ requests==2.18.4
 six==1.11.0
 urllib3==1.22
 django-rest-swagger==2.2.0
+psycopg2==2.7.5
 #drf-writable-nested==0.4.2
 #PyJWT==1.6.4
 #djangorestframework-jwt==1.11.0

@@ -12,10 +12,9 @@ from .models.Destinations import Destinations
 from .models.FieldMap import FieldMap
 from .models.JobStatistics import JobStatistics
 from .models.DataTypes import FMEDataTypes
-#from .models.User import User
+# from .models.User import User
 from django.contrib.auth.models import User
-
-
+import sys
 
 class SourceDataListSerializer(serializers.ModelSerializer):
 
@@ -49,17 +48,18 @@ class FieldmapSerializer(serializers.ModelSerializer):
                   'whoUpdated'
                   )
         read_only_fields = ('fieldMapId',)
-        
+
+
 class FieldmapDataTypeSerializer(serializers.ModelSerializer):
-    
-    fmeColumnType = serializers.SlugRelatedField(read_only=False, 
-                                               slug_field='fieldType', 
+
+    fmeColumnType = serializers.SlugRelatedField(read_only=False,
+                                               slug_field='fieldType',
                                                queryset=FMEDataTypes.objects.all())
-    
+
     class Meta:
         """Meta class to map serializer's fields with the model fields."""
         model = FieldMap
-        fields = ( 'fieldMapId', 'jobid', 'sourceColumnName', 'destColumnName', \
+        fields = ('fieldMapId', 'jobid', 'sourceColumnName', 'destColumnName', \
                    'whoCreated', 'whenCreated', 'whoUpdated',
                   'whoUpdated', 'fmeColumnType',
                   )
@@ -117,14 +117,16 @@ class JobIdlistSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')  # ADD THIS LINE
     fieldmaps = FieldmapSerializer(many=True, read_only=True)
 
-    # destkey = JobDestSerializer(queryset=Destinations.objects.all(),
+    #destkey = JobDestSerializer(queryset=Destinations.objects.all(),
     #                            source='Destinations',
     #                            required=False)
-    # 
+    #
     # replace line below to allow for initial makemigration then swap comments
     # back.
-    dests = Destinations.objects.all()
-    #dests = ['a', 'b']
+    if ('makemigrations' in sys.argv or 'migrate' in sys.argv):
+        dests = ['a', 'b']
+    else:
+        dests = Destinations.objects.all()
     destField = serializers.ChoiceField(choices=dests, allow_blank=True, allow_null=True)
 
     class Meta:
@@ -134,8 +136,6 @@ class JobIdlistSerializer(serializers.ModelSerializer):
                   'date_modified', 'sources', 'owner', 'fieldmaps', 'destField',)
         read_only_fields = ('date_created', 'date_modified', 'destEnvKey')
         depth = 1
-        
-
 
     def create(self, validated_data):
         # validated_data {'owner': <User: spock>, u'cronStr': u'some',
@@ -215,16 +215,15 @@ class JobIdlistSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     """A user serializer to aid in authentication and authorization."""
 
-    #jobs = serializers.PrimaryKeyRelatedField(many=True,
+    # jobs = serializers.PrimaryKeyRelatedField(many=True,
     #                                         queryset=ReplicationJobs.objects.all())
 
     class Meta:
         """Map this serializer to the default django user model."""
         model = User
-        #fields = ('id', 'username', 'jobs')
+        # fields = ('id', 'username', 'jobs')
         fields = ('id', 'username', 'email')
-                  
-        read_only_fields = ('authorization_directory', 'authorization_email', 
-                            'authorization_guid', 'authorization_id', 
+
+        read_only_fields = ('authorization_directory', 'authorization_email',
+                            'authorization_guid', 'authorization_id',
                             'display_name')
-        
