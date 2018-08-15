@@ -24,10 +24,12 @@ class ReplicationJobs(models.Model):
         - COMPLETE
         - PROCESSING
     '''
+#crims_marine_ecosystem_classification_staging_gdb_bcgw
     # DESTINATION_CHOICES = ()
 
     jobid = models.AutoField(primary_key=True)
     jobStatus = models.CharField(max_length=20)
+    jobLabel = models.CharField(max_length=100, null=True, blank=True)
     cronStr = models.CharField(max_length=25)
     destEnvKey = models.ForeignKey(Destinations, on_delete=models.SET_NULL,
                                    related_name='destEnvKey', to_field='dest_key',
