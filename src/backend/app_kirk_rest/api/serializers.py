@@ -71,7 +71,7 @@ class JobStatisticsSerializer(serializers.ModelSerializer):
     class Meta:
         """Meta class to map serializer's fields with the model fields."""
         model = JobStatistics
-        fields = ('jobStatsId', 'jobid', 'jobStatus', 'fmeServerJobId', \
+        fields = ('jobStatsId', 'jobid', 'jobStatus', 'jobLabel', 'fmeServerJobId', \
                   'jobStarted', 'jobCompleted')
         read_only_fields = ('jobStatsId',)
 
@@ -86,7 +86,7 @@ class JobDetailedInfoSerializer(serializers.PrimaryKeyRelatedField):
         job details Metadata
         '''
         model = ReplicationJobs
-        fields = ('jobid', 'jobStatus', 'cronStr', 'destEnvKey', 'date_created', 'date_modified', 'sources', 'fieldmaps')
+        fields = ('jobid', 'jobStatus', 'jobLabel', 'cronStr', 'destEnvKey', 'date_created', 'date_modified', 'sources', 'fieldmaps')
         read_only_fields = ('date_created', 'date_modified')
 
 
@@ -132,7 +132,7 @@ class JobIdlistSerializer(serializers.ModelSerializer):
     class Meta:
         """Meta class to map serializer's fields with the model fields."""
         model = ReplicationJobs
-        fields = ('jobid', 'jobStatus', 'cronStr', 'date_created',
+        fields = ('jobid', 'jobStatus', 'jobLabel', 'cronStr', 'date_created',
                   'date_modified', 'sources', 'owner', 'fieldmaps', 'destField',)
         read_only_fields = ('date_created', 'date_modified', 'destEnvKey')
         depth = 1
