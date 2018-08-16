@@ -195,16 +195,19 @@ class JobIdlistSerializer(serializers.ModelSerializer):
                    string value, then the serializer handles the management of
                    the foreignkey update.
         """
-#         print 'to_representation instance:', instance, type(instance)
-        # print 'destEnvKey', instance.destEnvKey
+        print 'to_representation instance:', instance, type(instance)
+        #print 'destEnvKey', instance.destEnvKey
         ret = super(JobIdlistSerializer, self).to_representation(instance)
+        print 'ret', ret
+        print 'instance', instance
         if 'destEnvKey' in ret:
 #             print 'superclass to_representation:', ret, type(ret)
 #             print 'instance.destEnvKey.dest_key:', instance.destEnvKey.dest_key
             ret['destField'] = instance.destEnvKey.dest_key
         elif isinstance(ret['destField'], Destinations):
             ret['destField'] = ret['destField'].dest_key
-        elif not instance.destEnvKey:
+        #  not (instance[u'destField']) or
+        elif (hasattr(instance, 'destEnvKey')) and not instance.destEnvKey:
             # indicates the desetEnvKey has not been set yet, so leave as is
             pass
         else:
