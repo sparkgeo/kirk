@@ -29,7 +29,7 @@ class ReplicationJobs(models.Model):
 
     jobid = models.AutoField(primary_key=True)
     jobStatus = models.CharField(max_length=20)
-    jobLabel = models.CharField(max_length=100, null=True, blank=True)
+    jobLabel = models.CharField(max_length=100, null=True, blank=True, unique=True)
     cronStr = models.CharField(max_length=25)
     destEnvKey = models.ForeignKey(Destinations, on_delete=models.SET_NULL,
                                    related_name='destEnvKey', to_field='dest_key',
