@@ -204,6 +204,9 @@ class JobIdlistSerializer(serializers.ModelSerializer):
             ret['destField'] = instance.destEnvKey.dest_key
         elif isinstance(ret['destField'], Destinations):
             ret['destField'] = ret['destField'].dest_key
+        elif not instance.destEnvKey:
+            # indicates the desetEnvKey has not been set yet, so leave as is
+            pass
         else:
             ret['destField'] = instance.destEnvKey.dest_key
 #         print 'ret:', ret
