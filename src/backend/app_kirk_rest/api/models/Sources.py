@@ -45,7 +45,10 @@ class Sources(models.Model):
     jobid = models.ForeignKey(ReplicationJobs, on_delete=models.SET_NULL,
                               related_name='sources', to_field='jobid',
                               null=True)
-    sourceTable = models.CharField(max_length=30, blank=False, null=False,
+    # changed length to 161 because esri fgdb allow for that table name
+    # length
+    # http://desktop.arcgis.com/en/arcmap/latest/manage-data/administer-file-gdbs/file-geodatabase-size-and-name-limits.htm
+    sourceTable = models.CharField(max_length=161, blank=False, null=False,
                                    help_text='Source Table Name')
     sourceTypeDefs = SourceTypes()
     sourceType = models.CharField(max_length=30, blank=False, null=False, \
