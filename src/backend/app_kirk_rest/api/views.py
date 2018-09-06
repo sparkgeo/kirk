@@ -145,7 +145,9 @@ class FieldMapView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         """Save the post data when creating a new bucketlist."""
-        serializer.save()
+        #serializer.save()
+        serializer.save(whoCreated=self.request.user, whoUpdated=self.request.user)
+
 
 
 class FieldMapDetailsView(generics.RetrieveUpdateDestroyAPIView):

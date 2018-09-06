@@ -53,6 +53,17 @@ Job Triggered
        Would be nice to be able to just make one call that returns
        all this info.
        
+# Issues
+
+## 9-5-2018 
+- during development randomly lost contact with the database.  Got the following
+  error:
+  
+```  
+Exception Type: OperationalError at /api/v1/sources/
+Exception Value: could not translate host name "postgresql" to address: No address associated with hostname
+```
+        
   
 
 # Theoretical Datamodel
