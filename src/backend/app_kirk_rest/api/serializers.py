@@ -38,14 +38,15 @@ class DestinationsSerializer(serializers.ModelSerializer):
 
 class FieldmapSerializer(serializers.ModelSerializer):
 
-    # owner = serializers.ReadOnlyField(source='owner.username') # ADD THIS LINE
-
+    whoCreated = serializers.ReadOnlyField(source='whoCreated.username') # ADD THIS LINE
+    whoUpdated = serializers.ReadOnlyField(source='whoUpdated.username') # ADD THIS LINE
+    
     class Meta:
         """Meta class to map serializer's fields with the model fields."""
         model = FieldMap
         fields = ('fieldMapId', 'jobid', 'sourceColumnName', 'destColumnName', \
                   'fmeColumnType', 'whoCreated', 'whenCreated', 'whoUpdated',
-                  'whoUpdated'
+                  'whenUpdated'
                   )
         read_only_fields = ('fieldMapId',)
 
