@@ -134,7 +134,8 @@ class JobIdlistSerializer(serializers.ModelSerializer):
         """Meta class to map serializer's fields with the model fields."""
         model = ReplicationJobs
         fields = ('jobid', 'jobStatus', 'jobLabel', 'cronStr', 'date_created',
-                  'date_modified', 'sources', 'owner', 'fieldmaps', 'destField',)
+                  'date_modified', 'sources', 'owner', 'fieldmaps', 'destField','destTableName', 
+                  'destSchema')
         read_only_fields = ('date_created', 'date_modified', 'destEnvKey')
         depth = 1
 

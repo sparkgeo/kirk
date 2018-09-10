@@ -53,6 +53,21 @@ Job Triggered
        Would be nice to be able to just make one call that returns
        all this info.
        
+# FME Components
+
+The Kirk api contains the replication information.  A dynamic FMW will be triggered using a single published parameter (Jobid).
+
+Using the job id, the fmw will communicate with Kirk to do the following steps:
+- determine the source file geodatabase and feature type
+- create input schema definition, this would get exported from the 
+- determine if there is any fieldmappings and if so populate a temporary lookup table
+
+
+
+- cleanup:
+   - delete tempoary fieldmapping lookup table.
+   
+       
 # Issues
 
 ## 9-5-2018 

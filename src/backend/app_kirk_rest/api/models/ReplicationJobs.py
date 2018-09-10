@@ -34,6 +34,8 @@ class ReplicationJobs(models.Model):
     destEnvKey = models.ForeignKey(Destinations, on_delete=models.SET_NULL,
                                    related_name='destEnvKey', to_field='dest_key',
                                    null=True, blank=True, editable=True)
+    destTableName = models.CharField(max_length=30)
+    destSchema = models.CharField(max_length=30)
     # destEnvKey = models.CharField(max_length=3,null=True, blank=True, editable=True)
 
     # TODO: once implement the user model change on_delete to SET_NULL
