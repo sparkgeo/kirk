@@ -40,17 +40,19 @@ class JobViewTestCase(TestCase):
         job_data = {'jobStatus': 'TESTING5',
                     'cronStr': 'some',
                     'owner': user.id,
-                    'destField': 'DLV'}
+                    'destField': 'DLV', 
+                    'destTableName': 'dummytab', 
+                    'destSchema': 'dummySchema'}
         self.response = self.client.post(
             reverse('job_create'),
             job_data,
             format="json")
-        #print 'response content', self.response.content
+        # print 'response content', self.response.content
 
     def test_api_can_create_a_job(self):
         """Test the api has replication job creation capability."""
         self.assertEqual(self.response.status_code, status.HTTP_201_CREATED)
-        #print 'job created!'
+        # print 'job created!'
 
     def test_api_can_get_a_job(self):
         """Test the api can get a given replication job."""
@@ -68,20 +70,22 @@ class JobViewTestCase(TestCase):
         jobs = ReplicationJobs.objects.get(jobStatus='TESTING5')
         change_bucketlist = {'jobStatus': 'TESTING6',
                              'cronStr': 'required',
-                             'destField': 'TST'}
+                             'destField': 'TST', 
+                             'destTableName': 'dummytab', 
+                             'destSchema': 'dummySchema'}
         res = self.client.put(
             reverse('job_details', kwargs={'jobid': jobs.jobid}),
             change_bucketlist, format='json'
         )
-        #print 'update result', res.content
+        # print 'update result', res.content
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
     def test_api_can_delete_a_job(self):
         """Test the api can delete a replication job."""
-        #print 'testing deleting'
+        # print 'testing deleting'
         jobList = ReplicationJobs.objects.get(jobStatus='TESTING5')
-        #print 'jobList', jobList
+        # print 'jobList', jobList
         response = self.client.delete(
             reverse('job_details', kwargs={'jobid': jobList.jobid}),
             format='json',
@@ -146,7 +150,6 @@ class SourceViewTestCase(TestCase):
 class FieldMapViewTestCase(TestCase):
     fixtures = ['fme_data_types.json']
 
-
     def setUp(self):
         self.client = APIClient()
         user = User.objects.create(username="spock")
@@ -154,17 +157,17 @@ class FieldMapViewTestCase(TestCase):
                     'cronStr': 'some',
                     'owner': user.id,
                     'destField': 'DLV'}
-        
+
         fmeColTypes = FMEDataTypes.objects.all()
         print 'fmeColTypes', fmeColTypes
         print 'fmeColType', fmeColTypes[0].fieldType
-        jobs = ReplicationJobs.objects.create(jobStatus='Testing', cronStr='test', 
+        jobs = ReplicationJobs.objects.create(jobStatus='Testing', cronStr='test',
                                               owner=user)
         self.fieldType = fmeColTypes[0].fieldTypeId
         self.client.force_authenticate(user=user)
         fldMapData = { 'sourceColumnName':'COLA',
                        'destColumnName':'COLUMN_A',
-                       'fmeColumnType':fmeColTypes[0].fieldTypeId, 
+                       'fmeColumnType':fmeColTypes[0].fieldTypeId,
                        "whoUpdated": user.id,
                        "whoCreated": user.id }
         self.response = self.client.post(
@@ -195,7 +198,7 @@ class FieldMapViewTestCase(TestCase):
 # TODO: check on the rest of the views
 
 # class JobStatisticsTestCase(TestCase):
-# 
+#
 #     def setUp(self):
 #         self.client = APIClient()
 #         user = User.objects.create(username="spock")
@@ -211,11 +214,11 @@ class FieldMapViewTestCase(TestCase):
 #             format="json")
 #         # print 'response: ', self.response.status_code
 #         # print 'response content:', self.response.content
-# 
+#
 #     def test_api_can_create_a_jobstat(self):
 #         """Test the api has JobStatistics creation capability."""
 #         self.assertEqual(self.response.status_code, status.HTTP_201_CREATED)
-# 
+#
 #     def test_api_can_get_a_jobstat(self):
 #         """Test the api can get a given jobstat dataset definition."""
 #         jobStatList = JobStatistics.objects.get(jobStatsId=1)
@@ -224,7 +227,7 @@ class FieldMapViewTestCase(TestCase):
 #         response = self.client.get(
 #             reverse('jobstats_details',
 #             kwargs={'jobStatsId': jobStatList.jobStatsId}), format="json")
-# 
+#
 #         self.assertEqual(response.status_code, status.HTTP_200_OK)
 #         self.assertContains(response, jobStatList)
 

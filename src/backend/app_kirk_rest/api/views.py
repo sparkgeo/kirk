@@ -14,6 +14,8 @@ from .models.FieldMap import FieldMap
 from .models.JobStatistics import JobStatistics
 from .models.ReplicationJobs import ReplicationJobs
 from .models.Sources import Sources
+from .models.Transformers import Transformers
+
 from .serializers import DestinationsSerializer
 from .serializers import FieldmapDataTypeSerializer
 from .serializers import FieldmapSerializer
@@ -21,12 +23,13 @@ from .serializers import JobIdlistSerializer
 from .serializers import JobStatisticsSerializer
 from .serializers import SourceDataListSerializer
 from .serializers import UserSerializer
+from .serializers import TransformerSerializer
 
 
 # Create your views here.
 class CreateJobView(generics.ListCreateAPIView):
     """This class defines the create behavior of our rest api."""
-    queryset = ReplicationJobs.objects.all()
+    queryset = ReplicationJobs.objects.all()  #pylint: disable=no-member
     serializer_class = JobIdlistSerializer
     permission_classes = (permissions.IsAuthenticated,)
     # if we wanted only owners of the job to be able to modify then use this
@@ -148,6 +151,36 @@ class FieldMapView(generics.ListCreateAPIView):
         #serializer.save()
         serializer.save(whoCreated=self.request.user, whoUpdated=self.request.user)
 
+class TransformersView(generics.ListCreateAPIView):
+    '''
+    View to create and list Transformers
+    '''
+    queryset = Transformers.objects.all()  # @UndefinedVariable
+    serializer_class = TransformerSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def perform_create(self, serializer):
+        """Save the post data when creating a new bucketlist."""
+        #serializer.save()
+        serializer.save(whoCreated=self.request.user, whoUpdated=self.request.user)
+
+class TransformerDetailsView(generics.RetrieveUpdateDestroyAPIView):
+    '''
+    view used to provide details for individual field map records.
+    '''
+    queryset = Transformers.objects.all()  # @UndefinedVariable
+    lookupfield = 'transformer_id'
+    serializer_class = TransformerSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_object(self):
+        transformer_id = self.kwargs['transformer_id']
+        print 'transformer_id', transformer_id
+        trans_map = Transformers.objects.filter(transformer_id=transformer_id)  # @UndefinedVariable
+        obj = trans_map.get(pk=transformer_id)
+        print 'trans_map', trans_map
+        print 'obj', obj
+        return obj
 
 
 class FieldMapDetailsView(generics.RetrieveUpdateDestroyAPIView):
@@ -180,6 +213,13 @@ class JobFieldMapsView(generics.ListCreateAPIView):
         fldMaps = FieldMap.objects.filter(jobid=jobid)
         return fldMaps
 
+class JobTransformersView(generics.ListCreateAPIView):
+    serializer_class = TransformerSerializer
+
+    def get_queryset(self):
+        jobid = self.kwargs['jobid']
+        transformer = Transformers.objects.filter(jobid=jobid)
+        return transformer
 
 class JobStatisticsView(generics.ListCreateAPIView):
     '''

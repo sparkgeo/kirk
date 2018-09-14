@@ -10,3 +10,4 @@ from .FieldMap import FieldMap
 from .DataTypes import FMEDataTypes
 from .JobStatistics import JobStatistics
 from .User import User
+from .Transformers import Transformers
