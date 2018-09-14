@@ -83,21 +83,7 @@ class TransformerSerializer(serializers.ModelSerializer):
                   )
         read_only_fields = ('transformer_id',)
 
-class TransformerDataTypeSerializer(serializers.ModelSerializer):
 
-    fmeColumnType = serializers.SlugRelatedField(
-        read_only=False,
-        slug_field='fieldType',
-        queryset=FMEDataTypes.objects.all())  # pylint: disable=no-member
-
-    class Meta:
-        """Meta class to map serializer's fields with the model fields."""
-        model = FieldMap
-        fields = ('fieldMapId', 'jobid', 'sourceColumnName', 'destColumnName', \
-                   'whoCreated', 'whenCreated', 'whoUpdated',
-                  'whoUpdated', 'fmeColumnType',
-                  )
-        read_only_fields = ('fieldMapId',)
         
 class JobStatisticsSerializer(serializers.ModelSerializer):
 
