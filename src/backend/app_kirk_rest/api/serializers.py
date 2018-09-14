@@ -12,9 +12,12 @@ from .models.Destinations import Destinations
 from .models.FieldMap import FieldMap
 from .models.JobStatistics import JobStatistics
 from .models.DataTypes import FMEDataTypes
+from .models.Transformers import Transformers
+
 # from .models.User import User
 from django.contrib.auth.models import User
 import sys
+
 
 class SourceDataListSerializer(serializers.ModelSerializer):
 
@@ -26,7 +29,6 @@ class SourceDataListSerializer(serializers.ModelSerializer):
                   'sourceFilePath')
         read_only_fields = ('sourceid',)
 
-
 class DestinationsSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -35,12 +37,11 @@ class DestinationsSerializer(serializers.ModelSerializer):
         fields = ('dest_key', 'dest_service_name', 'dest_host', 'dest_port', 'dest_type',
                   )
 
-
 class FieldmapSerializer(serializers.ModelSerializer):
 
-    whoCreated = serializers.ReadOnlyField(source='whoCreated.username') # ADD THIS LINE
-    whoUpdated = serializers.ReadOnlyField(source='whoUpdated.username') # ADD THIS LINE
-    
+    whoCreated = serializers.ReadOnlyField(source='whoCreated.username')  # ADD THIS LINE
+    whoUpdated = serializers.ReadOnlyField(source='whoUpdated.username')  # ADD THIS LINE
+
     class Meta:
         """Meta class to map serializer's fields with the model fields."""
         model = FieldMap
@@ -50,12 +51,12 @@ class FieldmapSerializer(serializers.ModelSerializer):
                   )
         read_only_fields = ('fieldMapId',)
 
-
 class FieldmapDataTypeSerializer(serializers.ModelSerializer):
 
-    fmeColumnType = serializers.SlugRelatedField(read_only=False,
-                                               slug_field='fieldType',
-                                               queryset=FMEDataTypes.objects.all())
+    fmeColumnType = serializers.SlugRelatedField(
+        read_only=False,
+        slug_field='fieldType',
+        queryset=FMEDataTypes.objects.all())  # pylint: disable=no-member
 
     class Meta:
         """Meta class to map serializer's fields with the model fields."""
@@ -66,7 +67,38 @@ class FieldmapDataTypeSerializer(serializers.ModelSerializer):
                   )
         read_only_fields = ('fieldMapId',)
 
+class TransformerSerializer(serializers.ModelSerializer):
 
+    whoCreated = serializers.ReadOnlyField(source='whoCreated.username')
+    whoUpdated = serializers.ReadOnlyField(source='whoUpdated.username')
+    
+    class Meta:
+        """Meta class to map serializer's fields with the model fields."""
+        model = Transformers
+        fields = ('transformer_id', 'jobid', 'transformer_type', 'ts1_name',
+                  'ts1_value', 'ts2_name', 'ts2_value', 'ts3_name',
+                  'ts3_value', 'ts4_name', 'ts4_value', 'ts5_name',
+                  'ts5_value', 'ts6_name', 'ts6_value', 'whoCreated',
+                  'whenCreated', 'whoUpdated', 'whenUpdated'
+                  )
+        read_only_fields = ('transformer_id',)
+
+class TransformerDataTypeSerializer(serializers.ModelSerializer):
+
+    fmeColumnType = serializers.SlugRelatedField(
+        read_only=False,
+        slug_field='fieldType',
+        queryset=FMEDataTypes.objects.all())  # pylint: disable=no-member
+
+    class Meta:
+        """Meta class to map serializer's fields with the model fields."""
+        model = FieldMap
+        fields = ('fieldMapId', 'jobid', 'sourceColumnName', 'destColumnName', \
+                   'whoCreated', 'whenCreated', 'whoUpdated',
+                  'whoUpdated', 'fmeColumnType',
+                  )
+        read_only_fields = ('fieldMapId',)
+        
 class JobStatisticsSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -75,7 +107,6 @@ class JobStatisticsSerializer(serializers.ModelSerializer):
         fields = ('jobStatsId', 'jobid', 'jobStatus', 'jobLabel', 'fmeServerJobId', \
                   'jobStarted', 'jobCompleted')
         read_only_fields = ('jobStatsId',)
-
 
 class JobDetailedInfoSerializer(serializers.PrimaryKeyRelatedField):
 
@@ -89,7 +120,6 @@ class JobDetailedInfoSerializer(serializers.PrimaryKeyRelatedField):
         model = ReplicationJobs
         fields = ('jobid', 'jobStatus', 'jobLabel', 'cronStr', 'destEnvKey', 'date_created', 'date_modified', 'sources', 'fieldmaps')
         read_only_fields = ('date_created', 'date_modified')
-
 
 class JobDestSerializer(serializers.PrimaryKeyRelatedField):
 
@@ -107,7 +137,6 @@ class JobDestSerializer(serializers.PrimaryKeyRelatedField):
             queryset = queryset.filter()
         return queryset
 
-
 class JobIdlistSerializer(serializers.ModelSerializer):
     """
     Serializer to map the Model instance into JSON format.
@@ -118,7 +147,7 @@ class JobIdlistSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')  # ADD THIS LINE
     fieldmaps = FieldmapSerializer(many=True, read_only=True)
 
-    #destkey = JobDestSerializer(queryset=Destinations.objects.all(),
+    # destkey = JobDestSerializer(queryset=Destinations.objects.all(),
     #                            source='Destinations',
     #                            required=False)
     #
@@ -134,7 +163,7 @@ class JobIdlistSerializer(serializers.ModelSerializer):
         """Meta class to map serializer's fields with the model fields."""
         model = ReplicationJobs
         fields = ('jobid', 'jobStatus', 'jobLabel', 'cronStr', 'date_created',
-                  'date_modified', 'sources', 'owner', 'fieldmaps', 'destField','destTableName', 
+                  'date_modified', 'sources', 'owner', 'fieldmaps', 'destField', 'destTableName',
                   'destSchema')
         read_only_fields = ('date_created', 'date_modified', 'destEnvKey')
         depth = 1
@@ -198,7 +227,7 @@ class JobIdlistSerializer(serializers.ModelSerializer):
                    the foreignkey update.
         """
         print 'to_representation instance:', instance, type(instance)
-        #print 'destEnvKey', instance.destEnvKey
+        # print 'destEnvKey', instance.destEnvKey
         ret = super(JobIdlistSerializer, self).to_representation(instance)
         print 'ret', ret
         print 'instance', instance
@@ -218,7 +247,6 @@ class JobIdlistSerializer(serializers.ModelSerializer):
         # OrderedDict([('jobid', 20), ('jobStatus', u'PRETTY'), ('cronStr', u'1'), ('date_created', u'2018-06-12T23:18:34.124000Z'), ('date_modified', u'2018-06-12T23:18:34.140000Z'), ('sources', []), ('owner', u'kjnether'), ('destField', None)]) <class 'collections.OrderedDict'>
         # ret['username'] = ret['username'].lower()
         return ret
-
 
 class UserSerializer(serializers.ModelSerializer):
     """A user serializer to aid in authentication and authorization."""

@@ -11,6 +11,14 @@ python manage.py loaddata Destination_Keywords.json
 python manage.py loaddata fme_data_types.json
 python manage.py loaddata job_data.json
 
+### create superuser
+before doing this change the email and the username
+
+python manage.py createsuperuser --email admin@example.com --username admin
+
+### create api token
+
+
 # REST API
 The APP_KIRK is initially going to be set up to use two rest-apis.
 1.   The first will use and oracle trigger that will make a rest call based on a
