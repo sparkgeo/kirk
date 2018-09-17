@@ -28,6 +28,7 @@ from .views import UserDetailsView
 from .views import TransformersView
 from .views import TransformerDetailsView
 from .views import JobTransformersView
+from .views import JobTransformerView
 
 
 
@@ -43,7 +44,9 @@ urlpatterns = {
     url(r'^api/v1/jobs/(?P<jobid>[0-9]+)/sources/$', JobSourcesView.as_view(),
         name='job_sources'),
     url(r'^api/v1/jobs/(?P<jobid>[0-9]+)/transformers/$', JobTransformersView.as_view(),
-        name='job_sources'),
+        name='job_transformers'),
+    url(r'^api/v1/jobs/(?P<jobid>[0-9]+)/transformers/(?P<transformer_id>[0-9]+)/$', JobTransformerView.as_view(),
+        name='job_transformer'),
     url(r'^api/v1/jobs/(?P<jobid>[0-9]+)/destination/$', JobDestinationView.as_view(),
         name='job_destination'),
     url(r'^api/v1/jobs/(?P<jobid>[0-9]+)/fieldmaps/$', JobFieldMapsView.as_view(), name='job_fieldmaps'),
@@ -59,9 +62,9 @@ urlpatterns = {
     url(r'^api/v1/jobstats/$', JobStatisticsView.as_view(), name='jobstats_create'),
     url(r'^api/v1/jobstats/(?P<jobStatsId>[0-9]+)/$',
         JobStatisticsDetailsView.as_view(), name="jobstats_details"),
-    url(r'^api/v1/transformers/$', TransformersView.as_view(), name='transformers_create'),
+    url(r'^api/v1/transformers/$', TransformersView.as_view(), name='transformers_create'), # working
     url(r'^api/v1/transformers/(?P<transformer_id>[0-9]+)/$',
-        TransformerDetailsView.as_view(), name="transformers_details"),
+        TransformerDetailsView.as_view(), name="transformers_details"), 
     url(r'^api/v1/users/$', AddUserView.as_view(), name="users"),
     url(r'api/v1/users/(?P<pk>[0-9]+)/$',
         UserDetailsView.as_view(), name="user_details"),

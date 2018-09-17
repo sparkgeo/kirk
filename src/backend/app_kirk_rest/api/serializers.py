@@ -24,9 +24,9 @@ class SourceDataListSerializer(serializers.ModelSerializer):
     class Meta:
         """Meta class to map serializer's fields with the model fields."""
         model = Sources
-        fields = ('sourceid', 'jobid', 'sourceTable', 'sourceType', 'sourceDBSchema',
-                  'sourceDBName', 'sourceDBHost', 'sourceDBPort',
-                  'sourceFilePath')
+        fields = ('sourceid', 'jobid', 'sourceTable', 'sourceType', 
+                  'sourceDBSchema', 'sourceDBName', 'sourceDBHost', 
+                  'sourceDBPort', 'sourceFilePath')
         read_only_fields = ('sourceid',)
 
 class DestinationsSerializer(serializers.ModelSerializer):
@@ -82,8 +82,6 @@ class TransformerSerializer(serializers.ModelSerializer):
                   'whenCreated', 'whoUpdated', 'whenUpdated'
                   )
         read_only_fields = ('transformer_id',)
-
-
         
 class JobStatisticsSerializer(serializers.ModelSerializer):
 
