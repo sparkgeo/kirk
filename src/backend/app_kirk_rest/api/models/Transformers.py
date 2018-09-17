@@ -41,12 +41,12 @@ class Transformers(models.Model):
     ts6_value = models.CharField(max_length=64, blank=True)
 
     whoCreated = models.ForeignKey('auth.User',
-                                   related_name='trans_user_created',
+                                   related_name='usercreated',
                                    on_delete=models.CASCADE
                                    )
     whenCreated = models.DateTimeField(auto_now_add=True)
     whoUpdated = models.ForeignKey('auth.User',
-                                   related_name='trans_user_updated',
+                                   related_name='userupdated',
                                    on_delete=models.CASCADE)
     whenUpdated = models.DateTimeField(auto_now=True)
 
