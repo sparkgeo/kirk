@@ -31,7 +31,7 @@ else:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '.idir.bcgov', 'kirkroute-kirk.192.168.99.100.nip.io', '*']
+ALLOWED_HOSTS = ['localhost', '.idir.bcgov', 'kirkroute-kirk.192.168.99.100.nip.io', 'kirk-route-dbc-kirk-dev.pathfinder.gov.bc.ca']
 
 #LOGIN_URL = 'https://test.apps.gov.bc.ca/ext/httpbin/get?show_env=1'
 # Application definition
@@ -91,6 +91,10 @@ DATABASES = {
 }
 
 if 'POSTGRES_DB_NAME' in os.environ:
+    # using this as an indication that we are running on openshift if so 
+    # then add this security param to allow the swagger ui to work with 
+    # https
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     #url = urlparse.urlparse(os.environ.get('OPENSHIFT_POSTGRESQL_DB_URL'))
 
     DATABASES['default'] = {
