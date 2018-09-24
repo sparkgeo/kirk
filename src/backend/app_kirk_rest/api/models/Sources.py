@@ -59,7 +59,8 @@ class Sources(models.Model):
     sourceDBHost = models.CharField(max_length=30, blank=True, null=True)
     sourceDBPort = models.IntegerField(blank=True, null=True)
     sourceFilePath = models.CharField(max_length=200, blank=True, null=True)
-
+    sourceProjection = models.CharField(max_length=100, blank=True, null=True)
+    
     def __str__(self):
         """Return a human readable representation of the model instance."""
         return "{}".format(self.sourceid)
