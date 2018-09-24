@@ -26,7 +26,7 @@ class SourceDataListSerializer(serializers.ModelSerializer):
         model = Sources
         fields = ('sourceid', 'jobid', 'sourceTable', 'sourceType', 
                   'sourceDBSchema', 'sourceDBName', 'sourceDBHost', 
-                  'sourceDBPort', 'sourceFilePath')
+                  'sourceDBPort', 'sourceFilePath', 'sourceProjection')
         read_only_fields = ('sourceid',)
 
 class DestinationsSerializer(serializers.ModelSerializer):
