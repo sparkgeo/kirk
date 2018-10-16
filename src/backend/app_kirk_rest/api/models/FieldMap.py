@@ -18,7 +18,7 @@ class FieldMap(models.Model):
     '''
     fieldMapId = models.AutoField(primary_key=True)
     
-    jobid = models.ForeignKey(ReplicationJobs, on_delete=models.SET_NULL,
+    jobid = models.ForeignKey(ReplicationJobs, on_delete=models.CASCADE,
                               related_name='ReplicationJobs', to_field='jobid',
                               null=True)
     sourceColumnName = models.CharField(max_length=64)

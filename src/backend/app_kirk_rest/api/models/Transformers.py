@@ -18,7 +18,7 @@ class Transformers(models.Model):
     '''
     transformer_id = models.AutoField(primary_key=True)
 
-    jobid = models.ForeignKey(ReplicationJobs, on_delete=models.SET_NULL,
+    jobid = models.ForeignKey(ReplicationJobs, on_delete=models.CASCADE,
                               related_name='trans_jobs', to_field='jobid',
                               null=True)
     # a text value used to describe the type of transformer this is

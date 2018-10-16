@@ -42,7 +42,7 @@ class Sources(models.Model):
     '''
     # jobid = models.IntegerField()
     sourceid = models.AutoField(primary_key=True)
-    jobid = models.ForeignKey(ReplicationJobs, on_delete=models.SET_NULL,
+    jobid = models.ForeignKey(ReplicationJobs, on_delete=models.CASCADE,
                               related_name='sources', to_field='jobid',
                               null=True)
     # changed length to 161 because esri fgdb allow for that table name
