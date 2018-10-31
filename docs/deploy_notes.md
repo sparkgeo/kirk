@@ -6,6 +6,8 @@ PP_KIRK is a replication system that defines replication configurations in a dat
 
 * ~~python manage.py makemigrations api~~
 * ~~python manage.py migrate api~~
+
+
 *not required, now part of dockerfile*
 
 ### loading fixtures: 
