@@ -34,7 +34,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.idir.bcgov', 'kirkroute-kirk.192.168.99.100.nip.io','kirk-route-dbc-kirk-prod.pathfinder.gov.bc.ca', 'kirk-route-dbc-kirk-dev.pathfinder.gov.bc.ca', 'kirk-route-dbc-kirk-test.pathfinder.gov.bc.ca']
 
 if 'ALLOWED_HOSTS' in os.environ:
-    ALLOWED_HOSTS = [os.environ['appHost']]
+    ALLOWED_HOSTS = [os.environ['ALLOWED_HOSTS']]
 
 
 #LOGIN_URL = 'https://test.apps.gov.bc.ca/ext/httpbin/get?show_env=1'
