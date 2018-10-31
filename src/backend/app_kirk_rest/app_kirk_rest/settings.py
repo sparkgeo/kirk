@@ -33,7 +33,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.idir.bcgov', 'kirkroute-kirk.192.168.99.100.nip.io','kirk-route-dbc-kirk-prod.pathfinder.gov.bc.ca', 'kirk-route-dbc-kirk-dev.pathfinder.gov.bc.ca', 'kirk-route-dbc-kirk-test.pathfinder.gov.bc.ca']
 
-if 'appHost' in os.environ:
+if 'ALLOWED_HOSTS' in os.environ:
     ALLOWED_HOSTS = [os.environ['appHost']]
 
 
