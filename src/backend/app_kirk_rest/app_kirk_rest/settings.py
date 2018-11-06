@@ -30,12 +30,19 @@ else:
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+if 'ALLOWED_HOSTS' in os.environ:
+    # parse out the start of the allowed hosts
+    allow = os.environ['ALLOWED_HOSTS'][0]
+    if allow:
+        allowLst = allow.split('.')
+        if (allowLst) and allowLst[0].lower() == 'kirk':
+            DEBUG = False
+    del allow, allowLst
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.idir.bcgov', 'kirkroute-kirk.192.168.99.100.nip.io','kirk-route-dbc-kirk-prod.pathfinder.gov.bc.ca', 'kirk-route-dbc-kirk-dev.pathfinder.gov.bc.ca', 'kirk-route-dbc-kirk-test.pathfinder.gov.bc.ca']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1','kirkroute-kirk.192.168.99.100.nip.io']
 
 if 'ALLOWED_HOSTS' in os.environ:
     ALLOWED_HOSTS = [os.environ['ALLOWED_HOSTS']]
-
 
 #LOGIN_URL = 'https://test.apps.gov.bc.ca/ext/httpbin/get?show_env=1'
 # Application definition
