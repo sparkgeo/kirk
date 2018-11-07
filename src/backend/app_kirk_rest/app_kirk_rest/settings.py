@@ -32,11 +32,13 @@ else:
 DEBUG = True
 if 'ALLOWED_HOSTS' in os.environ:
     # parse out the start of the allowed hosts
-    allow = os.environ['ALLOWED_HOSTS'][0]
+    allow = os.environ['ALLOWED_HOSTS']
+    print 'ALLOWED_HOSTS:', allow
     if allow:
         allowLst = allow.split('.')
         if (allowLst):
             if ( allowLst[0].lower() in ['kirk', 'kirk-t']):
+                print 'setting debug to false'
                 DEBUG = False
     del allow, allowLst
 
