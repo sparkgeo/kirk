@@ -35,8 +35,9 @@ if 'ALLOWED_HOSTS' in os.environ:
     allow = os.environ['ALLOWED_HOSTS'][0]
     if allow:
         allowLst = allow.split('.')
-        if (allowLst) and allowLst[0].lower() == 'kirk':
-            DEBUG = False
+        if (allowLst):
+            if ( allowLst[0].lower() in ['kirk', 'kirk-t']):
+                DEBUG = False
     del allow, allowLst
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1','kirkroute-kirk.192.168.99.100.nip.io']
