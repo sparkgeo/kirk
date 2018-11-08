@@ -31,9 +31,9 @@ else:
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
 DEBUG = False
-
-DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
-
+if os.getenv('DJANGO_DEBUG') and os.getenv('DJANGO_DEBUG').lower() == 'true':
+    DEBUG = True
+    
 # ALLOWED_HOSTS = ['*']
 # ALLOWED_HOSTS = ['localhost', '127.0.0.1','kirkroute-kirk.192.168.99.100.nip.io']
 
