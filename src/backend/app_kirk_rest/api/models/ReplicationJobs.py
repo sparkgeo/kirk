@@ -10,7 +10,6 @@ from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from django.dispatch import receiver
 from .Destinations import Destinations
-# from django.conf import settings
 
 
 class ReplicationJobs(models.Model):
@@ -24,19 +23,17 @@ class ReplicationJobs(models.Model):
         - COMPLETE
         - PROCESSING
     '''
-#crims_marine_ecosystem_classification_staging_gdb_bcgw
-    # DESTINATION_CHOICES = ()
-
     jobid = models.AutoField(primary_key=True)
     jobStatus = models.CharField(max_length=20)
-    jobLabel = models.CharField(max_length=100, null=True, blank=True)
+    jobLabel = models.CharField(max_length=100, null=True, blank=True,
+                                unique=True)
     cronStr = models.CharField(max_length=25)
     destEnvKey = models.ForeignKey(Destinations, on_delete=models.SET_NULL,
-                                   related_name='destEnvKey', to_field='dest_key',
-                                   null=True, blank=True, editable=True)
+                                   related_name='destEnvKey',
+                                   to_field='dest_key', null=True,
+                                   blank=True, editable=True)
     destTableName = models.CharField(max_length=30)
     destSchema = models.CharField(max_length=30)
-    # destEnvKey = models.CharField(max_length=3,null=True, blank=True, editable=True)
 
     # TODO: once implement the user model change on_delete to SET_NULL
     # auth.User
@@ -54,7 +51,8 @@ class ReplicationJobs(models.Model):
 @receiver(post_save, sender=User)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     '''
-    this receiver handles token creation immediately when a new user is created.
+    this receiver handles token creation immediately when a new user is
+    created.
     '''
     if created:
         Token.objects.create(user=instance)
