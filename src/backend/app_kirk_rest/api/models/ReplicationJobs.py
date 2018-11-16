@@ -2,6 +2,8 @@
 Created on May 15, 2018
 
 @author: kjnether
+
+
 '''
 from __future__ import unicode_literals
 from django.db import models
