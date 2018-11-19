@@ -1,0 +1,2096 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "KIRK",
+        "description": "",
+        "version": ""
+    },
+    "host": "kirk.data.gov.bc.ca",
+    "schemes": [
+        "https"
+    ],
+    "paths": {
+        "/api/v1/destinations/": {
+            "get": {
+                "tags": [
+                    "destinations"
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "parameters": [],
+                "operationId": "destinations_list"
+            },
+            "post": {
+                "tags": [
+                    "destinations"
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "parameters": [
+                    {
+                        "schema": {
+                            "required": [
+                                "dest_key",
+                                "dest_service_name",
+                                "dest_host",
+                                "dest_type"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "dest_key": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "dest_host": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "dest_type": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "dest_service_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "dest_port": {
+                                    "type": "integer",
+                                    "description": ""
+                                }
+                            }
+                        },
+                        "name": "data",
+                        "in": "body"
+                    }
+                ],
+                "operationId": "destinations_create"
+            }
+        },
+        "/api/v1/destinations/{dest_key}/": {
+            "get": {
+                "tags": [
+                    "destinations"
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "parameters": [
+                    {
+                        "description": "A unique value identifying this destinations.",
+                        "required": true,
+                        "type": "string",
+                        "name": "dest_key",
+                        "in": "path"
+                    }
+                ],
+                "operationId": "destinations_read"
+            },
+            "post": {
+                "tags": [
+                    "destinations"
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "parameters": [
+                    {
+                        "description": "A unique value identifying this destinations.",
+                        "required": true,
+                        "type": "string",
+                        "name": "dest_key",
+                        "in": "path"
+                    },
+                    {
+                        "schema": {
+                            "required": [
+                                "dest_key",
+                                "dest_service_name",
+                                "dest_host",
+                                "dest_type"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "dest_key": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "dest_host": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "dest_type": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "dest_service_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "dest_port": {
+                                    "type": "integer",
+                                    "description": ""
+                                }
+                            }
+                        },
+                        "name": "data",
+                        "in": "body"
+                    }
+                ],
+                "operationId": "destinations_create_0"
+            }
+        },
+        "/api/v1/fieldmaps/": {
+            "get": {
+                "description": "View to create and list fieldmaps",
+                "parameters": [],
+                "tags": [
+                    "fieldmaps"
+                ],
+                "summary": "View to create and list fieldmaps",
+                "operationId": "fieldmaps_list",
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "post": {
+                "description": "View to create and list fieldmaps",
+                "parameters": [
+                    {
+                        "schema": {
+                            "required": [
+                                "sourceColumnName",
+                                "destColumnName"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "destColumnName": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "fmeColumnType": {
+                                    "type": "integer",
+                                    "description": ""
+                                },
+                                "sourceColumnName": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "jobid": {
+                                    "type": "integer",
+                                    "description": ""
+                                }
+                            }
+                        },
+                        "name": "data",
+                        "in": "body"
+                    }
+                ],
+                "tags": [
+                    "fieldmaps"
+                ],
+                "summary": "View to create and list fieldmaps",
+                "operationId": "fieldmaps_create",
+                "consumes": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/fieldmaps/{fieldMapId}/": {
+            "get": {
+                "description": "view used to provide details for individual field map records.",
+                "parameters": [
+                    {
+                        "description": "A unique integer value identifying this field map.",
+                        "required": true,
+                        "type": "integer",
+                        "name": "fieldMapId",
+                        "in": "path"
+                    }
+                ],
+                "tags": [
+                    "fieldmaps"
+                ],
+                "summary": "view used to provide details for individual field map records.",
+                "operationId": "fieldmaps_read",
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "put": {
+                "description": "view used to provide details for individual field map records.",
+                "parameters": [
+                    {
+                        "description": "A unique integer value identifying this field map.",
+                        "required": true,
+                        "type": "integer",
+                        "name": "fieldMapId",
+                        "in": "path"
+                    },
+                    {
+                        "schema": {
+                            "required": [
+                                "sourceColumnName",
+                                "destColumnName",
+                                "whoCreated",
+                                "whoUpdated",
+                                "fmeColumnType"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "destColumnName": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "jobid": {
+                                    "type": "integer",
+                                    "description": ""
+                                },
+                                "whoCreated": {
+                                    "type": "integer",
+                                    "description": ""
+                                },
+                                "whoUpdated": {
+                                    "type": "integer",
+                                    "description": ""
+                                },
+                                "fmeColumnType": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceColumnName": {
+                                    "type": "string",
+                                    "description": ""
+                                }
+                            }
+                        },
+                        "name": "data",
+                        "in": "body"
+                    }
+                ],
+                "tags": [
+                    "fieldmaps"
+                ],
+                "summary": "view used to provide details for individual field map records.",
+                "operationId": "fieldmaps_update",
+                "consumes": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "patch": {
+                "description": "view used to provide details for individual field map records.",
+                "parameters": [
+                    {
+                        "description": "A unique integer value identifying this field map.",
+                        "required": true,
+                        "type": "integer",
+                        "name": "fieldMapId",
+                        "in": "path"
+                    },
+                    {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "destColumnName": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "jobid": {
+                                    "type": "integer",
+                                    "description": ""
+                                },
+                                "whoCreated": {
+                                    "type": "integer",
+                                    "description": ""
+                                },
+                                "whoUpdated": {
+                                    "type": "integer",
+                                    "description": ""
+                                },
+                                "fmeColumnType": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceColumnName": {
+                                    "type": "string",
+                                    "description": ""
+                                }
+                            }
+                        },
+                        "name": "data",
+                        "in": "body"
+                    }
+                ],
+                "tags": [
+                    "fieldmaps"
+                ],
+                "summary": "view used to provide details for individual field map records.",
+                "operationId": "fieldmaps_partial_update",
+                "consumes": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "delete": {
+                "description": "view used to provide details for individual field map records.",
+                "parameters": [
+                    {
+                        "description": "A unique integer value identifying this field map.",
+                        "required": true,
+                        "type": "integer",
+                        "name": "fieldMapId",
+                        "in": "path"
+                    }
+                ],
+                "tags": [
+                    "fieldmaps"
+                ],
+                "summary": "view used to provide details for individual field map records.",
+                "operationId": "fieldmaps_delete",
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/jobs/": {
+            "get": {
+                "description": "This class defines the create behavior of our rest api.",
+                "parameters": [],
+                "tags": [
+                    "jobs"
+                ],
+                "summary": "This class defines the create behavior of our rest api.",
+                "operationId": "jobs_list",
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "post": {
+                "description": "This class defines the create behavior of our rest api.",
+                "parameters": [
+                    {
+                        "schema": {
+                            "required": [
+                                "jobStatus",
+                                "cronStr",
+                                "destField",
+                                "destTableName",
+                                "destSchema"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "destField": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "jobStatus": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "destSchema": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "jobLabel": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "destTableName": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "cronStr": {
+                                    "type": "string",
+                                    "description": ""
+                                }
+                            }
+                        },
+                        "name": "data",
+                        "in": "body"
+                    }
+                ],
+                "tags": [
+                    "jobs"
+                ],
+                "summary": "This class defines the create behavior of our rest api.",
+                "operationId": "jobs_create",
+                "consumes": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/jobs/{jobid}/": {
+            "get": {
+                "description": "This class handles the http GET, PUT and DELETE requests.",
+                "parameters": [
+                    {
+                        "description": "A unique integer value identifying this replication jobs.",
+                        "required": true,
+                        "type": "integer",
+                        "name": "jobid",
+                        "in": "path"
+                    }
+                ],
+                "tags": [
+                    "jobs"
+                ],
+                "summary": "This class handles the http GET, PUT and DELETE requests.",
+                "operationId": "jobs_read",
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "put": {
+                "description": "This class handles the http GET, PUT and DELETE requests.",
+                "parameters": [
+                    {
+                        "description": "A unique integer value identifying this replication jobs.",
+                        "required": true,
+                        "type": "integer",
+                        "name": "jobid",
+                        "in": "path"
+                    },
+                    {
+                        "schema": {
+                            "required": [
+                                "jobStatus",
+                                "cronStr",
+                                "destField",
+                                "destTableName",
+                                "destSchema"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "destField": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "jobStatus": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "destSchema": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "jobLabel": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "destTableName": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "cronStr": {
+                                    "type": "string",
+                                    "description": ""
+                                }
+                            }
+                        },
+                        "name": "data",
+                        "in": "body"
+                    }
+                ],
+                "tags": [
+                    "jobs"
+                ],
+                "summary": "This class handles the http GET, PUT and DELETE requests.",
+                "operationId": "jobs_update",
+                "consumes": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "patch": {
+                "description": "This class handles the http GET, PUT and DELETE requests.",
+                "parameters": [
+                    {
+                        "description": "A unique integer value identifying this replication jobs.",
+                        "required": true,
+                        "type": "integer",
+                        "name": "jobid",
+                        "in": "path"
+                    },
+                    {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "destField": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "jobStatus": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "destSchema": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "jobLabel": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "destTableName": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "cronStr": {
+                                    "type": "string",
+                                    "description": ""
+                                }
+                            }
+                        },
+                        "name": "data",
+                        "in": "body"
+                    }
+                ],
+                "tags": [
+                    "jobs"
+                ],
+                "summary": "This class handles the http GET, PUT and DELETE requests.",
+                "operationId": "jobs_partial_update",
+                "consumes": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "delete": {
+                "description": "This class handles the http GET, PUT and DELETE requests.",
+                "parameters": [
+                    {
+                        "description": "A unique integer value identifying this replication jobs.",
+                        "required": true,
+                        "type": "integer",
+                        "name": "jobid",
+                        "in": "path"
+                    }
+                ],
+                "tags": [
+                    "jobs"
+                ],
+                "summary": "This class handles the http GET, PUT and DELETE requests.",
+                "operationId": "jobs_delete",
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/jobs/{jobid}/destination/": {
+            "get": {
+                "tags": [
+                    "jobs"
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "parameters": [
+                    {
+                        "description": "",
+                        "required": true,
+                        "type": "string",
+                        "name": "jobid",
+                        "in": "path"
+                    }
+                ],
+                "operationId": "jobs_destination_read"
+            }
+        },
+        "/api/v1/jobs/{jobid}/fieldmaps/": {
+            "get": {
+                "description": "view used to provide fieldmaps for a specific job",
+                "parameters": [
+                    {
+                        "description": "",
+                        "required": true,
+                        "type": "string",
+                        "name": "jobid",
+                        "in": "path"
+                    }
+                ],
+                "tags": [
+                    "jobs"
+                ],
+                "summary": "view used to provide fieldmaps for a specific job",
+                "operationId": "jobs_fieldmaps_list",
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "post": {
+                "description": "view used to provide fieldmaps for a specific job",
+                "parameters": [
+                    {
+                        "description": "",
+                        "required": true,
+                        "type": "string",
+                        "name": "jobid",
+                        "in": "path"
+                    },
+                    {
+                        "schema": {
+                            "required": [
+                                "sourceColumnName",
+                                "destColumnName",
+                                "whoCreated",
+                                "whoUpdated",
+                                "fmeColumnType"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "destColumnName": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "jobid": {
+                                    "type": "integer",
+                                    "description": ""
+                                },
+                                "whoCreated": {
+                                    "type": "integer",
+                                    "description": ""
+                                },
+                                "whoUpdated": {
+                                    "type": "integer",
+                                    "description": ""
+                                },
+                                "fmeColumnType": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceColumnName": {
+                                    "type": "string",
+                                    "description": ""
+                                }
+                            }
+                        },
+                        "name": "data",
+                        "in": "body"
+                    }
+                ],
+                "tags": [
+                    "jobs"
+                ],
+                "summary": "view used to provide fieldmaps for a specific job",
+                "operationId": "jobs_fieldmaps_create",
+                "consumes": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/jobs/{jobid}/sources/": {
+            "get": {
+                "tags": [
+                    "jobs"
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "parameters": [
+                    {
+                        "description": "",
+                        "required": true,
+                        "type": "string",
+                        "name": "jobid",
+                        "in": "path"
+                    }
+                ],
+                "operationId": "jobs_sources_list"
+            },
+            "post": {
+                "tags": [
+                    "jobs"
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "parameters": [
+                    {
+                        "description": "",
+                        "required": true,
+                        "type": "string",
+                        "name": "jobid",
+                        "in": "path"
+                    },
+                    {
+                        "schema": {
+                            "required": [
+                                "sourceTable"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "sourceDBSchema": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceType": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceDBPort": {
+                                    "type": "integer",
+                                    "description": ""
+                                },
+                                "jobid": {
+                                    "type": "integer",
+                                    "description": ""
+                                },
+                                "sourceProjection": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceFilePath": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceDBHost": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceDBName": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceTable": {
+                                    "type": "string",
+                                    "description": "Source Table Name"
+                                }
+                            }
+                        },
+                        "name": "data",
+                        "in": "body"
+                    }
+                ],
+                "operationId": "jobs_sources_create"
+            }
+        },
+        "/api/v1/jobs/{jobid}/transformers/": {
+            "get": {
+                "tags": [
+                    "jobs"
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "parameters": [
+                    {
+                        "description": "",
+                        "required": true,
+                        "type": "string",
+                        "name": "jobid",
+                        "in": "path"
+                    }
+                ],
+                "operationId": "jobs_transformers_list"
+            },
+            "post": {
+                "tags": [
+                    "jobs"
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "parameters": [
+                    {
+                        "description": "",
+                        "required": true,
+                        "type": "string",
+                        "name": "jobid",
+                        "in": "path"
+                    },
+                    {
+                        "schema": {
+                            "required": [
+                                "transformer_type"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "ts6_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts3_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts5_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts6_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts5_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts3_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "jobid": {
+                                    "type": "integer",
+                                    "description": ""
+                                },
+                                "ts1_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts2_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts4_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts1_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "transformer_type": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts4_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts2_name": {
+                                    "type": "string",
+                                    "description": ""
+                                }
+                            }
+                        },
+                        "name": "data",
+                        "in": "body"
+                    }
+                ],
+                "operationId": "jobs_transformers_create"
+            }
+        },
+        "/api/v1/jobs/{jobid}/transformers/{transformer_id}/": {
+            "get": {
+                "tags": [
+                    "jobs"
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "parameters": [
+                    {
+                        "description": "A unique integer value identifying this transformers.",
+                        "required": true,
+                        "type": "integer",
+                        "name": "transformer_id",
+                        "in": "path"
+                    },
+                    {
+                        "description": "",
+                        "required": true,
+                        "type": "string",
+                        "name": "jobid",
+                        "in": "path"
+                    }
+                ],
+                "operationId": "jobs_transformers_read"
+            },
+            "put": {
+                "tags": [
+                    "jobs"
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "parameters": [
+                    {
+                        "description": "A unique integer value identifying this transformers.",
+                        "required": true,
+                        "type": "integer",
+                        "name": "transformer_id",
+                        "in": "path"
+                    },
+                    {
+                        "description": "",
+                        "required": true,
+                        "type": "string",
+                        "name": "jobid",
+                        "in": "path"
+                    },
+                    {
+                        "schema": {
+                            "required": [
+                                "transformer_type"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "ts6_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts3_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts5_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts6_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts5_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts3_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "jobid": {
+                                    "type": "integer",
+                                    "description": ""
+                                },
+                                "ts1_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts2_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts4_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts1_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "transformer_type": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts4_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts2_name": {
+                                    "type": "string",
+                                    "description": ""
+                                }
+                            }
+                        },
+                        "name": "data",
+                        "in": "body"
+                    }
+                ],
+                "operationId": "jobs_transformers_update"
+            },
+            "patch": {
+                "tags": [
+                    "jobs"
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "parameters": [
+                    {
+                        "description": "A unique integer value identifying this transformers.",
+                        "required": true,
+                        "type": "integer",
+                        "name": "transformer_id",
+                        "in": "path"
+                    },
+                    {
+                        "description": "",
+                        "required": true,
+                        "type": "string",
+                        "name": "jobid",
+                        "in": "path"
+                    },
+                    {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "ts6_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts3_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts5_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts6_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts5_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts3_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "jobid": {
+                                    "type": "integer",
+                                    "description": ""
+                                },
+                                "ts1_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts2_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts4_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts1_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "transformer_type": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts4_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts2_name": {
+                                    "type": "string",
+                                    "description": ""
+                                }
+                            }
+                        },
+                        "name": "data",
+                        "in": "body"
+                    }
+                ],
+                "operationId": "jobs_transformers_partial_update"
+            },
+            "delete": {
+                "tags": [
+                    "jobs"
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "parameters": [
+                    {
+                        "description": "A unique integer value identifying this transformers.",
+                        "required": true,
+                        "type": "integer",
+                        "name": "transformer_id",
+                        "in": "path"
+                    },
+                    {
+                        "description": "",
+                        "required": true,
+                        "type": "string",
+                        "name": "jobid",
+                        "in": "path"
+                    }
+                ],
+                "operationId": "jobs_transformers_delete"
+            }
+        },
+        "/api/v1/jobstats/": {
+            "get": {
+                "description": "view used to create new statistics line, and get complete list of stats.",
+                "parameters": [],
+                "tags": [
+                    "jobstats"
+                ],
+                "summary": "view used to create new statistics line, and get complete list of stats.",
+                "operationId": "jobstats_list",
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "post": {
+                "description": "view used to create new statistics line, and get complete list of stats.",
+                "parameters": [
+                    {
+                        "schema": {
+                            "required": [
+                                "sourceTable"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "sourceDBSchema": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceType": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceDBPort": {
+                                    "type": "integer",
+                                    "description": ""
+                                },
+                                "jobid": {
+                                    "type": "integer",
+                                    "description": ""
+                                },
+                                "sourceProjection": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceFilePath": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceDBHost": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceDBName": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceTable": {
+                                    "type": "string",
+                                    "description": "Source Table Name"
+                                }
+                            }
+                        },
+                        "name": "data",
+                        "in": "body"
+                    }
+                ],
+                "tags": [
+                    "jobstats"
+                ],
+                "summary": "view used to create new statistics line, and get complete list of stats.",
+                "operationId": "jobstats_create",
+                "consumes": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/jobstats/{jobStatsId}/": {
+            "get": {
+                "description": "handles GET, PUT, and DELETE requests for sources",
+                "parameters": [
+                    {
+                        "description": "A unique integer value identifying this job statistics.",
+                        "required": true,
+                        "type": "integer",
+                        "name": "jobStatsId",
+                        "in": "path"
+                    }
+                ],
+                "tags": [
+                    "jobstats"
+                ],
+                "summary": "handles GET, PUT, and DELETE requests for sources",
+                "operationId": "jobstats_read",
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/sources/": {
+            "get": {
+                "tags": [
+                    "sources"
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "parameters": [],
+                "operationId": "sources_list"
+            },
+            "post": {
+                "tags": [
+                    "sources"
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "parameters": [
+                    {
+                        "schema": {
+                            "required": [
+                                "sourceTable"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "sourceDBSchema": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceType": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceDBPort": {
+                                    "type": "integer",
+                                    "description": ""
+                                },
+                                "jobid": {
+                                    "type": "integer",
+                                    "description": ""
+                                },
+                                "sourceProjection": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceFilePath": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceDBHost": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceDBName": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceTable": {
+                                    "type": "string",
+                                    "description": "Source Table Name"
+                                }
+                            }
+                        },
+                        "name": "data",
+                        "in": "body"
+                    }
+                ],
+                "operationId": "sources_create"
+            }
+        },
+        "/api/v1/sources/{sourceid}/": {
+            "get": {
+                "description": "handles GET, PUT, and DELETE requests for sources",
+                "parameters": [
+                    {
+                        "description": "A unique integer value identifying this sources.",
+                        "required": true,
+                        "type": "integer",
+                        "name": "sourceid",
+                        "in": "path"
+                    }
+                ],
+                "tags": [
+                    "sources"
+                ],
+                "summary": "handles GET, PUT, and DELETE requests for sources",
+                "operationId": "sources_read",
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "put": {
+                "description": "handles GET, PUT, and DELETE requests for sources",
+                "parameters": [
+                    {
+                        "description": "A unique integer value identifying this sources.",
+                        "required": true,
+                        "type": "integer",
+                        "name": "sourceid",
+                        "in": "path"
+                    },
+                    {
+                        "schema": {
+                            "required": [
+                                "sourceTable"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "sourceDBSchema": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceType": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceDBPort": {
+                                    "type": "integer",
+                                    "description": ""
+                                },
+                                "jobid": {
+                                    "type": "integer",
+                                    "description": ""
+                                },
+                                "sourceProjection": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceFilePath": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceDBHost": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceDBName": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceTable": {
+                                    "type": "string",
+                                    "description": "Source Table Name"
+                                }
+                            }
+                        },
+                        "name": "data",
+                        "in": "body"
+                    }
+                ],
+                "tags": [
+                    "sources"
+                ],
+                "summary": "handles GET, PUT, and DELETE requests for sources",
+                "operationId": "sources_update",
+                "consumes": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "patch": {
+                "description": "handles GET, PUT, and DELETE requests for sources",
+                "parameters": [
+                    {
+                        "description": "A unique integer value identifying this sources.",
+                        "required": true,
+                        "type": "integer",
+                        "name": "sourceid",
+                        "in": "path"
+                    },
+                    {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "sourceDBSchema": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceType": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceDBPort": {
+                                    "type": "integer",
+                                    "description": ""
+                                },
+                                "jobid": {
+                                    "type": "integer",
+                                    "description": ""
+                                },
+                                "sourceProjection": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceFilePath": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceDBHost": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceDBName": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "sourceTable": {
+                                    "type": "string",
+                                    "description": "Source Table Name"
+                                }
+                            }
+                        },
+                        "name": "data",
+                        "in": "body"
+                    }
+                ],
+                "tags": [
+                    "sources"
+                ],
+                "summary": "handles GET, PUT, and DELETE requests for sources",
+                "operationId": "sources_partial_update",
+                "consumes": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "delete": {
+                "description": "handles GET, PUT, and DELETE requests for sources",
+                "parameters": [
+                    {
+                        "description": "A unique integer value identifying this sources.",
+                        "required": true,
+                        "type": "integer",
+                        "name": "sourceid",
+                        "in": "path"
+                    }
+                ],
+                "tags": [
+                    "sources"
+                ],
+                "summary": "handles GET, PUT, and DELETE requests for sources",
+                "operationId": "sources_delete",
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/transformers/": {
+            "get": {
+                "description": "View to create and list Transformers",
+                "parameters": [],
+                "tags": [
+                    "transformers"
+                ],
+                "summary": "View to create and list Transformers",
+                "operationId": "transformers_list",
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "post": {
+                "description": "View to create and list Transformers",
+                "parameters": [
+                    {
+                        "schema": {
+                            "required": [
+                                "transformer_type"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "ts6_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts3_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts5_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts6_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts5_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts3_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "jobid": {
+                                    "type": "integer",
+                                    "description": ""
+                                },
+                                "ts1_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts2_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts4_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts1_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "transformer_type": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts4_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts2_name": {
+                                    "type": "string",
+                                    "description": ""
+                                }
+                            }
+                        },
+                        "name": "data",
+                        "in": "body"
+                    }
+                ],
+                "tags": [
+                    "transformers"
+                ],
+                "summary": "View to create and list Transformers",
+                "operationId": "transformers_create",
+                "consumes": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/transformers/{transformer_id}/": {
+            "get": {
+                "description": "view used to provide details for individual field map records.",
+                "parameters": [
+                    {
+                        "description": "A unique integer value identifying this transformers.",
+                        "required": true,
+                        "type": "integer",
+                        "name": "transformer_id",
+                        "in": "path"
+                    }
+                ],
+                "tags": [
+                    "transformers"
+                ],
+                "summary": "view used to provide details for individual field map records.",
+                "operationId": "transformers_read",
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "put": {
+                "description": "view used to provide details for individual field map records.",
+                "parameters": [
+                    {
+                        "description": "A unique integer value identifying this transformers.",
+                        "required": true,
+                        "type": "integer",
+                        "name": "transformer_id",
+                        "in": "path"
+                    },
+                    {
+                        "schema": {
+                            "required": [
+                                "transformer_type"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "ts6_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts3_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts5_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts6_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts5_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts3_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "jobid": {
+                                    "type": "integer",
+                                    "description": ""
+                                },
+                                "ts1_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts2_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts4_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts1_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "transformer_type": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts4_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts2_name": {
+                                    "type": "string",
+                                    "description": ""
+                                }
+                            }
+                        },
+                        "name": "data",
+                        "in": "body"
+                    }
+                ],
+                "tags": [
+                    "transformers"
+                ],
+                "summary": "view used to provide details for individual field map records.",
+                "operationId": "transformers_update",
+                "consumes": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "patch": {
+                "description": "view used to provide details for individual field map records.",
+                "parameters": [
+                    {
+                        "description": "A unique integer value identifying this transformers.",
+                        "required": true,
+                        "type": "integer",
+                        "name": "transformer_id",
+                        "in": "path"
+                    },
+                    {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "ts6_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts3_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts5_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts6_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts5_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts3_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "jobid": {
+                                    "type": "integer",
+                                    "description": ""
+                                },
+                                "ts1_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts2_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts4_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts1_name": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "transformer_type": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts4_value": {
+                                    "type": "string",
+                                    "description": ""
+                                },
+                                "ts2_name": {
+                                    "type": "string",
+                                    "description": ""
+                                }
+                            }
+                        },
+                        "name": "data",
+                        "in": "body"
+                    }
+                ],
+                "tags": [
+                    "transformers"
+                ],
+                "summary": "view used to provide details for individual field map records.",
+                "operationId": "transformers_partial_update",
+                "consumes": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "delete": {
+                "description": "view used to provide details for individual field map records.",
+                "parameters": [
+                    {
+                        "description": "A unique integer value identifying this transformers.",
+                        "required": true,
+                        "type": "integer",
+                        "name": "transformer_id",
+                        "in": "path"
+                    }
+                ],
+                "tags": [
+                    "transformers"
+                ],
+                "summary": "view used to provide details for individual field map records.",
+                "operationId": "transformers_delete",
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/users/": {
+            "get": {
+                "description": "View to list the user queryset.",
+                "parameters": [],
+                "tags": [
+                    "users"
+                ],
+                "summary": "View to list the user queryset.",
+                "operationId": "users_list",
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "post": {
+                "description": "View to list the user queryset.",
+                "parameters": [
+                    {
+                        "schema": {
+                            "required": [
+                                "username"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "username": {
+                                    "type": "string",
+                                    "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
+                                },
+                                "email": {
+                                    "type": "string",
+                                    "description": ""
+                                }
+                            }
+                        },
+                        "name": "data",
+                        "in": "body"
+                    }
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "View to list the user queryset.",
+                "operationId": "users_create",
+                "consumes": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/users/{id}/": {
+            "get": {
+                "description": "View to retrieve a user instance.",
+                "parameters": [
+                    {
+                        "description": "A unique integer value identifying this user.",
+                        "required": true,
+                        "type": "integer",
+                        "name": "id",
+                        "in": "path"
+                    }
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "View to retrieve a user instance.",
+                "operationId": "users_read",
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "put": {
+                "description": "View to retrieve a user instance.",
+                "parameters": [
+                    {
+                        "description": "A unique integer value identifying this user.",
+                        "required": true,
+                        "type": "integer",
+                        "name": "id",
+                        "in": "path"
+                    },
+                    {
+                        "schema": {
+                            "required": [
+                                "username"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "username": {
+                                    "type": "string",
+                                    "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
+                                },
+                                "email": {
+                                    "type": "string",
+                                    "description": ""
+                                }
+                            }
+                        },
+                        "name": "data",
+                        "in": "body"
+                    }
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "View to retrieve a user instance.",
+                "operationId": "users_update",
+                "consumes": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "patch": {
+                "description": "View to retrieve a user instance.",
+                "parameters": [
+                    {
+                        "description": "A unique integer value identifying this user.",
+                        "required": true,
+                        "type": "integer",
+                        "name": "id",
+                        "in": "path"
+                    },
+                    {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "username": {
+                                    "type": "string",
+                                    "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
+                                },
+                                "email": {
+                                    "type": "string",
+                                    "description": ""
+                                }
+                            }
+                        },
+                        "name": "data",
+                        "in": "body"
+                    }
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "View to retrieve a user instance.",
+                "operationId": "users_partial_update",
+                "consumes": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "delete": {
+                "description": "View to retrieve a user instance.",
+                "parameters": [
+                    {
+                        "description": "A unique integer value identifying this user.",
+                        "required": true,
+                        "type": "integer",
+                        "name": "id",
+                        "in": "path"
+                    }
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "View to retrieve a user instance.",
+                "operationId": "users_delete",
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "basic": {
+            "type": "basic"
+        }
+    }
+}
