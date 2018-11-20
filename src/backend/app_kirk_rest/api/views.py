@@ -46,13 +46,19 @@ class CreateJobView(generics.ListCreateAPIView):
 class JobDetailsView(generics.RetrieveUpdateDestroyAPIView):
     """This class handles the http GET, PUT and DELETE requests."""
     lookup_field = 'jobid'
-    queryset = ReplicationJobs.objects.all()
+    #queryset = ReplicationJobs.objects.all()
     serializer_class = JobIdlistSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def perform_update(self, serializer):
-        # print 'update: serializer', serializer
+        print 'update: serializer', serializer
         serializer.save(owner=self.request.user)
+
+    def get_queryset(self):
+        jobid = self.kwargs['jobid']
+        print 'jobid',jobid 
+        qs = ReplicationJobs.objects.filter(jobid=jobid)
+        return qs
 
 
 class SourceDataView(generics.ListCreateAPIView):
