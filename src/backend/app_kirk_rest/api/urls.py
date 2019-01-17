@@ -5,8 +5,9 @@ Created on May 16, 2018
 '''
 from __future__ import unicode_literals
 
-from django.conf.urls import url, include
-#from rest_framework.authtoken.views import obtain_auth_token  # add this import
+from django.conf.urls import url
+from django.conf.urls import include
+from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework_swagger.views import get_swagger_view
 
@@ -66,13 +67,14 @@ urlpatterns = {
     url(r'^api/v1/transformers/(?P<transformer_id>[0-9]+)/$',
         TransformerDetailsView.as_view(), name="transformers_details"), 
     url(r'^api/v1/users/$', AddUserView.as_view(), name="users"),
-    url(r'api/v1/users/(?P<pk>[0-9]+)/$',
+    url(r'^api/v1/users/(?P<pk>[0-9]+)/$',
         UserDetailsView.as_view(), name="user_details"),
     # url(r'^get_auth_token/$', obtain_auth_token, name='get_auth_token'),
 
-    # url(r'^get-token/', obtain_auth_token),  # Add this line
     url(r'^api/v1/auth/', include('rest_framework.urls',
                            namespace='rest_framework')),
+    url(r'^api/v1/get-token/', obtain_auth_token),
+
 }
 
 urlpatterns = format_suffix_patterns(urlpatterns)

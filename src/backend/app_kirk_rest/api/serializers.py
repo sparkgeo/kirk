@@ -176,7 +176,7 @@ class JobIdlistSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         # needs reworking...
         # see https://www.django-rest-framework.org/api-guide/serializers/#saving-instances
-        print 'instance', type(instance), instance.jobid
+        #print 'instance', type(instance), instance.jobid
         inst = self.to_representation(validated_data)
         torep = self.to_representation(validated_data)
 
@@ -215,11 +215,11 @@ class JobIdlistSerializer(serializers.ModelSerializer):
                    string value, then the serializer handles the management of
                    the foreignkey update.
         """
-        print 'to_representation instance:', instance, type(instance)
+        #print 'to_representation instance:', instance, type(instance)
         # print 'destEnvKey', instance.destEnvKey
         ret = super(JobIdlistSerializer, self).to_representation(instance)
-        print 'ret', ret
-        print 'instance', instance
+        #print 'ret', ret
+        #print 'instance', instance
         if 'destEnvKey' in ret:
 #             print 'superclass to_representation:', ret, type(ret)
 #             print 'instance.destEnvKey.dest_key:', instance.destEnvKey.dest_key
