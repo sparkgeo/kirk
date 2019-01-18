@@ -33,12 +33,8 @@ else:
 DEBUG = False
 if os.getenv('DJANGO_DEBUG') and os.getenv('DJANGO_DEBUG').lower() == 'true':
     DEBUG = True
-    
-ALLOWED_HOSTS = ['*']
-# ALLOWED_HOSTS = ['localhost', '127.0.0.1','kirkroute-kirk.192.168.99.100.nip.io']
 
-#if 'ALLOWED_HOSTS' in os.environ:
-#    ALLOWED_HOSTS = [os.environ['ALLOWED_HOSTS']]
+ALLOWED_HOSTS = ['*']
 
 #LOGIN_URL = 'https://test.apps.gov.bc.ca/ext/httpbin/get?show_env=1'
 LOGIN_URL = 'rest_framework:login'
