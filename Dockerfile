@@ -1,7 +1,8 @@
 FROM python:3.6-alpine
 
 ENV LANG C.UTF-8
-RUN apk add --no-cache curl python3 pkgconfig python3-dev openssl-dev libffi-dev musl-dev make gcc
+
+RUN apk add --no-cache curl python3 pkgconfig python3-dev openssl-dev libffi-dev musl-dev make gcc postgresql-dev
 
 RUN mkdir /kirk
 WORKDIR /kirk
