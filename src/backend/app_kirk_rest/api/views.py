@@ -51,12 +51,12 @@ class JobDetailsView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def perform_update(self, serializer):
-        print 'update: serializer', serializer
+        print(f'update: serializer {serializer}')
         serializer.save(owner=self.request.user)
 
     def get_queryset(self):
         jobid = self.kwargs['jobid']
-        print 'jobid',jobid 
+        #print(f'jobid: {jobid}') 
         qs = ReplicationJobs.objects.filter(jobid=jobid)
         return qs
 
@@ -165,7 +165,6 @@ class TransformersView(generics.ListCreateAPIView):
     serializer_class = TransformerSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
-    print 'TransformersView'
 
     def perform_create(self, serializer):
         """Save the post data when creating a new bucketlist."""
@@ -184,11 +183,8 @@ class TransformerDetailsView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_object(self):
         transformer_id = self.kwargs['transformer_id']
-        print 'transformer_id', transformer_id
         trans_map = Transformers.objects.filter(transformer_id=transformer_id)  # @UndefinedVariable
         obj = trans_map.get(pk=transformer_id)
-        print 'trans_map', trans_map
-        print 'obj', obj
         return obj
 
 

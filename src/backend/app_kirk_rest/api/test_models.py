@@ -76,7 +76,7 @@ class ModelTestCase(TestCase):
         self.assertNotEqual(old_count, new_count)
         allDest = Destinations.objects.all()
         for dest in allDest:
-            print 'dest:', dest
+            print(f'dest: {dest}')
 
     def test_model_can_create_a_fieldmap(self):
         """
@@ -86,7 +86,7 @@ class ModelTestCase(TestCase):
         dataType = FMEDataTypes(fieldType='testchar',
                                 Description='testing description')
         dataType.save()
-        print 'dataType', dataType
+        print(f'dataType: {dataType}') 
         
         job = ReplicationJobs(jobid=self.jobid)
 
@@ -143,7 +143,7 @@ class ModelTestCase(TestCase):
         self.assertNotEqual(old_count, new_count)
         dataTypes = FMEDataTypes.objects.all()
         for datatype in dataTypes:
-            print 'type:', datatype
+            print(f'type: {datatype}')
 
     def test_model_can_create_a_JobStatistic(self):
         """

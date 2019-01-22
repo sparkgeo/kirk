@@ -159,8 +159,8 @@ class FieldMapViewTestCase(TestCase):
                     'destField': 'DLV'}
 
         fmeColTypes = FMEDataTypes.objects.all()
-        print 'fmeColTypes', fmeColTypes
-        print 'fmeColType', fmeColTypes[0].fieldType
+        print(f'fmeColTypes: {fmeColTypes}')
+        print(f'fmeColType {fmeColTypes[0].fieldType}')
         jobs = ReplicationJobs.objects.create(jobStatus='Testing', cronStr='test',
                                               owner=user)
         self.fieldType = fmeColTypes[0].fieldTypeId
@@ -182,15 +182,15 @@ class FieldMapViewTestCase(TestCase):
     def test_api_can_get_a_fieldmap(self):
         """Test the api can get a given source dataset definition."""
         fldmapList = FieldMap.objects.all()
-        print 'fldmapList', fldmapList
-        print 'fldmapList[0]', fldmapList[0], type(fldmapList[0])
-        print 'value: ', fldmapList[0].fieldMapId
+        print(f'fldmapList {fldmapList}')
+        print(f'fldmapList[0]: {fldmapList[0]}, {type(fldmapList[0])}')
+        print(f'value: {fldmapList[0].fieldMapId}')
         param = fldmapList[0].fieldMapId
         response = self.client.get(
             reverse('fieldmap_details',
             kwargs={'fieldMapId': param}),
             format="json")
-        print 'response', response.content
+        print(f'response: {response.content}')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, fldmapList[0])
@@ -247,4 +247,3 @@ class DestinationsTestCase(TestCase):
             reverse('jobstats_create'),
             fldMapData,
             format="json")
-        # print 'response: ', self.response.status_code
