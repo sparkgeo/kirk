@@ -1,7 +1,6 @@
 FROM python:3.6-alpine as alpinebase
-ENV LANG C.UTF-8
-
 FROM alpinebase as alpinebuilder
+ENV LANG C.UTF-8
 
 RUN mkdir /install
 WORKDIR /install
