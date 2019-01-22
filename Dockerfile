@@ -13,4 +13,4 @@ RUN python manage.py migrate
 RUN python manage.py collectstatic
 
 ENTRYPOINT ["python", "/kirk/manage.py", "runserver", "0.0.0.0:8000"]
-EXPOSE 8000 
+EXPOSE 8000
