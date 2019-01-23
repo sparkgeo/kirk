@@ -1,5 +1,4 @@
-FROM python:3.6-alpine as alpinebase
-FROM alpinebase as alpinebuilder
+FROM python:3.6-alpine as alpinebuilder
 ENV LANG C.UTF-8
 
 RUN mkdir /install
@@ -10,7 +9,7 @@ RUN apk add --no-cache curl python3 pkgconfig python3-dev openssl-dev libffi-dev
 RUN pip install --install-option="--prefix=/install" -r /requirements.txt
 
 
-FROM alpinebase
+FROM python:3.6-alpine as alpinebase
 WORKDIR /kirk
 COPY --from=alpinebuilder /install /usr/local
 ADD ./src/backend/app_kirk_rest /kirk/
