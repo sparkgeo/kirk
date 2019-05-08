@@ -20,11 +20,13 @@ pipeline {
 		
 	stage ('OCP build') {
 		steps {
+			script {
 			sh 'echo "It will take 2 minutes for OpenShift rolling new install to runtime"'
 			def response = httpRequest contentType: 'APPLICATION_JSON_UTF8', httpMode: 'POST', requestBody: "{}", url: "${ocpBH}"
 			ocpTask = readJSON text: response.content
 			echo ocpTask.toString()
 			return "Success".equals(ocpTask["status"])
+				}
 			}
 		}
 	}
