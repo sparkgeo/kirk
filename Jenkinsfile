@@ -1,4 +1,6 @@
 node('master'){
+  withEnv(['PATH=${scannerHome}/bin', 'LD_LIBRARY_PATH=${scannerHome}/lib']) {
+
 
   stage('SonarScan') {
     deleteDir()
@@ -7,7 +9,7 @@ node('master'){
     withSonarQubeEnv('CODEQA') {
     dir('.') {
     sh '''
-       sonar-scanner -Dsonar.sources="." -Dsonar.exclusions="node_modules/**/*" -Dsonar.projectKey="kirk" -Dsonar.projectVersion="${gitTag}" -Dsonar.login="${sonarToken}"
+       ${scannerHome}/bin/sonar-scanner -Dsonar.sources="." -Dsonar.exclusions="node_modules/**/*" -Dsonar.projectKey="kirk" -Dsonar.projectVersion="${gitTag}" -Dsonar.login="${sonarToken}"
        '''
     def props = readProperties  file: '.scannerwork/report-task.txt'
     echo "properties=${props}"
