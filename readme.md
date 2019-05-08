@@ -2,7 +2,7 @@
 
 ## Background
 
-### Current Challenges
+### Current Challenges.
 DataBC's currently uses FME and FME Server as the backbone for most of our 
 replications.  FME product uses individual scripts to perform replications.  
 At DataBC we try to maintain a single source / destination for each 
