@@ -42,4 +42,3 @@ node('master'){
     return "Success".equals(ocpTask["status"])
   }
  }
-}
