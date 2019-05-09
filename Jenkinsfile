@@ -1,6 +1,4 @@
 node('master'){
-  withEnv(['PATH=${scannerHome}/bin', 'LD_LIBRARY_PATH=${scannerHome}/lib']) {
-
 
   stage('SonarScan') {
     deleteDir()
@@ -44,4 +42,3 @@ node('master'){
     return "Success".equals(ocpTask["status"])
   }
  }
-}
