@@ -4,7 +4,7 @@ node('master'){
     git branch: '${gitTag}', url: 'https://github.com/bcgov/kirk'
   }
   stage('SonarQube analysis') {
-    tool name: 'sonarscanner'
+    def scannerHome = tool 'sonarscanner';
     withSonarQubeEnv('CODEQA') {
       sh "${scannerHome}/bin/sonar-scanner -Dsonar.sources="." -Dsonar.projectKey="kirk" -Dsonar.projectVersion="${gitTag}" -Dsonar.login="${sonarToken}""
     }
