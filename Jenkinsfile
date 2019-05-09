@@ -6,7 +6,7 @@ node('master'){
   stage('SonarQube analysis') {
     def scannerHome = tool 'sonarscanner';
     withSonarQubeEnv('CODEQA') {
-      sh "${scannerHome}/bin/sonar-scanner -Dsonar.sources="." -Dsonar.exclusions="node_modules/**/*" -Dsonar.projectKey="kirk" -Dsonar.projectVersion="${gitTag}" -Dsonar.login="${sonarToken}"
+      sh "${scannerHome}/bin/sonar-scanner -Dsonar.sources="." -Dsonar.exclusions="node_modules/**/" -Dsonar.projectKey="kirk" -Dsonar.projectVersion="${gitTag}" -Dsonar.login="${sonarToken}"
     }
   }
 
