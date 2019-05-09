@@ -1,6 +1,6 @@
 # APP_KIRK (Keeping Information Replicated Kontinuously)
 
-## Background
+## Background.
 
 ### Current Challenges
 DataBC's currently uses FME and FME Server as the backbone for most of our 
