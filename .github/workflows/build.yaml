@@ -38,13 +38,14 @@ jobs:
       run: echo ::set-output name=DOCKER_VERSION_TAG::$(date +%Y%m%d-%H%M)
 
     # -------- CREATE THE DOCKER IMAGE --------
+    # repository: should get extracted from the github event 
     - name: Create the docker image
       uses: docker/build-push-action@v1
       with:
         registry: docker.pkg.github.com
         username: $GITHUB_ACTOR
         password: ${{ secrets.GITHUB_TOKEN }}
-        repository: bcgov/kirk/kirk
+        repository: franTarkenton/kirk/kirk
         tag_with_ref: true
         tag_with_sha: true
         add_git_labels: true
