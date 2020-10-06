@@ -38,22 +38,30 @@ jobs:
       run: echo ::set-output name=DOCKER_VERSION_TAG::$(date +%Y%m%d-%H%M)
 
 
-
-    # -------- CREATE THE DOCKER IMAGE --------
-    # repository: should get extracted from the github event 
-    - name: Create the docker image
-      uses: docker/build-push-action@v2
+    - name: Build and Publish Docker image
+      uses: VaultVulp/gp-docker-action@1.1.7
       with:
-        #registry: docker.pkg.github.com
-        #username: $GITHUB_ACTOR
-        #password: ${{ secrets.GITHUB_TOKEN }}
-        #tag_with_ref: true
-        #tag_with_sha: true
-        #add_git_labels: true
-        tags: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
-        push: true
-        #secrets: |
-        #  GIT_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }}
-        # ['builder', 'context', 'file', 'build-args', 'labels', 'tags', 'pull', 
-        #  'target', 'allow', 'no-cache', 'platforms', 'load', 'push', 'outputs', 
-        #  'cache-from', 'cache-to', 'secrets', 'github-token']
+        github-token: ${{ secrets.GITHUB_TOKEN }} # Provide GITHUB_TOKEN to login into the GitHub Packages
+        image-name: kirk # Provide Docker image name
+        image-tag: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }} # Provide Docker image tag
+    
+    
+    
+    #   # -------- CREATE THE DOCKER IMAGE --------
+    # # repository: should get extracted from the github event 
+    # - name: Create the docker image
+    #   uses: docker/build-push-action@v2
+    #   with:
+    #     #registry: docker.pkg.github.com
+    #     #username: $GITHUB_ACTOR
+    #     #password: ${{ secrets.GITHUB_TOKEN }}
+    #     #tag_with_ref: true
+    #     #tag_with_sha: true
+    #     #add_git_labels: true
+    #     tags: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
+    #     push: true
+    #     #secrets: |
+    #     #  GIT_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }}
+    #     # ['builder', 'context', 'file', 'build-args', 'labels', 'tags', 'pull', 
+    #     #  'target', 'allow', 'no-cache', 'platforms', 'load', 'push', 'outputs', 
+    #     #  'cache-from', 'cache-to', 'secrets', 'github-token']
