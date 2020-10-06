@@ -37,17 +37,20 @@ jobs:
       id: calculateImageTag
       run: echo ::set-output name=DOCKER_VERSION_TAG::$(date +%Y%m%d-%H%M)
 
+
+
     # -------- CREATE THE DOCKER IMAGE --------
     # repository: should get extracted from the github event 
     - name: Create the docker image
-      uses: docker/build-push-action@v1
+      uses: docker/build-push-action@v2
       with:
         registry: docker.pkg.github.com
-        username: $GITHUB_ACTOR
-        password: ${{ secrets.GITHUB_TOKEN }}
-        repository: franTarkenton/kirk/kirk
+        #username: $GITHUB_ACTOR
+        #password: ${{ secrets.GITHUB_TOKEN }}
         tag_with_ref: true
         tag_with_sha: true
         add_git_labels: true
         tags: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
         push: true
+        #secrets: |
+        #  GIT_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }}
