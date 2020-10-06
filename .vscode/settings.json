@@ -1,0 +1,4 @@
+{
+    "terminal.integrated.shellArgs.linux": [ "-l" ],
+    "terminal.integrated.rendererType": "dom"
+}
