@@ -8,7 +8,7 @@ ADD requirements.txt /kirk/
 RUN ls /kirk
 
 # apk update
-#RUN apk add --no-cache curl py3-psycopg2
+RUN apk add --no-cache curl py3-psycopg2 libpq
 # RUN apk add --virtual build-dependencies --no-cache python3 pkgconfig python3-dev openssl-dev libffi-dev musl-dev make gcc py3-psycopg2 py3-cffi \
 RUN apk add --virtual build-dependencies --no-cache  pkgconfig  openssl-dev postgresql-libs  make gcc libffi-dev  musl-dev postgresql-dev  \
     && python3 -m pip install -r /kirk/requirements.txt \
