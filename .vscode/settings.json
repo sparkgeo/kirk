@@ -1,4 +1,5 @@
 {
     "terminal.integrated.shellArgs.linux": [ "-l" ],
-    "terminal.integrated.rendererType": "dom"
+    "terminal.integrated.rendererType": "dom",
+    "python.pythonPath": "ve_kirk/bin/python"
 }
