@@ -1,0 +1,14 @@
+.settings
+ve_kirk
+.project
+.pydevproject
+src/backend/staticfiles/
+src/backend/app_kirk_rest/staticfiles/*
+src/backend/app_kirk_rest/db.sqllite3
+src/backend/db.sqllite3
+src/frontend/node_modules
+__pycache__
+src/backend/app_kirk_rest/db.sqlite3
+ve
+db_dump.gz
+docs/deploy_notes.md
