@@ -21,7 +21,7 @@ parameters:
   - name: PGDB_PASSWORD
     description: "Name of the postgres database user password for app schema"
     value: bones_password
-  - name: NAME
+  - name: APP_NAME
     description: "base name for the all objects"
     value: kirk
   - name: ENV
@@ -50,10 +50,36 @@ parameters:
   - name: "POSTGRES_VOLUME_NAME"
     value: 'postgresql-volume'
     description: "the name of the volume used by the postgres database"
+  - name: "DATABASE_SERVICE_ROLE"
+    value: 'database-role'
+    description: "a label used for database roles"
+  - name: "API_SERVICE_ROLE"
+    value: 'api-role'
+    description: "label used for api roles"
+
+
+    
+
 
 objects:
-
-  # github image secret
+  # DATABASE - connection secrets
+  - kind: Secret
+    apiVersion: v1
+    stringData:
+      database-name: ${PGDB_NAME}
+      database-password: ${PGDB_PASSWORD}
+      database-user: ${PGDB_USER}
+    metadata:
+      labels:
+        template: postgresql-persistent-template
+        app: ${APP_NAME}
+        env: ${ENV}
+        name: ${DB_SECRETS_NAME}
+      name: ${DB_SECRETS_NAME}
+      namespace: ${DEPLOY_NAMESPACE}
+    type: Opaque
+  
+  # KIRK - image pull secret
   - kind: Secret
     apiVersion: v1
     data:
@@ -62,39 +88,15 @@ objects:
     metadata:
       name: ${CONTAINER_SRC_SECRET_NAME}
       namespace: ${DEPLOY_NAMESPACE}
+      labels:
+        app: ${APP_NAME}
+        env: ${ENV}
+        name: ${CONTAINER_SRC_SECRET_NAME}
     type: kubernetes.io/dockerconfigjson
   
-  # ---- DataBase Service
-  - kind: Service
+  # DATABASE - PVC Claim
+  - kind: PersistentVolumeClaim
     apiVersion: v1
-    metadata:
-      name: postgresql-svc
-      namespace: ${DEPLOY_NAMESPACE}
-    spec:
-      ports:
-        - port: ${{PGDB_PORT}}
-          protocol: TCP
-          targetPort: ${{PGDB_PORT}}
-      selector:
-        app: ${PGDB_NAME}
-
-  # postgresql secrets
-  - apiVersion: v1
-    kind: Secret
-    stringData:
-      database-name: ${PGDB_NAME}
-      database-password: ${PGDB_PASSWORD}
-      database-user: ${PGDB_USER}
-    metadata:
-      labels:
-        template: postgresql-persistent-template
-      name: ${DB_SECRETS_NAME}
-      namespace: ${DEPLOY_NAMESPACE}
-    type: Opaque
-  
-  # database PVC Claim
-  - apiVersion: v1
-    kind: PersistentVolumeClaim
     metadata:
       annotations:
         volume.beta.kubernetes.io/storage-provisioner: csi.trident.netapp.io
@@ -127,62 +129,30 @@ objects:
         destination:
           - - int:network=internal-cluster-api-endpoint
 
-  # network security policy - db
-  - apiVersion: networking.k8s.io/v1
-    kind: NetworkPolicy
-    metadata:
-      name: intra-namespace-comms
-    spec:
-      description: "allow ${DEPLOY_NAMESPACE} namespace to talk to itself"
-      source:
-        - - $namespace=${DEPLOY_NAMESPACE}
-      destination:
-        - - $namespace=${DEPLOY_NAMESPACE}
-
-  # network security policy - k8s
-  - apiVersion: networking.k8s.io/v1
-    kind: NetworkPolicy
-    metadata:
-      name: int-cluster-k8s-api-comms
-    spec:
-      description: "allow ${DEPLOY_NAMESPACE} pods to talk to the k8s api"
-      destination:
-      - - int:network=internal-cluster-api-endpoint
-      source:
-      - - $namespace=${DEPLOY_NAMESPACE}
-
-  # network security policy - external routes
-  - apiVersion: security.devops.gov.bc.ca/v1alpha1
-    kind: NetworkSecurityPolicy
-    metadata:
-      name: egress-internet
-    spec:
-      description: "allow ${DEPLOY_NAMESPACE} namespace to talk to the internet."
-      source:
-        - - $namespace=${DEPLOY_NAMESPACE}
-      destination:
-        - - ext:network=any
-
-        
-  # deploy config for database
-  - apiVersion: apps.openshift.io/v1
-    kind: DeploymentConfig
+  # DATABASE - DC
+  - kind: DeploymentConfig
+    apiVersion: apps.openshift.io/v1
     metadata:
       annotations:
         template.alpha.openshift.io/wait-for-ready: 'true'
       generation: 4
       labels:
         template: postgresql-persistent-template
-        name: ${PGDB_NAME}
-        app: ${NAME}
-        role: database
+        name: postgresql-dc
+        app: ${APP_NAME}
+        role: ${DATABASE_SERVICE_ROLE}
         env: ${ENV}
-      name: postgresql
+      name: postgresql-dc
       namespace: ${DEPLOY_NAMESPACE}
     spec:
       replicas: 1
       selector:
-        name: postgresql
+        # these below need to exist as the 
+        # template->labels
+        # they should also be referenced in the service
+        # selector
+        app: ${APP_NAME}
+        deploymentconfig: postgresql-dc
       strategy:
         activeDeadlineSeconds: 21600
         recreateParams:
@@ -193,7 +163,11 @@ objects:
         metadata:
           creationTimestamp: null
           labels:
-            name: postgresql
+            name: postgresql-dc
+            app: ${APP_NAME}
+            role: ${DATABASE_SERVICE_ROLE}
+            env: ${ENV}
+            deploymentconfig: postgresql-dc
         spec:
           containers:
             - env:
@@ -295,14 +269,38 @@ objects:
       unavailableReplicas: 0
       updatedReplicas: 0
         
-  # kirk service
-  - apiVersion: v1
-    kind: Service
+  # DATABASE - Service
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: postgresql-svc
+      labels:
+        role: ${DATABASE_SERVICE_ROLE}
+        name: postgresql-svc
+        app: ${APP_NAME}
+        env: ${ENV}
+      namespace: ${DEPLOY_NAMESPACE}
+    spec:
+      ports:
+        - port: ${{PGDB_PORT}}
+          protocol: TCP
+          targetPort: ${{PGDB_PORT}}
+          name: tcp-5432
+      selector:
+        deploymentconfig: postgresql-dc
+        app: ${APP_NAME}
+
+  # KIRK - service
+  - kind: Service
+    apiVersion: v1
     metadata:
       annotations:
         openshift.io/generated-by: OpenShiftWebConsole
       labels:
-        app: kirk
+        app: ${APP_NAME}
+        role: ${API_SERVICE_ROLE}
+        env: ${ENV}
+        name: kirk-svc
       name: kirk-svc
       namespace: ${DEPLOY_NAMESPACE}
     spec:
@@ -312,18 +310,22 @@ objects:
           protocol: TCP
           targetPort: 8000
       selector:
+        app: ${APP_NAME}
         deploymentconfig: kirk-dc
       sessionAffinity: None
       type: ClusterIP
     status:
       loadBalancer: {}
 
-  # deploy config for KIRK app
-  - apiVersion: apps.openshift.io/v1
-    kind: DeploymentConfig
+  # KIRK - DC
+  - kind: DeploymentConfig
+    apiVersion: apps.openshift.io/v1
     metadata:
       labels:
-        app: kirk
+        app: ${APP_NAME}
+        role: ${API_SERVICE_ROLE}
+        name: kirk-dc
+        env: ${ENV}
       name: kirk-dc
       namespace:  ${DEPLOY_NAMESPACE}
     spec:
@@ -347,8 +349,10 @@ objects:
             openshift.io/generated-by: OpenShiftWebConsole
           creationTimestamp: null
           labels:
-            app: kirk
             deploymentconfig: kirk-dc
+            role: ${API_SERVICE_ROLE}
+            app: ${APP_NAME}
+            env: ${ENV}  
         spec:
           imagePullSecrets:
             - name: ${CONTAINER_SRC_SECRET_NAME}
@@ -374,7 +378,7 @@ objects:
                       key: database-user
                       name: ${DB_SECRETS_NAME}
                 - name: POSTGRES_HOST
-                  value: postgresql
+                  value: postgresql-svc
               image: "${CONTAINER_SRC}:${IMAGE_LABEL}"
               imagePullPolicy: Always
               name: kirk
@@ -404,7 +408,7 @@ objects:
       #         docker-registry.default.svc:5000/dbc-kirk-tools/kirk@sha256:76122a9d55355799b55e800589f8de223e448ec750abf715548711a6b4d0147b
       #     type: ImageChange
 
-  # kirk route
+  # KIRK route
   - kind: Route
     apiVersion: route.openshift.io/v1
     metadata:
@@ -423,3 +427,41 @@ objects:
         termination: edge
         insecureEdgeTerminationPolicy: None
       wildcardPolicy: None
+
+  - kind: NetworkSecurityPolicy
+    apiVersion: security.devops.gov.bc.ca/v1alpha1
+    metadata:
+      name: kirk-api-db-nsp
+      labels:
+        name: kirk-api-db-nsp
+        env: ${ENV}
+    spec:
+      description: |
+        Allow the api to talk to the database pod.
+      source:
+        - - role=${API_SERVICE_ROLE}
+          - app=${APP_NAME}
+          - env=${ENV}
+      destination:
+        - - role=${DATABASE_SERVICE_ROLE}
+          - app=${APP_NAME}
+          - env=${ENV}
+
+  # - kind: NetworkSecurityPolicy
+  #   apiVersion: security.devops.gov.bc.ca/v1alpha1
+  #   metadata:
+  #     name: kirk-api-db-nsp2
+  #     labels:
+  #       name: kirk-api-db-nsp2
+  #       env: ${ENV}
+  #   spec:
+  #     description: |
+  #       Allow the api to talk to the database pod.
+  #     destination:
+  #       - - role=${API_SERVICE_ROLE}
+  #         - app=${APP_NAME}
+  #         - env=${ENV}
+  #     source:
+  #       - - role=${DATABASE_SERVICE_ROLE}
+  #         - app=${APP_NAME}
+  #         - env=${ENV}

@@ -6,6 +6,17 @@
   },
   "objects": [
     {
+      "apiVersion": "v1",
+      "data": {
+        "backup.conf": "${BACKUP_CONFIG}"
+      },
+      "kind": "ConfigMap",
+      "metadata": {
+        "name": "backup-conf",
+        "namespace": "${DEPLOY_NAMESPACE}"
+      }
+    },
+    {
       "kind": "PersistentVolumeClaim",
       "apiVersion": "v1",
       "metadata": {
@@ -17,7 +28,9 @@
       },
       "spec": {
         "storageClassName": "${BACKUP_VOLUME_CLASS}",
-        "accessModes": ["ReadWriteOnce"],
+        "accessModes": [
+          "ReadWriteOnce"
+        ],
         "resources": {
           "requests": {
             "storage": "${BACKUP_VOLUME_SIZE}"
@@ -37,7 +50,9 @@
       },
       "spec": {
         "storageClassName": "${VERIFICATION_VOLUME_CLASS}",
-        "accessModes": ["ReadWriteOnce"],
+        "accessModes": [
+          "ReadWriteOnce"
+        ],
         "resources": {
           "requests": {
             "storage": "${VERIFICATION_VOLUME_SIZE}"
@@ -60,11 +75,11 @@
       "kind": "Secret",
       "apiVersion": "v1",
       "data": {
-          ".dockerconfigjson": "${GITHUB_PACKAGE_ACCESS_JSON_BASE64}"
+        ".dockerconfigjson": "${GITHUB_PACKAGE_ACCESS_JSON_BASE64}"
       },
       "metadata": {
-          "name": "${GITHUB_PACKAGE_ACCESS_SECRET_NAME}",
-          "namespace": "${DEPLOY_NAMESPACE}"
+        "name": "${GITHUB_PACKAGE_ACCESS_SECRET_NAME}",
+        "namespace": "${DEPLOY_NAMESPACE}"
       },
       "type": "kubernetes.io/dockerconfigjson"
     },
@@ -189,7 +204,7 @@
                     "name": "DATABASE_USER",
                     "valueFrom": {
                       "secretKeyRef": {
-                        "name": "${DATABASE_DEPLOYMENT_NAME}",
+                        "name": "${DATABASE_SECRET_NAME}",
                         "key": "${DATABASE_USER_KEY_NAME}"
                       }
                     }
@@ -198,7 +213,7 @@
                     "name": "DATABASE_PASSWORD",
                     "valueFrom": {
                       "secretKeyRef": {
-                        "name": "${DATABASE_DEPLOYMENT_NAME}",
+                        "name": "${DATABASE_SECRET_NAME}",
                         "key": "${DATABASE_PASSWORD_KEY_NAME}"
                       }
                     }
@@ -275,7 +290,11 @@
                 ]
               }
             ],
-            "imagePullSecrets": [{"name": "${GITHUB_PACKAGE_ACCESS_SECRET_NAME}"}]
+            "imagePullSecrets": [
+              {
+                "name": "${GITHUB_PACKAGE_ACCESS_SECRET_NAME}"
+              }
+            ]
           }
         }
       }
@@ -346,7 +365,7 @@
       "value": ""
     },
     {
-      "name": "DATABASE_DEPLOYMENT_NAME",
+      "name": "DATABASE_SECRET_NAME",
       "displayName": "Database Deployment Name",
       "description": "The name associated to the database deployment resources.  In particular, this is used to wire up the credentials associated to the database.",
       "required": true,
@@ -355,14 +374,14 @@
     {
       "name": "DATABASE_USER_KEY_NAME",
       "displayName": "Database User Key Name",
-      "description": "The datbase user key name stoed in database deployment resources specified by DATABASE_DEPLOYMENT_NAME.",
+      "description": "The datbase user key name stoed in database deployment resources specified by DATABASE_SECRET_NAME.",
       "required": true,
       "value": "database-user"
     },
     {
       "name": "DATABASE_PASSWORD_KEY_NAME",
       "displayName": "Database Password Key Name",
-      "description": "The database password key name stored in database deployment resources specified by DATABASE_DEPLOYMENT_NAME.",
+      "description": "The database password key name stored in database deployment resources specified by DATABASE_SECRET_NAME.",
       "required": true,
       "value": "database-password"
     },
@@ -517,7 +536,7 @@
       "displayName": "Backup Volume Class",
       "description": "The class of the persistent volume used to store the backups; netapp-block-standard, netapp-file-standard, nfs-backup.  Please note, nfs-backup storage is the recommended storage type for backups.  It MUST be provisioned manually through the OCP catalog via the 'BC Gov NFS Storage' template.  nfs-backup storage CANNOT be automatically provisioned by this template.",
       "required": true,
-      "value": "nfs-backup"
+      "value": "netapp-file-backup"
     },
     {
       "name": "VERIFICATION_VOLUME_NAME",
@@ -593,6 +612,13 @@
       "name": "GITHUB_PACKAGE_ACCESS_JSON_BASE64",
       "displayName": "base64 image access key",
       "description": "base64 image access key",
+      "required": true,
+      "value": ""
+    },
+    {
+      "name": "BACKUP_CONFIG",
+      "displayName": "Backup configuration",
+      "description": "The backup configuration, should include at least one database description, like postgres=postgresql:<port>/<dbname>, and a cron string like:  0 1 * * * default ./backup.sh -s ",
       "required": true,
       "value": ""
     }

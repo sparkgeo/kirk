@@ -10,3 +10,5 @@ src/frontend/node_modules
 __pycache__
 src/backend/app_kirk_rest/db.sqlite3
 ve
+db_dump.gz
+docs/deploy_notes.md
