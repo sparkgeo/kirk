@@ -57,10 +57,6 @@ parameters:
     value: 'api-role'
     description: "label used for api roles"
 
-
-    
-
-
 objects:
   # DATABASE - connection secrets
   - kind: Secret
