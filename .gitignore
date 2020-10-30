@@ -12,3 +12,9 @@ src/backend/app_kirk_rest/db.sqlite3
 ve
 db_dump.gz
 docs/deploy_notes.md
+kirk-helm/templates/config.yaml
+kirk-helm/templates/config-dev.yaml
+helm-conifg-dev.yaml
+helm-config-dev.yaml
+helm_junk
+

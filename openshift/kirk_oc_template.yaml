@@ -58,7 +58,7 @@ parameters:
     description: "label used for api roles"
 
 objects:
-  # DATABASE - connection secrets
+  # HELMD - DATABASE - connection secrets
   - kind: Secret
     apiVersion: v1
     stringData:
@@ -75,7 +75,7 @@ objects:
       namespace: ${DEPLOY_NAMESPACE}
     type: Opaque
   
-  # KIRK - image pull secret
+  # HELMD - KIRK - image pull secret
   - kind: Secret
     apiVersion: v1
     data:
@@ -90,7 +90,7 @@ objects:
         name: ${CONTAINER_SRC_SECRET_NAME}
     type: kubernetes.io/dockerconfigjson
   
-  # DATABASE - PVC Claim
+  # HELMD - DATABASE - PVC Claim
   - kind: PersistentVolumeClaim
     apiVersion: v1
     metadata:
@@ -112,18 +112,6 @@ objects:
           storage: 1Gi
       storageClassName: netapp-file-standard
       volumeMode: Filesystem
-
-      apiVersion: secops.pathfinder.gov.bc.ca/v1alpha1
-      kind: NetworkSecurityPolicy
-      metadata:
-        name: custom-pods-to-k8s-api-[APP_NAME]
-      spec:
-        description: |
-          Allow pods to talk to the internal K8S api 
-        source:
-          - - $namespace=handy-dandy-prod
-        destination:
-          - - int:network=internal-cluster-api-endpoint
 
   # DATABASE - DC
   - kind: DeploymentConfig
