@@ -57,7 +57,7 @@ spec:
                   key: database-user
                   name: {{ .Values.kirk_pgdb_secret_name }}
             - name: POSTGRES_HOST
-              value: "{{ .Values.app_name}}-svc" 
+              value: "{{ .Values.app_name}}-postgres-svc"
           image: "{{ .Values.github_imagepull_parameters.registry }}:{{ .Values.github_imagepull_parameters.imagetag }}"
           imagePullPolicy: Always
           name: kirk

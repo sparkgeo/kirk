@@ -1,0 +1,18 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Values.app_name }}-postgres-svc
+  labels:
+    role:  {{ .Values.label_database_role }}
+    name: {{ .Values.app_name }}-postgres-svc
+    app: {{ .Values.app_name }}
+    env: {{ .Values.env }}
+spec:
+  ports:
+    - port: {{ .Values.kirk_pgdb_params.kirk_database_port }}
+      protocol: TCP
+      targetPort: {{ .Values.kirk_pgdb_params.kirk_database_port }}
+      name: tcp-{{ .Values.kirk_pgdb_params.kirk_database_port }}
+  selector:
+    deploymentconfig: {{ .Values.app_name }}-postgres-dc
+    app: {{ .Values.app_name }}

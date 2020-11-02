@@ -113,7 +113,7 @@ objects:
       storageClassName: netapp-file-standard
       volumeMode: Filesystem
 
-  # DATABASE - DC
+  # HELMD - DATABASE - DC
   - kind: DeploymentConfig
     apiVersion: apps.openshift.io/v1
     metadata:
@@ -253,7 +253,7 @@ objects:
       unavailableReplicas: 0
       updatedReplicas: 0
         
-  # DATABASE - Service
+  # HELMD - DATABASE - Service
   - kind: Service
     apiVersion: v1
     metadata:
@@ -274,7 +274,7 @@ objects:
         deploymentconfig: postgresql-dc
         app: ${APP_NAME}
 
-  # KIRK - service
+  # HELMD - KIRK - service
   - kind: Service
     apiVersion: v1
     metadata:
@@ -301,7 +301,7 @@ objects:
     status:
       loadBalancer: {}
 
-  # KIRK - DC
+  # HELMD - KIRK - DC
   - kind: DeploymentConfig
     apiVersion: apps.openshift.io/v1
     metadata:
@@ -392,7 +392,7 @@ objects:
       #         docker-registry.default.svc:5000/dbc-kirk-tools/kirk@sha256:76122a9d55355799b55e800589f8de223e448ec750abf715548711a6b4d0147b
       #     type: ImageChange
 
-  # KIRK route
+  # HELMD - KIRK route
   - kind: Route
     apiVersion: route.openshift.io/v1
     metadata:
@@ -412,6 +412,7 @@ objects:
         insecureEdgeTerminationPolicy: None
       wildcardPolicy: None
 
+  # HELMD - API to DB NSP
   - kind: NetworkSecurityPolicy
     apiVersion: security.devops.gov.bc.ca/v1alpha1
     metadata:

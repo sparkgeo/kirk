@@ -7,7 +7,7 @@ name: BUILDPackage
 # -------- DEBUGGING --------
 on: 
   push:
-    branches: ['dev', 'ocp4_ea']
+    branches: ['dev', 'mk_helm_cht']
 
 
 # on:

@@ -1,0 +1,24 @@
+kind: Service
+apiVersion: v1
+metadata:
+  annotations:
+    openshift.io/generated-by: OpenShiftWebConsole
+  labels:
+    app: {{ .Values.app_name }}
+    role: {{ .Values.label_api_role }}
+    env: {{ .Values.env }}
+    name: {{ .Values.app_name }}-svc
+  name: {{ .Values.app_name }}-svc
+spec:
+  ports:
+    - name: {{ .Values.kirk_app_params.kirk_container_port }}-tcp
+      port: {{ .Values.kirk_app_params.kirk_container_port }}
+      protocol: TCP
+      targetPort: {{ .Values.kirk_app_params.kirk_port }}
+  selector:
+    app: {{ .Values.app_name }}
+    deploymentconfig: {{ .Values.app_name }}-dc
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

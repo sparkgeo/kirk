@@ -189,6 +189,9 @@ kirk pod will have a prefix of *kirk-dc*
 
 `curl -v telnet://postgresql-svc:5432`
 
+**on helm deploy renamed the service so use:
+`curl -v telnet://kirk-postgres-svc:5432`
+
 
 ### Verify that kirk pod can talk to the db
 
@@ -220,7 +223,10 @@ capturing traffic to the db pod.
 In theory these network security profiles (NSP's) will render the network 
 security policies similar to default policies configured in OCP3.
 
-`oc4 process -f https://raw.githubusercontent.com/BCDevOps/platform-services/master/security/aporeto/docs/sample/quickstart-nsp.yaml NAMESPACE=<project namespace> | oc4 create -f -`
+```
+NAMESPACE=<project namespace>
+oc process -f https://raw.githubusercontent.com/BCDevOps/platform-services/master/security/aporeto/docs/sample/quickstart-nsp.yaml NAMESPACE=$NAMESPACE | oc create -f -
+```
 
 [link to github file](https://github.com/BCDevOps/platform-services/blob/master/security/aporeto/docs/sample/quickstart-nsp.yaml)
 
