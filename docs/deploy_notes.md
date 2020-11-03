@@ -173,6 +173,10 @@ Changes from the parent version:
 
 to deploy process and run the template: *backup-deploy.json*
 
+## Data Migrations for deployments
+
+[good article on how to properly handle data migrations for django apps](https://itnext.io/django-migrations-with-init-containers-on-openshift-597db8138dad)
+
 # Debugging Openshift Deployments
 
 ### Get the pods

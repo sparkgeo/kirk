@@ -1,0 +1,47 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Values.app_name}}-migrate-job
+  labels:
+    app: {{ .Values.app_name }}
+    name: {{ .Values.app_name }}-migrate-job
+    env: {{ .Values.env }}
+spec:
+  template:
+    metadata:
+      labels:
+        deploymentconfig: {{ .Values.app_name }}-dc
+        role: {{ .Values.label_api_role }}
+        app: {{ .Values.app_name }}
+        env: {{ .Values.env }}
+    spec:
+      imagePullSecrets:
+        - name: {{ .Values.github_imagepull_secret_name }}
+      containers:
+        - env:
+            - name: POSTGRES_PORT
+              value: {{ .Values.kirk_pgdb_params.kirk_database_port | quote }}
+            - name: POSTGRES_DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  key: database-name
+                  name: {{ .Values.kirk_pgdb_secret_name }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: database-password
+                  name: {{ .Values.kirk_pgdb_secret_name }}
+            - name: POSTGRES_USER_NAME
+              valueFrom:
+                secretKeyRef:
+                  key: database-user
+                  name: {{ .Values.kirk_pgdb_secret_name }}
+            - name: POSTGRES_HOST
+              value: "{{ .Values.app_name}}-postgres-svc"
+          
+          image: "{{ .Values.github_imagepull_parameters.registry }}:{{ .Values.github_imagepull_parameters.imagetag }}"
+          imagePullPolicy: Always
+          name: {{ .Values.app_name}}-job
+          command: ['python', 'manage.py', 'migrate']
+      restartPolicy: Never
+  backoffLimit: 5

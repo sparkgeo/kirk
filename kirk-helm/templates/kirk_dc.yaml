@@ -33,6 +33,51 @@ spec:
         app: {{ .Values.app_name }}
         env: {{ .Values.env }}
     spec:
+      initContainers:
+      - name: {{ .Values.app_name }}-init
+        image: ${NAME}
+        imagePullPolicy: Always
+        env:
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                key: database-user
+                name: ${NAME}-db
+                optional: false
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: database-password
+                name: ${NAME}-db
+                optional: false
+          - name: DJANGO_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                key: django-secret-key
+                name: ${NAME}-secret
+                optional: false
+          - name: POSTGRES_SQL_SERVICE_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: ${NAME}-db
+                key: database-host
+                optional: false
+          - name: POSTGRES_SQL_SERVICE_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: ${NAME}-db
+                key: database-port
+                optional: false
+        command:
+        - /bin/bash
+        - -c
+        - sleep 30 &&
+          echo "Begin Migration ..." &&
+          python3 "/opt/app-root/src/myapp/manage.py migrate --noinput" &&
+          echo "Migration Completed" &&
+          sleep 5
+
+
       imagePullSecrets:
         - name: {{ .Values.github_imagepull_secret_name }}
       containers:
@@ -60,6 +105,20 @@ spec:
               value: "{{ .Values.app_name}}-postgres-svc"
           image: "{{ .Values.github_imagepull_parameters.registry }}:{{ .Values.github_imagepull_parameters.imagetag }}"
           imagePullPolicy: Always
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - '-i'
+                - '-c'
+                - python manage.py check
+                #- pg_isready -h {{ .Values.app_name}}-postgres-svc -p {{ .Values.kirk_pgdb_params.kirk_database_port }}
+            failureThreshold: 5
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+
           name: kirk
           ports:
             - containerPort: {{ .Values.kirk_app_params.kirk_port }}
