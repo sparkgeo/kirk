@@ -33,49 +33,38 @@ spec:
         app: {{ .Values.app_name }}
         env: {{ .Values.env }}
     spec:
-      initContainers:
-      - name: {{ .Values.app_name }}-init
-        image: ${NAME}
-        imagePullPolicy: Always
-        env:
-          - name: DATABASE_USER
-            valueFrom:
-              secretKeyRef:
-                key: database-user
-                name: ${NAME}-db
-                optional: false
-          - name: DATABASE_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                key: database-password
-                name: ${NAME}-db
-                optional: false
-          - name: DJANGO_SECRET_KEY
-            valueFrom:
-              secretKeyRef:
-                key: django-secret-key
-                name: ${NAME}-secret
-                optional: false
-          - name: POSTGRES_SQL_SERVICE_HOST
-            valueFrom:
-              configMapKeyRef:
-                name: ${NAME}-db
-                key: database-host
-                optional: false
-          - name: POSTGRES_SQL_SERVICE_PORT
-            valueFrom:
-              configMapKeyRef:
-                name: ${NAME}-db
-                key: database-port
-                optional: false
-        command:
-        - /bin/bash
-        - -c
-        - sleep 30 &&
-          echo "Begin Migration ..." &&
-          python3 "/opt/app-root/src/myapp/manage.py migrate --noinput" &&
-          echo "Migration Completed" &&
-          sleep 5
+      # initContainers:
+      # - name: {{ .Values.app_name }}-init
+      #   image: "{{ .Values.github_imagepull_parameters.registry }}:{{ .Values.github_imagepull_parameters.imagetag }}"
+      #   imagePullPolicy: Always
+      #   env:
+      #     - name: POSTGRES_PORT
+      #       value: {{ .Values.kirk_pgdb_params.kirk_database_port | quote }}
+      #     - name: POSTGRES_DB_NAME
+      #       valueFrom:
+      #         secretKeyRef:
+      #           key: database-name
+      #           name: {{ .Values.kirk_pgdb_secret_name }}
+      #     - name: POSTGRES_PASSWORD
+      #       valueFrom:
+      #         secretKeyRef:
+      #           key: database-password
+      #           name: {{ .Values.kirk_pgdb_secret_name }}
+      #     - name: POSTGRES_USER_NAME
+      #       valueFrom:
+      #         secretKeyRef:
+      #           key: database-user
+      #           name: {{ .Values.kirk_pgdb_secret_name }}
+      #     - name: POSTGRES_HOST
+      #       value: "{{ .Values.app_name}}-postgres-svc"
+      #   command:
+      #   - /bin/sh
+      #   - -c
+      #   - sleep 30 &&
+      #     echo "Begin Migration ..." &&
+      #     python3 "manage.py migrate --noinput" &&
+      #     echo "Migration Completed" &&
+      #     sleep 2
 
 
       imagePullSecrets:
@@ -118,7 +107,20 @@ spec:
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 5
-
+          livenessProbe: 
+            httpGet:
+              path: /
+              port: {{ .Values.kirk_app_params.kirk_port }}
+            initialDelaySeconds: 3
+            periodSeconds: 4
+            failureThreshold: 2
+          startupProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.kirk_app_params.kirk_port }}
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            failureThreshold: 3
           name: kirk
           ports:
             - containerPort: {{ .Values.kirk_app_params.kirk_port }}
@@ -130,4 +132,4 @@ spec:
       restartPolicy: Always
       schedulerName: default-scheduler
       securityContext: {}
-      terminationGracePeriodSeconds: 30
+      terminationGracePeriodSeconds: 5

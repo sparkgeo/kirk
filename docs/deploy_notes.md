@@ -176,6 +176,7 @@ to deploy process and run the template: *backup-deploy.json*
 ## Data Migrations for deployments
 
 [good article on how to properly handle data migrations for django apps](https://itnext.io/django-migrations-with-init-containers-on-openshift-597db8138dad)
+[migrations using jobs](https://medium.com/@markgituma/kubernetes-local-to-production-with-django-3-postgres-with-migrations-on-minikube-31f2baa8926e)
 
 # Debugging Openshift Deployments
 
