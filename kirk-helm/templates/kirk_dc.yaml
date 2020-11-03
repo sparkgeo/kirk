@@ -111,9 +111,9 @@ spec:
             httpGet:
               path: /
               port: {{ .Values.kirk_app_params.kirk_port }}
-            initialDelaySeconds: 3
-            periodSeconds: 4
-            failureThreshold: 2
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 5
           startupProbe:
             httpGet:
               path: /

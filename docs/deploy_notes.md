@@ -35,41 +35,47 @@ then hit the same address... 127.0.0.1:8000 to verify everything is workin in th
 
 assuming it is, test on openshift...
 
-# Build Image
+## Build Image
 
 a github action has been setup to build images on pull request to dev. (not implemented ATM)
 
-
 # Data Migrations
+
 ### data model migrations:
 
 * ~~python manage.py makemigrations api~~
 * ~~python manage.py migrate api~~
 
+*not required, now part of helm deployment*
 
-*not required, now part of dockerfile*
+### loading fixtures
 
-### loading fixtures: 
 these are a one time load!  Only need to be loaded when the new openshift project
 is created.
+
+Log into a kirk pod and run the following command there.  This is a one time thing
+for net new installs.  Could create a job to do this and configure with a flag that
+triggers its run.
 
 * `python manage.py loaddata Destination_Keywords.json`
 * `python manage.py loaddata fme_data_types.json`
 * `python manage.py loaddata job_data.json`
 
 ### create superuser
+
 Also a one time thing for new deployment to openshift, before doing this change the email and the username
-listed below
+listed below.
 
 `python manage.py createsuperuser --email <su email address> admin@example.com --username <su username>`
 
 ### create api token
+
 Only the first time kirk is set up.
+
 `$ python manage.py drf_create_token spock`
 
 Then put api token into pmp along with the superuser you created in the previous
 step.
-
 
 # KIRK API / Replication overview
 
@@ -109,7 +115,6 @@ Job Triggered
          - rest call to get ???
        Would be nice to be able to just make one call that returns
        all this info.
-         
        
 # Openshift Deployment
 

@@ -1,3 +1,4 @@
+{{- if default .Values.kirk_run_migration false -}}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -45,3 +46,4 @@ spec:
           command: ['python', 'manage.py', 'migrate']
       restartPolicy: Never
   backoffLimit: 5
+  {{- end }}

@@ -1,0 +1,28 @@
+# on: 
+#   push:
+#     branches: ['dev', 'mk_helm_cht']
+
+on: repository_dispatch
+
+jobs:
+  build_backup:
+    defaults:
+      run:
+        shell: bash
+    name: Create Dockerfile for DB Backups Image
+    runs-on: ubuntu-18.04
+    outputs:
+      dockerversiontag: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
+    steps:
+    - name: Get Dockerfile for DB Backups Image
+      run: |
+        git clone https://github.com/BCDevOps/backup-container.git
+    - name: calculateImageTag
+      id: calculateImageTag
+      run: echo ::set-output name=DOCKER_VERSION_TAG::$(date +%Y%m%d-%H%M)
+    - name: Build and Publish Docker image
+      uses: VaultVulp/gp-docker-action@1.1.7
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }} # Provide GITHUB_TOKEN to login into the GitHub Packages
+        image-name: backup # Provide Docker image name
+        image-tag: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }} # Provide Docker image tag

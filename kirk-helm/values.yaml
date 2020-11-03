@@ -86,3 +86,14 @@ label_database_role: database-role
 label_api_role: api-role
 # allows external (web) requests to api
 label_external_role: api-in-role
+
+kirk_app_params:
+  # The port that the service is configured for.
+  kirk_port: 8000
+  # the port that is configured in the entrypoint for the container
+  # locked into the kirk port
+  kirk_container_port: 8000
+
+kirk_run_migration: false
+
+  
