@@ -23,7 +23,7 @@ jobs:
     - uses: actions/checkout@v2
       name: checkout backup repo
       #repository: BCDevOps/backup-container
-      repository: https://github.com/BCDevOps/backup-container
+      repository: github.com/BCDevOps/backup-container
     - name: Verify contents of workspace
       run: |
         ls -l .
