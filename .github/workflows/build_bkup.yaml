@@ -73,7 +73,10 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
         registry: docker.pkg.github.com
         repository: bcgov/kirk/backup
+        dockerfile: ./docker/Dockerfile
+        path: ./docker
         tag_with_ref: true
+        tag_with_sha: true
 
         #tags: docker.pkg.github.com/${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
 #docker.pkg.github.com/user/app:latest
