@@ -22,7 +22,7 @@ jobs:
       run:
         shell: bash
 
-    name: Build BCDC-SMK container image
+    name: Build kirk container image
     # The type of runner that the job will run on
     runs-on: ubuntu-18.04
     outputs:
