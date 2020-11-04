@@ -20,6 +20,7 @@ jobs:
       run: |
         git clone https://github.com/BCDevOps/backup-container.git .
         ls -l .
+        cd docker
     - name: calculateImageTag
       id: calculateImageTag
       run: echo ::set-output name=DOCKER_VERSION_TAG::$(date +%Y%m%d-%H%M)
@@ -30,4 +31,4 @@ jobs:
         image-name: backup # Provide Docker image name
         image-tag: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }} # Provide Docker image tag
         #dockerfile: Dockerfile
-        build-context: ./docker
+        #build-context: ./docker
