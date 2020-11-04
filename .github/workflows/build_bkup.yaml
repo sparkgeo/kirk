@@ -24,8 +24,8 @@ jobs:
       name: checkout backup repo
       repository: BCDevOps/backup-container
     - name: Verify contents of workspace
-        run: |
-          ls -l .
+      run: |
+        ls -l .
 
     - name: calculateImageTag
       id: calculateImageTag
