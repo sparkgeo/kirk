@@ -18,7 +18,7 @@ jobs:
     steps:
     - name: Get Dockerfile for DB Backups Image
       run: |
-        git clone https://github.com/BCDevOps/backup-container.git
+        git clone https://github.com/BCDevOps/backup-container.git .
         ls -l .
     - name: calculateImageTag
       id: calculateImageTag
