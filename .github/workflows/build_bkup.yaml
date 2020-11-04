@@ -19,6 +19,7 @@ jobs:
     - name: Get Dockerfile for DB Backups Image
       run: |
         git clone https://github.com/BCDevOps/backup-container.git
+        ls -l .
     - name: calculateImageTag
       id: calculateImageTag
       run: echo ::set-output name=DOCKER_VERSION_TAG::$(date +%Y%m%d-%H%M)
