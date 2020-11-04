@@ -2,7 +2,7 @@
 #   push:
 #     branches: ['dev', 'mk_helm_cht']
 
-on: repository_dispatch
+on: workflow_dispatch
 
 jobs:
   build_backup:
