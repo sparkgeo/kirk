@@ -1,10 +1,10 @@
 name: buildBackupContainer
 
-on: 
-  push:
-    branches: ['dev', 'mk_helm_cht']
+# on: 
+#   push:
+#     branches: ['dev', 'mk_helm_cht']
 
-#on: workflow_dispatch
+on: [workflow_dispatch]
 
 jobs:
   build_backup:
@@ -28,3 +28,4 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }} # Provide GITHUB_TOKEN to login into the GitHub Packages
         image-name: backup # Provide Docker image name
         image-tag: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }} # Provide Docker image tag
+        dockerfile: docker/Dockerfile
