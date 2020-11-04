@@ -60,7 +60,7 @@ jobs:
         context: ./docker
         file: ./docker/Dockerfile
         push: true
-        tags: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
+        #tags: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
 
     #     username: ${{ github.actor }}
     #     password: ${{ secrets.GITHUB_TOKEN }}
