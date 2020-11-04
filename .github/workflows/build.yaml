@@ -10,10 +10,22 @@ name: BUILDPackage
 #     branches: ['dev', 'mk_helm_cht']
 
 
-# on:
-#   pull_request:
-#     branches: ['master']
-#     types: ['opened', 'reopened']
+on:
+  pull_request:
+    branches: ['master']
+    types: ['opened', 'reopened']
+    paths-ignore:
+      - openshift/**
+      - .vscode/**
+      - docs/**
+      - kirk-helm/**
+      - .gitignore
+      - code_of_conduct.md
+      - Jenkinsfile
+      - LICENSE
+      - open-api.json
+      - readme.md
+      - workflows/**
 
 jobs:
   # This workflow contains a single job called "build"
