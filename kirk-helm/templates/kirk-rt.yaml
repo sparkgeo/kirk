@@ -1,0 +1,20 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  labels:
+    app: {{ .Values.app_name }}
+    env: {{ .Values.env }}
+    role: {{ .Values.label_api_role }}
+    name: {{ .Values.app_name }}-rt
+  name: {{ .Values.app_name }}-rt
+spec:
+  to:
+    kind: Service
+    name: {{ .Values.app_name }}-svc
+    weight: 100
+  port:
+    targetPort: {{ .Values.kirk_app_params.kirk_port }}-tcp
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: None
+  wildcardPolicy: None

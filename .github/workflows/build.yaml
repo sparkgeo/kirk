@@ -5,15 +5,26 @@ name: BUILDPackage
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 # -------- DEBUGGING --------
-on: 
-  push:
-    branches: ['dev', 'ocp4_ea']
+# on: 
+#   push:
+#     branches: ['dev', 'mk_helm_cht']
 
 
-# on:
-#   pull_request:
-#     branches: ['master']
-#     types: ['opened', 'reopened']
+on:
+  pull_request:
+    branches: ['master']
+    types: ['opened', 'reopened']
+    paths-ignore:
+      - openshift/**
+      - .vscode/**
+      - docs/**
+      - kirk-helm/**
+      - .gitignore
+      - code_of_conduct.md
+      - Jenkinsfile
+      - LICENSE
+      - open-api.json
+      - readme.md
 
 jobs:
   # This workflow contains a single job called "build"
@@ -22,7 +33,7 @@ jobs:
       run:
         shell: bash
 
-    name: Build BCDC-SMK container image
+    name: Build kirk container image
     # The type of runner that the job will run on
     runs-on: ubuntu-18.04
     outputs:

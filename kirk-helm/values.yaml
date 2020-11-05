@@ -1,0 +1,136 @@
+# Default values for kirk-helm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths: []
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# name of the secret that is used to retrieve the container, require by github hosted packages (images)
+github_imagepull_secret_name: kirk-image-secret
+github_backup_imagepull_secret_name: kirkbackup-image-secret
+
+# the name of the persistent volume claim that is going to be used for the database persistent storage
+database_pvc_name: postgresql-pvc
+
+app_name: kirk
+env: dev
+
+label_database_role: database-role
+label_api_role: api-role
+# allows external (web) requests to api
+label_external_role: api-in-role
+
+kirk_app_params:
+  # The port that the service is configured for.
+  kirk_port: 8000
+  # the port that is configured in the entrypoint for the container
+  # locked into the kirk port
+  kirk_container_port: 8000
+
+kirk_run_migration: false
+
+# ------------------------------------
+#  Values you may want to override
+# ------------------------------------
+
+# Parameters used to create and connect to the postgres database that
+# sits behind kirk
+kirk_pgdb_params:
+  # Annotations to add to the service account
+  annotations: {}
+  # The user that will be created in the database and for 
+  # subsequent database connections.
+  kirk_database_user: "default_db_user"
+  kirk_database_password: "GoHabsGo"
+  kirk_database_name: "kirk-pgdb"
+  kirk_database_port: 8888
+
+
+# Secret name that contains the database parameters described above
+kirk_pgdb_secret_name: kirk-database-secrets
+
+# Github packages require credentials to access packages.
+github_imagepull_parameters:
+  email: guy.lafleur@montreal.canadians.ca
+  username: guyLafleur
+  password: b05t0NSuuuuuxx999342
+  registry: docker.pkg.github.com/bcgov/kirk/kirk
+  imagetag: 20201021-2140
+
+# secrets used to access the backup image
+github_backup_imagepull_parameters:
+  email: guy.lafleur@montreal.canadians.ca
+  username: guyLafleur
+  password: b05t0NSuuuuuxx999342
+  registry: docker.pkg.github.com/bcgov/kirk/backup
+  imagetag: 20201104-1728
+  
+        
+

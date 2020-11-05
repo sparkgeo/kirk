@@ -35,41 +35,47 @@ then hit the same address... 127.0.0.1:8000 to verify everything is workin in th
 
 assuming it is, test on openshift...
 
-# Build Image
+## Build Image
 
 a github action has been setup to build images on pull request to dev. (not implemented ATM)
 
-
 # Data Migrations
+
 ### data model migrations:
 
 * ~~python manage.py makemigrations api~~
 * ~~python manage.py migrate api~~
 
+*not required, now part of helm deployment*
 
-*not required, now part of dockerfile*
+### loading fixtures
 
-### loading fixtures: 
 these are a one time load!  Only need to be loaded when the new openshift project
 is created.
+
+Log into a kirk pod and run the following command there.  This is a one time thing
+for net new installs.  Could create a job to do this and configure with a flag that
+triggers its run.
 
 * `python manage.py loaddata Destination_Keywords.json`
 * `python manage.py loaddata fme_data_types.json`
 * `python manage.py loaddata job_data.json`
 
 ### create superuser
+
 Also a one time thing for new deployment to openshift, before doing this change the email and the username
-listed below
+listed below.
 
 `python manage.py createsuperuser --email <su email address> admin@example.com --username <su username>`
 
 ### create api token
+
 Only the first time kirk is set up.
+
 `$ python manage.py drf_create_token spock`
 
 Then put api token into pmp along with the superuser you created in the previous
 step.
-
 
 # KIRK API / Replication overview
 
@@ -109,7 +115,6 @@ Job Triggered
          - rest call to get ???
        Would be nice to be able to just make one call that returns
        all this info.
-         
        
 # Openshift Deployment
 
@@ -173,6 +178,11 @@ Changes from the parent version:
 
 to deploy process and run the template: *backup-deploy.json*
 
+## Data Migrations for deployments
+
+[good article on how to properly handle data migrations for django apps](https://itnext.io/django-migrations-with-init-containers-on-openshift-597db8138dad)
+[migrations using jobs](https://medium.com/@markgituma/kubernetes-local-to-production-with-django-3-postgres-with-migrations-on-minikube-31f2baa8926e)
+
 # Debugging Openshift Deployments
 
 ### Get the pods
@@ -188,6 +198,9 @@ kirk pod will have a prefix of *kirk-dc*
 ### Verify that you can communicate from the kirk pod to the database pod:
 
 `curl -v telnet://postgresql-svc:5432`
+
+**on helm deploy renamed the service so use:
+`curl -v telnet://kirk-postgres-svc:5432`
 
 
 ### Verify that kirk pod can talk to the db
@@ -220,7 +233,10 @@ capturing traffic to the db pod.
 In theory these network security profiles (NSP's) will render the network 
 security policies similar to default policies configured in OCP3.
 
-`oc4 process -f https://raw.githubusercontent.com/BCDevOps/platform-services/master/security/aporeto/docs/sample/quickstart-nsp.yaml NAMESPACE=<project namespace> | oc4 create -f -`
+```
+NAMESPACE=<project namespace>
+oc process -f https://raw.githubusercontent.com/BCDevOps/platform-services/master/security/aporeto/docs/sample/quickstart-nsp.yaml NAMESPACE=$NAMESPACE | oc create -f -
+```
 
 [link to github file](https://github.com/BCDevOps/platform-services/blob/master/security/aporeto/docs/sample/quickstart-nsp.yaml)
 
