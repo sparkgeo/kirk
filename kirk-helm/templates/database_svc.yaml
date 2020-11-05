@@ -16,3 +16,4 @@ spec:
   selector:
     deploymentconfig: {{ .Values.app_name }}-postgres-dc
     app: {{ .Values.app_name }}
+

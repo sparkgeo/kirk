@@ -1,8 +1,11 @@
 name: buildBackupContainer
 
+# likely want to set up as a pr event for the build eventually, once
+# start moving to a full CD/CI flow
 on: 
   push:
-    branches: ['dev', 'mk_helm_cht']
+    #branches: ['dev', 'mk_helm_cht']
+    branches: ['master']
     paths-ignore:
       - openshift/**
       - .vscode/**
@@ -16,9 +19,6 @@ on:
       - readme.md
       - src/**
       - requirements.txt
-
-
-# on: [workflow_dispatch]
 
 jobs:
   build_backup:
@@ -46,6 +46,7 @@ jobs:
     - name: calculateImageTag
       id: calculateImageTag
       run: echo ::set-output name=DOCKER_VERSION_TAG::$(date +%Y%m%d-%H%M)
+      
     - name: Push to GitHub Packages
       uses: docker/build-push-action@v1
       with:
@@ -55,8 +56,6 @@ jobs:
         repository: bcgov/kirk/backup
         dockerfile: ./docker/Dockerfile
         path: ./docker
-        tag_with_ref: true
-        tag_with_sha: true
         tags: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
         push: true
 

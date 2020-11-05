@@ -63,10 +63,20 @@ Create the name of the service account to use
 
 
 {{/*
-create image pull secrets for github access
+create image pull secrets for kirk image github access
 */}}
 {{- define "kirk-helm.gitHubImagePullSecret" }}
 {{- with .Values.github_imagepull_parameters }}
+{{- printf "{\"auths\":{\"%s\":{\"username\":\"%s\",\"password\":\"%s\",\"email\":\"%s\",\"auth\":\"%s\"}}}" .registry .username .password .email (printf "%s:%s" .username .password | b64enc) | b64enc }}
+{{- end }}
+{{- end }}
+
+
+{{/*
+create image pull secrets for backup image github access
+*/}}
+{{- define "kirk-helm.githubBackupImagePullSecret" }}
+{{- with .Values.github_backup_imagepull_parameters }}
 {{- printf "{\"auths\":{\"%s\":{\"username\":\"%s\",\"password\":\"%s\",\"email\":\"%s\",\"auth\":\"%s\"}}}" .registry .username .password .email (printf "%s:%s" .username .password | b64enc) | b64enc }}
 {{- end }}
 {{- end }}

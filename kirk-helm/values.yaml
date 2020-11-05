@@ -74,7 +74,7 @@ affinity: {}
 
 # name of the secret that is used to retrieve the container, require by github hosted packages (images)
 github_imagepull_secret_name: kirk-image-secret
-
+github_backup_imagepull_secret_name: kirkbackup-image-secret
 
 # the name of the persistent volume claim that is going to be used for the database persistent storage
 database_pvc_name: postgresql-pvc
@@ -96,4 +96,41 @@ kirk_app_params:
 
 kirk_run_migration: false
 
+# ------------------------------------
+#  Values you may want to override
+# ------------------------------------
+
+# Parameters used to create and connect to the postgres database that
+# sits behind kirk
+kirk_pgdb_params:
+  # Annotations to add to the service account
+  annotations: {}
+  # The user that will be created in the database and for 
+  # subsequent database connections.
+  kirk_database_user: "default_db_user"
+  kirk_database_password: "GoHabsGo"
+  kirk_database_name: "kirk-pgdb"
+  kirk_database_port: 8888
+
+
+# Secret name that contains the database parameters described above
+kirk_pgdb_secret_name: kirk-database-secrets
+
+# Github packages require credentials to access packages.
+github_imagepull_parameters:
+  email: guy.lafleur@montreal.canadians.ca
+  username: guyLafleur
+  password: b05t0NSuuuuuxx999342
+  registry: docker.pkg.github.com/bcgov/kirk/kirk
+  imagetag: 20201021-2140
+
+# secrets used to access the backup image
+github_backup_imagepull_parameters:
+  email: guy.lafleur@montreal.canadians.ca
+  username: guyLafleur
+  password: b05t0NSuuuuuxx999342
+  registry: docker.pkg.github.com/bcgov/kirk/backup
+  imagetag: 20201104-1728
   
+        
+

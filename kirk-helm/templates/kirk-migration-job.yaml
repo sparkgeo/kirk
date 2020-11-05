@@ -1,4 +1,4 @@
-{{- if default .Values.kirk_run_migration false -}}
+{{- if default false .Values.kirk_run_migration -}}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -8,6 +8,7 @@ metadata:
     name: {{ .Values.app_name }}-migrate-job
     env: {{ .Values.env }}
 spec:
+  ttlSecondsAfterFinished: 5
   template:
     metadata:
       labels:
