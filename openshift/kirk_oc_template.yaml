@@ -1,0 +1,452 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: KIRK_TEMPLATE
+labels:
+  app: kirk
+parameters:
+  - name: DB_SECRETS_NAME
+    description: "Name of the postgres database"
+    value: pgdb-secrets
+  - name: PGDB_PORT
+    value: '666'
+    description: "Name of the port that the db is listening to"
+    type: int
+  - name: PGDB_NAME
+    description: "Name of the postgres database"
+    value: bones_pgdb
+  - name: PGDB_USER
+    description: "Name of the postgres database user for app schema"
+    value: bones_user
+  - name: PGDB_PASSWORD
+    description: "Name of the postgres database user password for app schema"
+    value: bones_password
+  - name: APP_NAME
+    description: "base name for the all objects"
+    value: kirk
+  - name: ENV
+    description: "this is dev|test|prd"
+    value: dev
+  - name: "CONTAINER_SRC"
+    description: "path to the container/image stream"
+    value: docker.pkg.github.com/bcgov/kirk/kirk
+  - name: "CONTAINER_SRC_SECRET_NAME"
+    description: "name of the secret that is used to retrieve the container, require by github hosted packages (images)"
+    value: kirk-image-secret
+  - name: "DEPLOY_NAMESPACE"
+    description: "The namespace / project where the template is to be deployed"
+    value: my-great-project
+  - name: "IMAGE_LABEL"
+    description: "the label that identifies what image to deploy"
+    value: "latest"
+#  - name: "ROUTE_HOST"
+#    description: "the route to be used when creating the Kong based route"
+#    value: "bcdc-smk.data.gov.bc.ca"
+  - name: "GITHUB_PACKAGE_ACCESS_JSON_BASE64"
+    description: "The 64 bit encoded json with the secret defs for access to GITHUB packages"
+  - name: "PVC_NAME"
+    value: 'postgresql-pvc'
+    description: "the name of the persistent volume claim that is going to be used for the database persistent storage"
+  - name: "POSTGRES_VOLUME_NAME"
+    value: 'postgresql-volume'
+    description: "the name of the volume used by the postgres database"
+  - name: "DATABASE_SERVICE_ROLE"
+    value: 'database-role'
+    description: "a label used for database roles"
+  - name: "API_SERVICE_ROLE"
+    value: 'api-role'
+    description: "label used for api roles"
+
+objects:
+  # HELMD - DATABASE - connection secrets
+  - kind: Secret
+    apiVersion: v1
+    stringData:
+      database-name: ${PGDB_NAME}
+      database-password: ${PGDB_PASSWORD}
+      database-user: ${PGDB_USER}
+    metadata:
+      labels:
+        template: postgresql-persistent-template
+        app: ${APP_NAME}
+        env: ${ENV}
+        name: ${DB_SECRETS_NAME}
+      name: ${DB_SECRETS_NAME}
+      namespace: ${DEPLOY_NAMESPACE}
+    type: Opaque
+  
+  # HELMD - KIRK - image pull secret
+  - kind: Secret
+    apiVersion: v1
+    data:
+      .dockerconfigjson: >-
+        ${GITHUB_PACKAGE_ACCESS_JSON_BASE64}
+    metadata:
+      name: ${CONTAINER_SRC_SECRET_NAME}
+      namespace: ${DEPLOY_NAMESPACE}
+      labels:
+        app: ${APP_NAME}
+        env: ${ENV}
+        name: ${CONTAINER_SRC_SECRET_NAME}
+    type: kubernetes.io/dockerconfigjson
+  
+  # HELMD - DATABASE - PVC Claim
+  - kind: PersistentVolumeClaim
+    apiVersion: v1
+    metadata:
+      annotations:
+        volume.beta.kubernetes.io/storage-provisioner: csi.trident.netapp.io
+      finalizers:
+      - kubernetes.io/pvc-protection
+      # labels:
+      #   template: postgresql-persistent-template
+      name: ${PVC_NAME}
+      namespace: ${DEPLOY_NAMESPACE}
+      finalizers:
+        - kubernetes.io/pvc-protection
+    spec:
+      accessModes:
+        - ReadWriteMany
+      resources:
+        requests:
+          storage: 1Gi
+      storageClassName: netapp-file-standard
+      volumeMode: Filesystem
+
+  # HELMD - DATABASE - DC
+  - kind: DeploymentConfig
+    apiVersion: apps.openshift.io/v1
+    metadata:
+      annotations:
+        template.alpha.openshift.io/wait-for-ready: 'true'
+      generation: 4
+      labels:
+        template: postgresql-persistent-template
+        name: postgresql-dc
+        app: ${APP_NAME}
+        role: ${DATABASE_SERVICE_ROLE}
+        env: ${ENV}
+      name: postgresql-dc
+      namespace: ${DEPLOY_NAMESPACE}
+    spec:
+      replicas: 1
+      selector:
+        # these below need to exist as the 
+        # template->labels
+        # they should also be referenced in the service
+        # selector
+        app: ${APP_NAME}
+        deploymentconfig: postgresql-dc
+      strategy:
+        activeDeadlineSeconds: 21600
+        recreateParams:
+          timeoutSeconds: 600
+        resources: {}
+        type: Recreate
+      template:
+        metadata:
+          creationTimestamp: null
+          labels:
+            name: postgresql-dc
+            app: ${APP_NAME}
+            role: ${DATABASE_SERVICE_ROLE}
+            env: ${ENV}
+            deploymentconfig: postgresql-dc
+        spec:
+          containers:
+            - env:
+                - name: POSTGRESQL_USER
+                  valueFrom:
+                    secretKeyRef:
+                      key: database-user
+                      name: ${DB_SECRETS_NAME}
+                - name: POSTGRESQL_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      key: database-password
+                      name: ${DB_SECRETS_NAME}
+                - name: POSTGRESQL_DATABASE
+                  valueFrom:
+                    secretKeyRef:
+                      key: database-name
+                      name: ${DB_SECRETS_NAME}
+              image: >-
+                docker-registry.default.svc:5000/openshift/postgresql@sha256:d740d4960134a692d4d4a19a04c191b563a9cebc4f3dea04e92ae47d08e03451
+              imagePullPolicy: IfNotPresent
+              livenessProbe:
+                exec:
+                  command:
+                    - /bin/sh
+                    - '-i'
+                    - '-c'
+                    - pg_isready -h 127.0.0.1 -p 5432
+                failureThreshold: 3
+                initialDelaySeconds: 30
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 1
+              name: postgresql
+              ports:
+                - containerPort: 5432
+                  protocol: TCP
+              readinessProbe:
+                exec:
+                  command:
+                    - /bin/sh
+                    - '-i'
+                    - '-c'
+                    - >-
+                      psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d
+                      $POSTGRESQL_DATABASE -c 'SELECT 1'
+                failureThreshold: 3
+                initialDelaySeconds: 5
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 1
+              resources:
+                limits:
+                  memory: 512Mi
+              securityContext:
+                capabilities: {}
+                privileged: false
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+              volumeMounts:
+                - mountPath: /var/lib/pgsql/data
+                  name: postgresql-volume
+          dnsPolicy: ClusterFirst
+          restartPolicy: Always
+          schedulerName: default-scheduler
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+          volumes:
+            - name: postgresql-volume
+              persistentVolumeClaim:
+                claimName: ${PVC_NAME}
+      test: false
+      triggers:
+        - imageChangeParams:
+            automatic: true
+            containerNames:
+              - postgresql
+            from:
+              kind: ImageStreamTag
+              name: 'postgresql:9.6'
+              namespace: openshift
+            lastTriggeredImage: >-
+              docker-registry.default.svc:5000/openshift/postgresql@sha256:d740d4960134a692d4d4a19a04c191b563a9cebc4f3dea04e92ae47d08e03451
+          type: ImageChange
+        - type: ConfigChange
+      details:
+        causes:
+          - imageTrigger:
+              from:
+                kind: DockerImage
+                name: >-
+                  docker-registry.default.svc:5000/openshift/postgresql@sha256:d740d4960134a692d4d4a19a04c191b563a9cebc4f3dea04e92ae47d08e03451
+            type: ImageChange
+        message: image change
+      latestVersion: 3
+      observedGeneration: 4
+      readyReplicas: 1
+      replicas: 1
+      unavailableReplicas: 0
+      updatedReplicas: 0
+        
+  # HELMD - DATABASE - Service
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: postgresql-svc
+      labels:
+        role: ${DATABASE_SERVICE_ROLE}
+        name: postgresql-svc
+        app: ${APP_NAME}
+        env: ${ENV}
+      namespace: ${DEPLOY_NAMESPACE}
+    spec:
+      ports:
+        - port: ${{PGDB_PORT}}
+          protocol: TCP
+          targetPort: ${{PGDB_PORT}}
+          name: tcp-5432
+      selector:
+        deploymentconfig: postgresql-dc
+        app: ${APP_NAME}
+
+  # HELMD - KIRK - service
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftWebConsole
+      labels:
+        app: ${APP_NAME}
+        role: ${API_SERVICE_ROLE}
+        env: ${ENV}
+        name: kirk-svc
+      name: kirk-svc
+      namespace: ${DEPLOY_NAMESPACE}
+    spec:
+      ports:
+        - name: 8000-tcp
+          port: 8000
+          protocol: TCP
+          targetPort: 8000
+      selector:
+        app: ${APP_NAME}
+        deploymentconfig: kirk-dc
+      sessionAffinity: None
+      type: ClusterIP
+    status:
+      loadBalancer: {}
+
+  # HELMD - KIRK - DC
+  - kind: DeploymentConfig
+    apiVersion: apps.openshift.io/v1
+    metadata:
+      labels:
+        app: ${APP_NAME}
+        role: ${API_SERVICE_ROLE}
+        name: kirk-dc
+        env: ${ENV}
+      name: kirk-dc
+      namespace:  ${DEPLOY_NAMESPACE}
+    spec:
+      replicas: 2
+      selector:
+        app: kirk
+        deploymentconfig: kirk-dc
+      strategy:
+        activeDeadlineSeconds: 21600
+        resources: {}
+        rollingParams:
+          intervalSeconds: 1
+          maxSurge: 25%
+          maxUnavailable: 25%
+          timeoutSeconds: 600
+          updatePeriodSeconds: 1
+        type: Rolling
+      template:
+        metadata:
+          annotations:
+            openshift.io/generated-by: OpenShiftWebConsole
+          creationTimestamp: null
+          labels:
+            deploymentconfig: kirk-dc
+            role: ${API_SERVICE_ROLE}
+            app: ${APP_NAME}
+            env: ${ENV}  
+        spec:
+          imagePullSecrets:
+            - name: ${CONTAINER_SRC_SECRET_NAME}
+          containers:
+            - env:
+                - name: DJANGO_DEBUG
+                  value: 'False'
+                - name: POSTGRES_PORT
+                  value: ${PGDB_PORT}
+                - name: POSTGRES_DB_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      key: database-name
+                      name: ${DB_SECRETS_NAME}
+                - name: POSTGRES_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      key: database-password
+                      name: ${DB_SECRETS_NAME}
+                - name: POSTGRES_USER_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      key: database-user
+                      name: ${DB_SECRETS_NAME}
+                - name: POSTGRES_HOST
+                  value: postgresql-svc
+              image: "${CONTAINER_SRC}:${IMAGE_LABEL}"
+              imagePullPolicy: Always
+              name: kirk
+              ports:
+                - containerPort: 8000
+                  protocol: TCP
+              resources: {}
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+          dnsPolicy: ClusterFirst
+          restartPolicy: Always
+          schedulerName: default-scheduler
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+
+      # triggers:
+      #   - type: ConfigChange
+      #   - imageChangeParams:
+      #       automatic: true
+      #       containerNames:
+      #         - kirk
+      #       from:
+      #         kind: ImageStreamTag
+      #         name: 'kirk:latest'
+      #         namespace: dbc-kirk-tools
+      #       lastTriggeredImage: >-
+      #         docker-registry.default.svc:5000/dbc-kirk-tools/kirk@sha256:76122a9d55355799b55e800589f8de223e448ec750abf715548711a6b4d0147b
+      #     type: ImageChange
+
+  # HELMD - KIRK route
+  - kind: Route
+    apiVersion: route.openshift.io/v1
+    metadata:
+      namespace: ${DEPLOY_NAMESPACE}
+      labels:
+        app: kirk
+      name: kirk-rt
+    spec:
+      to:
+        kind: Service
+        name: kirk-svc
+        weight: 100
+      port:
+        targetPort: 8000-tcp
+      tls:
+        termination: edge
+        insecureEdgeTerminationPolicy: None
+      wildcardPolicy: None
+
+  # HELMD - API to DB NSP
+  - kind: NetworkSecurityPolicy
+    apiVersion: security.devops.gov.bc.ca/v1alpha1
+    metadata:
+      name: kirk-api-db-nsp
+      labels:
+        name: kirk-api-db-nsp
+        env: ${ENV}
+    spec:
+      description: |
+        Allow the api to talk to the database pod.
+      source:
+        - - role=${API_SERVICE_ROLE}
+          - app=${APP_NAME}
+          - env=${ENV}
+      destination:
+        - - role=${DATABASE_SERVICE_ROLE}
+          - app=${APP_NAME}
+          - env=${ENV}
+
+  # - kind: NetworkSecurityPolicy
+  #   apiVersion: security.devops.gov.bc.ca/v1alpha1
+  #   metadata:
+  #     name: kirk-api-db-nsp2
+  #     labels:
+  #       name: kirk-api-db-nsp2
+  #       env: ${ENV}
+  #   spec:
+  #     description: |
+  #       Allow the api to talk to the database pod.
+  #     destination:
+  #       - - role=${API_SERVICE_ROLE}
+  #         - app=${APP_NAME}
+  #         - env=${ENV}
+  #     source:
+  #       - - role=${DATABASE_SERVICE_ROLE}
+  #         - app=${APP_NAME}
+  #         - env=${ENV}

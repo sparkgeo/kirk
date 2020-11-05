@@ -1,0 +1,57 @@
+# This is a basic workflow to help you get started with Actions
+
+name: BUILDPackage
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+# -------- DEBUGGING --------
+# on: 
+#   push:
+#     branches: ['dev', 'mk_helm_cht']
+
+
+on:
+  pull_request:
+    branches: ['master']
+    types: ['opened', 'reopened']
+    paths-ignore:
+      - openshift/**
+      - .vscode/**
+      - docs/**
+      - kirk-helm/**
+      - .gitignore
+      - code_of_conduct.md
+      - Jenkinsfile
+      - LICENSE
+      - open-api.json
+      - readme.md
+
+jobs:
+  # This workflow contains a single job called "build"
+  buildjob:
+    defaults:
+      run:
+        shell: bash
+
+    name: Build kirk container image
+    # The type of runner that the job will run on
+    runs-on: ubuntu-18.04
+    outputs:
+      dockerversiontag: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+      id: checkout
+      with:
+        fetch-depth: 0
+    - name: calculateImageTag
+      id: calculateImageTag
+      run: echo ::set-output name=DOCKER_VERSION_TAG::$(date +%Y%m%d-%H%M)
+
+
+    - name: Build and Publish Docker image
+      uses: VaultVulp/gp-docker-action@1.1.7
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }} # Provide GITHUB_TOKEN to login into the GitHub Packages
+        image-name: kirk # Provide Docker image name
+        image-tag: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }} # Provide Docker image tag
