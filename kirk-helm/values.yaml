@@ -112,7 +112,6 @@ kirk_pgdb_params:
   kirk_database_name: "kirk-pgdb"
   kirk_database_port: 8888
 
-
 # Secret name that contains the database parameters described above
 kirk_pgdb_secret_name: kirk-database-secrets
 
@@ -131,6 +130,3 @@ github_backup_imagepull_parameters:
   password: b05t0NSuuuuuxx999342
   registry: docker.pkg.github.com/bcgov/kirk/backup
   imagetag: 20201104-1728
-  
-        
-

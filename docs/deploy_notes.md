@@ -229,25 +229,8 @@ capturing traffic to the db pod.
 
 `oc port-forward postgresql-dc-1-4x9h6 5432:5432`
 
-### deploy quickstart nsp examples:
-In theory these network security profiles (NSP's) will render the network 
-security policies similar to default policies configured in OCP3.
-
-```
-NAMESPACE=<project namespace>
-oc process -f https://raw.githubusercontent.com/BCDevOps/platform-services/master/security/aporeto/docs/sample/quickstart-nsp.yaml NAMESPACE=$NAMESPACE | oc create -f -
-```
-
-[link to github file](https://github.com/BCDevOps/platform-services/blob/master/security/aporeto/docs/sample/quickstart-nsp.yaml)
-
-[example NSP policy in oc template](https://github.com/bcgov/cass-api/blob/master/openshift/templates/api/api-postgres-deploy.yaml)
-
-### Get network security policies
-`oc get networksecuritypolicies`
-
-or 
-
-`oc get nsp`
+### Get network policies
+`oc get networkpolicies`
 
 ## Postgres Database Debugging:
 

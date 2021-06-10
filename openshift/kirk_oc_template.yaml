@@ -412,41 +412,5 @@ objects:
         insecureEdgeTerminationPolicy: None
       wildcardPolicy: None
 
-  # HELMD - API to DB NSP
-  - kind: NetworkSecurityPolicy
-    apiVersion: security.devops.gov.bc.ca/v1alpha1
-    metadata:
-      name: kirk-api-db-nsp
-      labels:
-        name: kirk-api-db-nsp
-        env: ${ENV}
-    spec:
-      description: |
-        Allow the api to talk to the database pod.
-      source:
-        - - role=${API_SERVICE_ROLE}
-          - app=${APP_NAME}
-          - env=${ENV}
-      destination:
-        - - role=${DATABASE_SERVICE_ROLE}
-          - app=${APP_NAME}
-          - env=${ENV}
-
-  # - kind: NetworkSecurityPolicy
-  #   apiVersion: security.devops.gov.bc.ca/v1alpha1
-  #   metadata:
-  #     name: kirk-api-db-nsp2
-  #     labels:
-  #       name: kirk-api-db-nsp2
-  #       env: ${ENV}
-  #   spec:
-  #     description: |
-  #       Allow the api to talk to the database pod.
-  #     destination:
-  #       - - role=${API_SERVICE_ROLE}
-  #         - app=${APP_NAME}
-  #         - env=${ENV}
-  #     source:
-  #       - - role=${DATABASE_SERVICE_ROLE}
-  #         - app=${APP_NAME}
-  #         - env=${ENV}
+  # HELMD - KNP
+  # see helm templates
