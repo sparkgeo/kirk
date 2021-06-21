@@ -31,6 +31,9 @@ create a parameter file by coping the code snippet below and populate with
 the parameters you want.
 
 ```
+app_name: <app name>
+env: <dev or prod env>
+
 # Parameters used to create and connect to the postgres database that
 # sits behind kirk
 kirk_pgdb_params:
@@ -46,24 +49,16 @@ kirk_pgdb_params:
 # Secret name that contains the database parameters described above
 kirk_pgdb_secret_name: <name of the secret for the database secrets>
 
-# Github packages require credentials to access packages.
-github_imagepull_parameters:
-  email: <email for image pull>
-  username: <github username>
-  password: <github api key>
-  registry: docker.pkg.github.com/bcgov/kirk/kirk
-  imagetag: <tag to deploy>
+# License plate for openshift namespaces
+license_plate: <license plate>
         
 ```
 
 ### install the chart
 
-[kirk package list](https://github.com/bcgov/kirk/packages/466269/versions)
-
 ```
 helm install kirk-install kirk-helm \
   -f <path to the secrets file defined in previous step> \
-  --set github_imagepull_parameters.imagetag=<image tag> \
   --set kirk_run_migration=true
 ```
 
@@ -87,18 +82,12 @@ as all those objects are stored in the database.
 
 ### install a new KIRK image
 
-[Get the image tag from github](https://github.com/bcgov/kirk/packages/466269/versions)
-
-insert the image tag that you want to deploy in the command below.
-
 ```
 helm install kirk-install kirk-helm \
   -f <path to the secrets file defined in previous step> \
-  --set github_imagepull_parameters.imagetag=<image tag> \
   --set kirk_run_migration=true
 ```
 
 Because of the database component reverting an install is not possible if the database has already been migrated.  In 
 these situations you will need to create a new release with a database migration that performs the reversion of the
 datamodel.  Then deploy that new version that includes the migration code to revert the previously applied changes.
-

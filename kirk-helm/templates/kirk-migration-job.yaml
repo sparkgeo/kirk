@@ -17,8 +17,6 @@ spec:
         app: {{ .Values.app_name }}
         env: {{ .Values.env }}
     spec:
-      imagePullSecrets:
-        - name: {{ .Values.github_imagepull_secret_name }}
       containers:
         - env:
             - name: POSTGRES_PORT
@@ -41,7 +39,7 @@ spec:
             - name: POSTGRES_HOST
               value: "{{ .Values.app_name}}-postgres-svc"
           
-          image: "{{ .Values.github_imagepull_parameters.registry }}:{{ .Values.github_imagepull_parameters.imagetag }}"
+          image: image-registry.openshift-image-registry.svc:5000/{{ .Values.license_plate }}-tools/kirk:{{ .Chart.AppVersion }}
           imagePullPolicy: Always
           name: {{ .Values.app_name}}-job
           command: ['python', 'manage.py', 'migrate']

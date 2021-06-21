@@ -123,7 +123,17 @@ are templated but require manually running the template.
 
 ## Template Deployment
 
-*Note: This may be changing as we work to convert the templates to helm charts*
+To start building images in tools namespace and to allow images being pulled, run
+```
+oc process --ignore-unknown-parameters=true --param-file=<path to the secrets file for kirk-install> -f openshift/templates/sa_rbac.yaml | oc apply -f -
+
+curl https://raw.githubusercontent.com/BCDevOps/backup-container/master/openshift/templates/backup/backup-build.yaml | oc process -f - | oc apply -f -
+
+
+cat kirk-helm/Chart.yaml <path to the secrets file for kirk-install> > temp.yaml && \
+oc process --ignore-unknown-parameters=true --param-file=temp.yaml -f openshift/templates/kirk_bc.yaml | oc apply -f - && \
+rm temp.yaml
+```
 
 There are currently two templates:
 1. KIRK application and all the dependencies used by that app.

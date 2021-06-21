@@ -35,7 +35,7 @@ spec:
     spec:
       # initContainers:
       # - name: {{ .Values.app_name }}-init
-      #   image: "{{ .Values.github_imagepull_parameters.registry }}:{{ .Values.github_imagepull_parameters.imagetag }}"
+      #   image: image-registry.openshift-image-registry.svc:5000/{{ .Values.license_plate }}-tools/kirk:{{ .Chart.AppVersion }}
       #   imagePullPolicy: Always
       #   env:
       #     - name: POSTGRES_PORT
@@ -66,9 +66,6 @@ spec:
       #     echo "Migration Completed" &&
       #     sleep 2
 
-
-      imagePullSecrets:
-        - name: {{ .Values.github_imagepull_secret_name }}
       containers:
         - env:
             - name: DJANGO_DEBUG
@@ -92,8 +89,8 @@ spec:
                   name: {{ .Values.kirk_pgdb_secret_name }}
             - name: POSTGRES_HOST
               value: "{{ .Values.app_name}}-postgres-svc"
-          image: "{{ .Values.github_imagepull_parameters.registry }}:{{ .Values.github_imagepull_parameters.imagetag }}"
-          imagePullPolicy: Always
+          image: image-registry.openshift-image-registry.svc:5000/{{ .Values.license_plate }}-tools/kirk:{{ .Chart.AppVersion }}
+          imagePullPolicy: IfNotPresent
           readinessProbe:
             exec:
               command:
