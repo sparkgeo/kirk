@@ -113,3 +113,6 @@ kirk_pgdb_secret_name: kirk-database-secrets
 
 # License plate for openshift namespaces
 license_plate: abcd1234
+
+# License plate for where kong api lives
+license_plate_kong: kong1234
