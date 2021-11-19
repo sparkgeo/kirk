@@ -17,23 +17,10 @@ PP_KIRK is a replication system that defines replication configurations in a dat
 run the server and make sure it does what its suppose to:
 
 ```
-python ./src/backend/app_kirk_rest/manage.py runserver
+docker-compose up
 ```
 
 Then hit 127.0.0.1:8000 to verify the app is working
-
-## Test Dockerfile
-
-Build the image:
-
-`docker build -t kirk:latest  .`
-
-## Run the image
-`docker run -p 8000:8000 kirk`
-
-then hit the same address... 127.0.0.1:8000 to verify everything is workin in the container.
-
-assuming it is, test on openshift...
 
 ## Build Image
 

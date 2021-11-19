@@ -11,10 +11,10 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-
+from pathlib import Path
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 FIXTURE_DIRS = (os.path.join(PROJECT_ROOT, 'fixtures'),)
@@ -66,7 +66,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'app_kirk_rest.urls'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') ##specify static root
+STATIC_ROOT = os.path.join(BASE_DIR, './', 'staticfiles') ##specify static root
 
 
 TEMPLATES = [
@@ -93,9 +93,13 @@ WSGI_APPLICATION = 'app_kirk_rest.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+        'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.postgresql'),
+        'NAME': os.getenv('DB_NAME', 'postgres'),
+        'USER': os.getenv('DB_USER', 'postgres'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'postgres'),
+        'HOST': os.getenv('DB_HOST', 'db'),
+        'PORT': os.getenv('DB_PORT', '5432'),
+    },
 }
 
 if 'POSTGRES_DB_NAME' in os.environ:

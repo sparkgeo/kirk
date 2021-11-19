@@ -1,0 +1,44 @@
+version: "3.6"
+x-env: &defaults
+  POSTGRES_PASSWORD: postgres
+  DB_NAME: kirk
+  DB_USER: cpkirk
+  DB_PASSWORD: password
+  DB_ENGINE: django.db.backends.postgresql
+  DB_PORT: 5432
+  DB_HOST: db
+
+services:
+  db:
+    build: ./src/db
+    container_name: kirk_db
+    environment: *defaults
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+    ports:
+      - 5432:5432
+    volumes:
+      - type: bind
+        source: ./pg_data
+        target: /var/lib/postgresql/data
+      - type: bind
+        source: ./src/db
+        target: /opt/db
+
+  api:
+    build: ./src/backend
+    container_name: kirk_api
+    environment: *defaults
+    command: >
+      sh -c "python manage.py migrate &&
+             if [[ ! -e /api/staticfiles ]]; then python manage.py collectstatic; fi &&
+             python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - 8000:8000
+    volumes:
+      - type: bind
+        source: ./src/backend
+        target: /api
+    depends_on:
+      db:
+        condition: service_healthy
