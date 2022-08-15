@@ -19,8 +19,8 @@ objects:
     lookupPolicy:
       local: false
   status:
-    dockerImageRepository: "" 
-- apiVersion: v1 
+    dockerImageRepository: ""
+- apiVersion: v1
   kind: BuildConfig
   metadata:
     creationTimestamp: null

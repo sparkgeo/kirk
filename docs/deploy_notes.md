@@ -1,207 +1,220 @@
-# Overview
+# Deploy notes
 
-<img src="https://www.thewrap.com/wp-content/uploads/2014/10/Shatner.jpeg" width="600px">
+### Overview
 
-PP_KIRK is a replication system that defines replication configurations in a database.
+- APP_KIRK: Python Django app + postgres DB.
 
-* [Local Developement Testing](#Local-Developement-Testing)
-* [Data Migrations](#Data-Migrations)
-* [FME Related Information](#KIRK-API-/-Replication-overview)
-* [Openshift Deployment]()
-* [Debugging Openshift Deployment Notes](#Debugging-Openshift-Deployments)
+- APP_KIRK + DB backup container are deployed via helm charts.
 
-# Local Developement Testing
+- Deployment environment: a namespace set on BC Gov openshift silver cluster.
 
-## Dev Machine
+  - APP_KIRK is deployed on prod, test and dev namespace.
 
-run the server and make sure it does what its suppose to:
+  - DB backup is deployed on tools namespace.
 
+- Container images are now built and stored on tool namespace.
+  - ~~Container images *used* to be built via GH actions and retrieved from GH packages.~~
+  - ~~[List of kirk images](https://github.com/bcgov/kirk/packages/466269/versions)~~
+
+
+### Deploy on a net new project namespace set
+
+0. Log into openshift - grab the login command from the openshift console.
+
+1. Choose correct project - get a list of all the projects you have access to `oc projects`.
+
+2. Log into a specific project `oc project <project_namespace>`.
+
+3. Prepare deployment configuration files, [see this section](#deployment-configuration-files).
+
+4. Prepare container images in tools namespace, [see this section](#build-container-images).
+
+5. Run the following helm chart deployment - kirk-install in dev, test or prod.
 ```
-docker-compose up
-```
-
-Then hit 127.0.0.1:8000 to verify the app is working
-
-## Build Image
-
-a github action has been setup to build images on pull request to dev. (not implemented ATM)
-
-# Data Migrations
-
-### data model migrations:
-
-* ~~python manage.py makemigrations api~~
-* ~~python manage.py migrate api~~
-
-*not required, now part of helm deployment*
-
-### loading fixtures
-
-these are a one time load!  Only need to be loaded when the new openshift project
-is created.
-
-Log into a kirk pod and run the following command there.  This is a one time thing
-for net new installs.  Could create a job to do this and configure with a flag that
-triggers its run.
-
-* `python manage.py loaddata Destination_Keywords.json`
-* `python manage.py loaddata fme_data_types.json`
-* `python manage.py loaddata job_data.json`
-
-### create superuser
-
-Also a one time thing for new deployment to openshift, before doing this change the email and the username
-listed below.
-
-`python manage.py createsuperuser --email <su email address> admin@example.com --username <su username>`
-
-### create api token
-
-Only the first time kirk is set up.
-
-`$ python manage.py drf_create_token spock`
-
-Then put api token into pmp along with the superuser you created in the previous
-step.
-
-# KIRK API / Replication overview
-
-1.   FME Schedules will be configured to run the APPKIRK_FGDB.fmw.  Each 
-     schedule will call the fmw with a different jobid.
-
-2.   FME will retrieve from the rest api the rest of the transformation config
-     data associated with the job:
-        - sources 
-        - destinations
-        - fieldmaps
-        - transformers
-        
-3.  the APPKIRK_FGDB.fmw proceeds and completes the replication.
-
-4.  *future*: update the status of the job back to kirk
-          
-For Later on creating new entries in the API:
-1.   View Jobs w/ sources /w destinations /w transformer switches
-     basically this table would be the starting point for configurations
-
-2.   Add new Job, allows you to:
-     a) define the source data
-     b) define the destination data
-     c) (optional) define the source data field map
-     d) (optional) define the transformer switches
-          - These get defined on as needed basis, each transformer switch
-            will have its own configuration parameters.
-  
-Job Triggered
-  - Sends jobid with Rest call
-  - FMW then starts excution
-      - using job id:
-         - rest call to get sources
-         - rest call to get destinations
-         - rest call to get transformers
-         - rest call to get ???
-       Would be nice to be able to just make one call that returns
-       all this info.
-       
-# Openshift Deployment
-
-Kirk app has automated builds, the automation currently stops there, the deployments
-are templated but require manually running the template.
-
-## Template Deployment
-
-To start building images in tools namespace and to allow images being pulled, run
-```
-oc process --ignore-unknown-parameters=true --param-file=<path to the secrets file for kirk-install> -f openshift/templates/sa_rbac.yaml | oc apply -f -
-
-curl https://raw.githubusercontent.com/BCDevOps/backup-container/master/openshift/templates/backup/backup-build.yaml | oc process -f - | oc apply -f -
-
-
-cat kirk-helm/Chart.yaml <path to the secrets file for kirk-install> > temp.yaml && \
-oc process --ignore-unknown-parameters=true --param-file=temp.yaml -f openshift/templates/kirk_bc.yaml | oc apply -f - && \
-rm temp.yaml
+helm install kirk-install kirk-helm \
+     -f <path_to_kirk_install_helm_chart_config_yaml> \
+     --set kirk_run_migration=true
 ```
 
-There are currently two templates:
-1. KIRK application and all the dependencies used by that app.
-1. Database backup which is based on the bcgov backup container
+6. Post install steps, [see this section](#data-migrations).
 
-### Deploying Kirk
-
-The docker images used for KIRK are built using github actions.
-
-Deploying kirk to a namespace, the example below shows using a parameter file...
+7. Run the followiing helm chart deployment - kirk-backup in dev, test or prod.in dev, test or prod.
 ```
-NAMESPACE=<namespace in oc to deploy to>
-oc -n $NAMESPACE process -f ./openshift/kirk_oc_template.yaml --param-file <path to parameter file> | oc -n $NAMESPACE create -f - 
+helm repo add bcgov http://bcgov.github.io/helm-charts
+
+helm repo update
+
+helm install kirk-backup bcgov/backup-storage \
+     -f <path_to_kirk_backup_helm_chart_config>
 ```
 
-Secrets that should be populated either with -P overrides or with a parameter file:
 
-* GITHUB_PACKAGE_ACCESS_JSON_BASE64 - base 64 encoded github package access json
-* CONTAINER_SRC - path used by docker to refer to the image, example: docker.pkg.github.com/bcgov/kirk/kirk
-* CONTAINER_SRC_SECRET_NAME - name of the secret that will be created and used to gain access to the github packages
-* ENV - environment string
-* DEPLOY_NAMESPACE - openshift namespace
-* IMAGE_LABEL - docker image tag
-* DB_SECRETS_NAME - name of the secret used to store db data.
-* PGDB_NAME - name of the postgres database that will be created
-* PGDB_PASSWORD - database password
-* PGDB_USER - database user
-* PGDB_PORT - database port
+### Redeploy
 
-### Deploying Backup Container
+- Use `helm upgrade --install` instead.
 
-Currently using a slighly modified version of the backup container from here:
-https://github.com/franTarkenton/backup-container
+```
+helm upgrade --install kirk-install kirk-helm \
+     -f <path_to_kirk_install_helm_chart_config_yaml> \
+     --set kirk_run_migration=true
 
-Changes from the parent version:
-* configured github action to build image
-* Copied the rest of the configs and am storing with local repo.
+helm upgrade --install kirk-backup bcgov/backup-storage \
+     -f <path_to_kirk_backup_helm_chart_config>
+```
 
-#### Parameters that should be overriden
-* **TAG_NAME** - The package tag from the backup-container repo that is to be deployed
-* **DATABASE_SECRET_NAME** - name of the database secrets (re-used not created, this is created by kirk deploy)
-* **DATABASE_USER_KEY_NAME** - key in the secret above that contains the db user
-* **DATABASE_PASSWORD_KEY_NAME** - key that contains the database password
-* **BACKUP_VOLUME_NAME** - backup volume name
-* **BACKUP_VOLUME_SIZE** - backup size
-* **VERIFICATION_VOLUME_SIZE** - verification volume size
-* **VERIFICATION_VOLUME_CLASS** - verification volume class
-* **ENVIRONMENT_FRIENDLY_NAME** - descriptive name of the backup container 
-* **GITHUB_PACKAGE_ACCESS_SECRET_NAM** - name of the secret that will be created to access the github packages
-* **GITHUB_PACKAGE_ACCESS_JSON_BASE64** - 64 bit encoded json snippet with the github personal access token that can be used to read the packages
-* **BACKUP_CONFIG** - backup configuration string that goes in  the backup config map
-
-to deploy process and run the template: *backup-deploy.json*
-
-## Data Migrations for deployments
-
-[good article on how to properly handle data migrations for django apps](https://itnext.io/django-migrations-with-init-containers-on-openshift-597db8138dad)
-[migrations using jobs](https://medium.com/@markgituma/kubernetes-local-to-production-with-django-3-postgres-with-migrations-on-minikube-31f2baa8926e)
-
-# Debugging Openshift Deployments
-
-### Get the pods
-
-`oc get pods`
-
-kirk pod will have a prefix of *kirk-dc*
-
-### Log into a kirk pod
-
-`oc rsh <kirk pod name>`
-
-### Verify that you can communicate from the kirk pod to the database pod:
-
-`curl -v telnet://postgresql-svc:5432`
-
-**on helm deploy renamed the service so use:
-`curl -v telnet://kirk-postgres-svc:5432`
+- If DB has already been migrated, reverting an install is not possible because of the DB component. In situation like this, you will need to:
+  - create a new release with a database migration that performs the reversion of the
+datamodel; and
+  - then deploy that new version that includes the migration code to revert the previously applied changes.
 
 
-### Verify that kirk pod can talk to the db
+### Details
 
+#### Deployment configuration files
+
+Create *kirk_install_helm_chart_config.yaml* by coping the code snippet below and populate with the parameters you want.
+
+```
+app_name: <app_name>
+env: <dev_or_prod_env>
+
+# Parameters used to create and connect to the postgres database that
+# sits behind kirk
+kirk_pgdb_params:
+  # Annotations to add to the service account
+  annotations: {}
+  # The user that will be created in the database and for
+  # subsequent database connections.
+  kirk_database_user: <application_database_user>
+  kirk_database_password: <application_database_user_password>
+  kirk_database_name: <application_database_name>
+  kirk_database_port: <application_database_port>
+
+# Secret name that contains the database parameters described above
+kirk_pgdb_secret_name: <name_of_the_secret_for_the_database_secrets>
+
+# License plate for openshift namespaces
+license_plate: <license_plate>
+
+# License plate for where kong api lives
+license_plate_kong: <kong_license_plate>
+
+```
+
+Create *kirk_backup_helm_chart_config.yaml* by coping the code snippet below and populate with the parameters you want.
+
+```
+image:
+  repository: image-registry.openshift-image-registry.svc:5000/<license_plate>-tools/backup-postgres
+  pullPolicy: Always
+  tag: latest
+
+persistence:
+  backup:
+    size: 5Gi
+    storageClassName: netapp-file-backup
+  verification:
+    size: 1Gi
+    storageClassName: netapp-file-standard
+
+db:
+  secretName: <db_secret_name>
+  usernameKey: database-user
+  passwordKey: database-password
+
+env:
+  DATABASE_SERVICE_NAME:
+    value: <db_service_name>
+  ENVIRONMENT_FRIENDLY_NAME:
+    value: "Kirk DB Backups"
+  ENVIRONMENT_NAME:
+    value: "dev"
+
+backupConfig: |
+  postgres=<db_service_name>:5432/<db_name>
+  0 8-17 * * 1-5 default ./backup.sh -s
+  10 8-17 * * 1-5 default ./backup.sh -s -v all
+  0 8 * * 6,0 default ./backup.sh -s
+  10 8 * * 6,0 default ./backup.sh -s -v all
+
+```
+
+#### Build container images
+
+To start building images in tools namespace and to allow images being pulled, run the following.
+
+```
+BUILD_VALUES=<path_to_kirk_install_helm_chart_config>
+
+oc process --ignore-unknown-parameters=true \
+     --param-file=$BUILD_VALUES \
+     -f openshift/templates/sa_rbac.yaml | \
+     oc apply -f -
+
+curl https://raw.githubusercontent.com/BCDevOps/backup-container/master/openshift/templates/backup/backup-build.yaml | \
+     oc process -f - | \
+     oc apply -f -
+
+cat kirk-helm/Chart.yaml $BUILD_VALUES > temp.yaml && \
+     oc process --ignore-unknown-parameters=true --param-file=temp.yaml \-f openshift/templates/kirk_bc.yaml | oc apply -f - && \
+     rm temp.yaml
+```
+
+#### Data Migrations
+
+- Data model migrations
+  - *Not required, now part of helm deployment.*
+  - ~~python manage.py makemigrations api~~
+  - ~~python manage.py migrate api~~
+
+- Loading fixtures
+  - *A one time thing for new deployment to openshift.*
+  - Log into a kirk_app pod and run the following command there.
+    - ```python manage.py loaddata Destination_Keywords.json```
+    - ```python manage.py loaddata fme_data_types.json```
+    - ```python manage.py loaddata job_data.json```
+
+- Create superuser
+  - *Also a one time thing for new deployment to openshift.*
+  - ```python manage.py createsuperuser --email <YOUR_SU_EMAIL_ADDRESS> --username <YOUR_SU_USERNAME>```
+
+- Create api token
+  - *Only the first time kirk is set up.*
+  - ```python manage.py drf_create_token spock```
+  - Then put api token into PMP along with the superuser you created in the previous step.
+
+
+### Developer / debugging notes
+
+Local developement testing
+
+- Run the server ```docker-compose up```
+
+- Then hit 127.0.0.1:8000 to verify the app is working.
+
+Helm deployments
+
+- Install the chart ```helm install kirk-install kirk-helm -f ./helm-config-dev.yaml```
+
+- Delete all objects defined in the chart ```helm uninstall kirk-install```
+
+- Debug / test a chart ```helm install --dry-run --debug kirk-install kirk-helm -f ./helm-config-dev.yaml```
+
+- List what has been deployed ```helm ls```
+
+- Upgrade ```helm upgrade --install kirk-install kirk-helm -f $HELM_KIRK_VALUES \
+  --set kirk_run_migration=true```
+
+Openshift Deployments
+
+- To get the pods ```oc get pods```
+  - Kirk pod will have a prefix of *kirk-dc*
+
+- Log into a kirk pod ```oc rsh <kirk_pod_name>```
+
+- Verify that you can communicate from the kirk pod to the database pod ```curl -v telnet://<db_service_name>:5432```
+
+- Verify that kirk pod can talk to the db
 ``` python
 import psycopg2
 import os
@@ -213,44 +226,20 @@ connStr = f"dbname='{dbname}' user='{dbuser}' host='{dbhost}' password='{dbpassw
 db = psycopg2.connect(connStr)
 ```
 
-### Configure Port Forwarding on db pod
+- Configure Port Forwarding on db pod ```oc port-forward <podname> <srcport>:<destport>```
+  - This is to capture that communication exists between the pods, by capturing traffic to the db pod.
 
-This is to capture that communication exists between the pods, by
-capturing traffic to the db pod.
 
-*Parameterized example*
+Postgres Database Debugging
 
-`oc port-forward <podname> <srcport>:<destport>`
+- [Postgresql cheat sheet](https://www.postgresqltutorial.com/postgresql-cheat-sheet/)
 
-*with a hypothetical pod name*
+- Dump database to backup file ```pg_dump -Fp -h $POSTGRESQL_SVC_SERVICE_HOST -p $POSTGRESQL_SVC_SERVICE_PORT -U POSTGRESQL_USER $POSTGRESQL_DATABASE > dumpfile.gz```
 
-`oc port-forward postgresql-dc-1-4x9h6 5432:5432`
+- Connect / Login to database ```psql -U $POSTGRESQL_USER```
 
-### Get network policies
-`oc get networkpolicies`
+- Drop database ```psql -ac "DROP DATABASE $POSTGRESQL_DATABASE"```
 
-## Postgres Database Debugging:
+- Copy data to a pod ```oc rsync junk postgresql-dc-1-qs9sl:/var/lib/pgsql/data/userdata/tmp```
 
-The following cheat sheets shows how to connect to a database, list tables
-etc...
-
-[postgresql cheat sheet](https://www.postgresqltutorial.com/postgresql-cheat-sheet/)
-
-Rest of the sections here are a bunch of misc tasks that I have performed to debug / data migrate etc from database to database.
-
-### dump database to backup file
-
-`pg_dump -Fp -h $POSTGRESQL_SVC_SERVICE_HOST -p $POSTGRESQL_SVC_SERVICE_PORT -U POSTGRESQL_USER $POSTGRESQL_DATABASE > dumpfile.gz`
-
-### Connect / Login to database
-
-`psql -U $POSTGRESQL_USER`
-
-### drop database
-`psql -ac "DROP DATABASE $POSTGRESQL_DATABASE"`
-
-### copy data to a pod
-`oc rsync junk postgresql-dc-1-qs9sl:/var/lib/pgsql/data/userdata/tmp`
-
-### log into pod and run this to restore
-`gunzip < db_dump.gz | psql -v ON_ERROR_STOP=1 -x  -d $POSTGRESQL_DATABASE`
+- Log into pod and run this to restore ```gunzip < db_dump.gz | psql -v ON_ERROR_STOP=1 -x  -d $POSTGRESQL_DATABASE```
