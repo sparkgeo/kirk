@@ -74,4 +74,4 @@ parameters:
   value: 'master'
 - name: SOURCE_REPOSITORY_DIR
   required: true
-  value: '.'
+  value: 'src/backend/'
