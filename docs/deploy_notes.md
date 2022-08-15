@@ -38,7 +38,7 @@ helm install kirk-install kirk-helm \
 
 6. Post install steps, [see this section](#data-migrations).
 
-7. Run the followiing helm chart deployment - kirk-backup in dev, test or prod.in dev, test or prod.
+7. Run the followiing helm chart deployment - kirk-backup in dev, test or prod.
 ```
 helm repo add bcgov http://bcgov.github.io/helm-charts
 
@@ -156,7 +156,9 @@ curl https://raw.githubusercontent.com/BCDevOps/backup-container/master/openshif
      oc apply -f -
 
 cat kirk-helm/Chart.yaml $BUILD_VALUES > temp.yaml && \
-     oc process --ignore-unknown-parameters=true --param-file=temp.yaml \-f openshift/templates/kirk_bc.yaml | oc apply -f - && \
+     oc process --ignore-unknown-parameters=true --param-file=temp.yaml \
+     -f openshift/templates/kirk_bc.yaml | \
+     oc apply -f - && \
      rm temp.yaml
 ```
 
