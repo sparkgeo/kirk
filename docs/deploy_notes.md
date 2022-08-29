@@ -10,7 +10,7 @@
 
   - APP_KIRK is deployed on prod, test and dev namespace.
 
-  - DB backup is deployed on tools namespace.
+  - DB backup is deployed on prod, test and dev namespace.
 
 - Container images are now built and stored on tool namespace.
   - ~~Container images *used* to be built via GH actions and retrieved from GH packages.~~
